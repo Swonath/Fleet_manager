@@ -1,0 +1,268 @@
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using FLEET_MANAGER.Models;
+using FLEET_MANAGER.Repositories;
+
+namespace FLEET_MANAGER.ViewModels
+{
+    /// <summary>
+    /// ViewModel pour la gestion des trajets
+    /// </summary>
+    public class TrajetViewModel : ViewModelBase
+    {
+        private ObservableCollection<Vehicule> _vehicules;
+        private Vehicule? _vehiculeSelectionne;
+        private ObservableCollection<Trajet> _trajets;
+        private DateTime _dateTrajet = DateTime.Now;
+        private TimeSpan _heureDepart = new TimeSpan(9, 0, 0);
+        private TimeSpan _heureArrivee = new TimeSpan(17, 0, 0);
+        private int _kilometrageDepart = 0;
+        private int _kilometrageArrivee = 0;
+        private int _distanceParcourue = 0;
+        private string _lieuDepart = string.Empty;
+        private string _lieuArrivee = string.Empty;
+        private string _typeTrajet = "Professionnel";
+        private string _notes = string.Empty;
+        private string _messageErreur = string.Empty;
+        private bool _isLoading = false;
+
+        private VehiculeRepository _vehiculeRepository;
+        private TrajetRepository _trajetRepository;
+
+        public ObservableCollection<Vehicule> Vehicules
+        {
+            get => _vehicules;
+            set => SetProperty(ref _vehicules, value, nameof(Vehicules));
+        }
+
+        public Vehicule? VehiculeSelectionne
+        {
+            get => _vehiculeSelectionne;
+            set
+            {
+                if (SetProperty(ref _vehiculeSelectionne, value, nameof(VehiculeSelectionne)))
+                {
+                    if (value != null)
+                    {
+                        ChargerTrajets(value.IdVehicule);
+                    }
+                }
+            }
+        }
+
+        public ObservableCollection<Trajet> Trajets
+        {
+            get => _trajets;
+            set => SetProperty(ref _trajets, value, nameof(Trajets));
+        }
+
+        public DateTime DateTrajet
+        {
+            get => _dateTrajet;
+            set => SetProperty(ref _dateTrajet, value, nameof(DateTrajet));
+        }
+
+        public TimeSpan HeureDepart
+        {
+            get => _heureDepart;
+            set => SetProperty(ref _heureDepart, value, nameof(HeureDepart));
+        }
+
+        public TimeSpan HeureArrivee
+        {
+            get => _heureArrivee;
+            set => SetProperty(ref _heureArrivee, value, nameof(HeureArrivee));
+        }
+
+        public int KilomettrageDepart
+        {
+            get => _kilometrageDepart;
+            set
+            {
+                if (SetProperty(ref _kilometrageDepart, value, nameof(KilomettrageDepart)))
+                {
+                    CalculerDistance();
+                }
+            }
+        }
+
+        public int KilomettrageArrivee
+        {
+            get => _kilometrageArrivee;
+            set
+            {
+                if (SetProperty(ref _kilometrageArrivee, value, nameof(KilomettrageArrivee)))
+                {
+                    CalculerDistance();
+                }
+            }
+        }
+
+        public int DistanceParcourue
+        {
+            get => _distanceParcourue;
+            set => SetProperty(ref _distanceParcourue, value, nameof(DistanceParcourue));
+        }
+
+        public string LieuDepart
+        {
+            get => _lieuDepart;
+            set => SetProperty(ref _lieuDepart, value, nameof(LieuDepart));
+        }
+
+        public string LieuArrivee
+        {
+            get => _lieuArrivee;
+            set => SetProperty(ref _lieuArrivee, value, nameof(LieuArrivee));
+        }
+
+        public string TypeTrajet
+        {
+            get => _typeTrajet;
+            set => SetProperty(ref _typeTrajet, value, nameof(TypeTrajet));
+        }
+
+        public string Notes
+        {
+            get => _notes;
+            set => SetProperty(ref _notes, value, nameof(Notes));
+        }
+
+        public string MessageErreur
+        {
+            get => _messageErreur;
+            set => SetProperty(ref _messageErreur, value, nameof(MessageErreur));
+        }
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value, nameof(IsLoading));
+        }
+
+        // Commandes
+        public ICommand EnregistrerCommand { get; }
+        public ICommand ReinitialiserCommand { get; }
+
+        public TrajetViewModel()
+        {
+            _vehicules = new ObservableCollection<Vehicule>();
+            _trajets = new ObservableCollection<Trajet>();
+            _vehiculeRepository = new VehiculeRepository();
+            _trajetRepository = new TrajetRepository();
+
+            EnregistrerCommand = new RelayCommand(_ => PerformerEnregistrement(), _ => VehiculeSelectionne != null && !IsLoading);
+            ReinitialiserCommand = new RelayCommand(_ => Reinitialiser());
+
+            ChargerVehicules();
+        }
+
+        private void ChargerVehicules()
+        {
+            try
+            {
+                var vehicules = _vehiculeRepository.ObtenirTousLesVehicules();
+                Vehicules = new ObservableCollection<Vehicule>(vehicules);
+                MessageErreur = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                MessageErreur = $"Erreur lors du chargement des vehicules : {ex.Message}";
+                System.Diagnostics.Debug.WriteLine(MessageErreur);
+            }
+        }
+
+        private void ChargerTrajets(int idVehicule)
+        {
+            try
+            {
+                var trajets = _trajetRepository.ObtenirTrajetsParVehicule(idVehicule);
+                Trajets = new ObservableCollection<Trajet>(trajets);
+            }
+            catch (Exception ex)
+            {
+                MessageErreur = $"Erreur lors du chargement des trajets : {ex.Message}";
+            }
+        }
+
+        private void CalculerDistance()
+        {
+            DistanceParcourue = KilomettrageArrivee - KilomettrageDepart;
+        }
+
+        private void PerformerEnregistrement()
+        {
+            if (VehiculeSelectionne == null)
+            {
+                MessageErreur = "Veuillez selectionner un vehicule.";
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(LieuDepart) || string.IsNullOrWhiteSpace(LieuArrivee))
+            {
+                MessageErreur = "Les lieux de depart et d'arrivee sont requis.";
+                return;
+            }
+
+            if (DistanceParcourue <= 0)
+            {
+                MessageErreur = "La distance doit etre superieure a 0.";
+                return;
+            }
+
+            try
+            {
+                IsLoading = true;
+
+                var trajet = new Trajet
+                {
+                    IdVehicule = VehiculeSelectionne.IdVehicule,
+                    DateTrajet = DateTrajet,
+                    HeureDepart = HeureDepart,
+                    HeureArrivee = HeureArrivee,
+                    KilomettrageDepart = KilomettrageDepart,
+                    KilomettrageArrivee = KilomettrageArrivee,
+                    DistanceParcourue = DistanceParcourue,
+                    LieuDepart = LieuDepart,
+                    LieuArrivee = LieuArrivee,
+                    TypeTrajet = TypeTrajet,
+                    Notes = Notes,
+                    IdUtilisateur = 1  // TODO: Utiliser l'utilisateur connecte
+                };
+
+                if (_trajetRepository.AjouterTrajet(trajet))
+                {
+                    MessageErreur = "Trajet enregistre avec succes !";
+                    ChargerTrajets(VehiculeSelectionne.IdVehicule);
+                    Reinitialiser();
+                }
+                else
+                {
+                    MessageErreur = "Erreur lors de l'enregistrement.";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageErreur = $"Erreur : {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private void Reinitialiser()
+        {
+            DateTrajet = DateTime.Now;
+            HeureDepart = new TimeSpan(9, 0, 0);
+            HeureArrivee = new TimeSpan(17, 0, 0);
+            KilomettrageDepart = 0;
+            KilomettrageArrivee = 0;
+            DistanceParcourue = 0;
+            LieuDepart = string.Empty;
+            LieuArrivee = string.Empty;
+            TypeTrajet = "Professionnel";
+            Notes = string.Empty;
+        }
+    }
+}

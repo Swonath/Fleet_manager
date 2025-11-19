@@ -1,0 +1,176 @@
+﻿<Window x:Class="FLEET_MANAGER.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FLEET_MANAGER"
+        mc:Ignorable="d"
+        Title="Fleet Manager - Tableau de bord" 
+        Height="600" 
+        Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="#f5f5f5">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <StackPanel Grid.Column="0" Background="#1e3a8a" VerticalAlignment="Top">
+            <TextBlock Text="FLEET MANAGER" 
+                       Foreground="White" 
+                        FontSize="18" 
+                       FontWeight="Bold"
+                       Padding="15,20"/>
+            
+            <TextBlock Text="{Binding UtilisateurConnecte.NomComplet, StringFormat='Bienvenue, {0}'}"
+                       Foreground="#e0e7ff"
+                       FontSize="12"
+                       Padding="15,0,15,15"/>
+
+            <Button Content="Tableau de bord" 
+                    Height="45" 
+                    Foreground="White" 
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="15,0"/>
+            
+            <Button Content="Vehicules" 
+                    Height="45" 
+                    Foreground="White" 
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="15,0"
+                    x:Name="BtnVehicules"
+                    Click="BtnVehicules_Click"/>
+            
+            <Button Content="Carburant" 
+                    Height="45" 
+                    Foreground="White" 
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="15,0"/>
+            
+            <Button Content="Trajets" 
+                    Height="45" 
+                    Foreground="White" 
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="15,0"/>
+            
+            <Button Content="Maintenances" 
+                    Height="45" 
+                    Foreground="White" 
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="15,0"/>
+            
+            <Button Content="Rapports" 
+                    Height="45" 
+                    Foreground="White" 
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="15,0"/>
+
+            <Separator Background="#3b82f6" Margin="0,20"/>
+
+            <Button Content="Profil" 
+                    Height="45" 
+                    Foreground="White" 
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="15,0"/>
+            
+            <Button Content="Deconnexion" 
+                    Height="45" 
+                    Foreground="White" 
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="15,0"/>
+        </StackPanel>
+
+        <!-- Contenu principal -->
+        <StackPanel Grid.Column="1" Margin="20">
+            <TextBlock Text="Tableau de bord" FontSize="28" FontWeight="Bold" Margin="0,0,0,20"/>
+
+            <!-- Indicateurs clés -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Indicateur Total Vehicules -->
+                <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,10,0">
+                    <StackPanel>
+                        <TextBlock Text="Total Vehicules" Foreground="#64748b" FontSize="12"/>
+                        <TextBlock Text="{Binding TotalVehicules}" FontSize="28" FontWeight="Bold" Foreground="#1e3a8a"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Indicateur Vehicules en service -->
+                <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="15" Margin="0,0,10,0">
+                    <StackPanel>
+                        <TextBlock Text="En service" Foreground="#64748b" FontSize="12"/>
+                        <TextBlock Text="{Binding VehiculesEnService}" FontSize="28" FontWeight="Bold" Foreground="#16a34a"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Indicateur Couts -->
+                <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="15" Margin="0,0,10,0">
+                    <StackPanel>
+                        <TextBlock Text="Cout total carburant" Foreground="#64748b" FontSize="12"/>
+                        <TextBlock Text="{Binding CoutTotalCarburant, StringFormat='€{0:F2}'}" FontSize="28" FontWeight="Bold" Foreground="#dc2626"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Indicateur Distance -->
+                <Border Grid.Column="3" Background="White" CornerRadius="8" Padding="15">
+                    <StackPanel>
+                        <TextBlock Text="Distance totale" Foreground="#64748b" FontSize="12"/>
+                        <TextBlock Text="{Binding DistanceTotaleParcourue}" FontSize="24" FontWeight="Bold" Foreground="#7c3aed" Margin="0,5,0,0"/>
+                        <TextBlock Text="km" Foreground="#64748b" FontSize="11"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Tableau des vehicules -->
+            <TextBlock Text="Flotte de vehicules" FontSize="16" FontWeight="Bold" Margin="0,20,0,10"/>
+            <DataGrid ItemsSource="{Binding Vehicules}" 
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      BorderBrush="#e2e8f0"
+                      BorderThickness="1"
+                      RowBackground="White"
+                      AlternatingRowBackground="#f8fafc">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Marque" Binding="{Binding Marque}" Width="80"/>
+                    <DataGridTextColumn Header="Modele" Binding="{Binding Modele}" Width="100"/>
+                    <DataGridTextColumn Header="Immatriculation" Binding="{Binding Immatriculation}" Width="120"/>
+                    <DataGridTextColumn Header="Type" Binding="{Binding TypeCarburant}" Width="80"/>
+                    <DataGridTextColumn Header="Etat" Binding="{Binding Etat}" Width="100"/>
+                    <DataGridTextColumn Header="Kilometrage" Binding="{Binding KilomettrageActuel}" Width="100"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</Window>

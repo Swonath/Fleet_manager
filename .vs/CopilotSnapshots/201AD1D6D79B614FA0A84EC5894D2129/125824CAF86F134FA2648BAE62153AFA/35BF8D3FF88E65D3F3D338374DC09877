@@ -1,0 +1,71 @@
+﻿using System.Windows;
+using FLEET_MANAGER.Models;
+using FLEET_MANAGER.ViewModels;
+using FLEET_MANAGER.Views;
+
+namespace FLEET_MANAGER
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        private DashboardViewModel _dashboardViewModel;
+        private VehiculeViewModel _vehiculeViewModel;
+        private CarburantViewModel _carburantViewModel;
+        private TrajetViewModel _trajetViewModel;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            
+            _dashboardViewModel = new DashboardViewModel();
+            _vehiculeViewModel = new VehiculeViewModel();
+            _carburantViewModel = new CarburantViewModel();
+            _trajetViewModel = new TrajetViewModel();
+            
+            DataContext = _dashboardViewModel;
+        }
+
+        public void InitialiserAvecUtilisateur(Utilisateur utilisateur)
+        {
+            _dashboardViewModel.InitialiserAvecUtilisateur(utilisateur);
+        }
+
+        private void BtnDashboard_Click(object sender, RoutedEventArgs e)
+        {
+            DataContext = _dashboardViewModel;
+        }
+
+        private void BtnVehicules_Click(object sender, RoutedEventArgs e)
+        {
+            _vehiculeViewModel = new VehiculeViewModel();
+            var window = new VehiculeWindow { DataContext = _vehiculeViewModel };
+            ContentArea.Content = window;
+        }
+
+        private void BtnCarburant_Click(object sender, RoutedEventArgs e)
+        {
+            _carburantViewModel = new CarburantViewModel();
+            var window = new CarburantWindow { DataContext = _carburantViewModel };
+            ContentArea.Content = window;
+        }
+
+        private void BtnTrajets_Click(object sender, RoutedEventArgs e)
+        {
+            _trajetViewModel = new TrajetViewModel();
+            var window = new TrajetWindow { DataContext = _trajetViewModel };
+            ContentArea.Content = window;
+        }
+
+        private void BtnMaintenances_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Module Maintenances - A venir");
+        }
+
+        private void BtnRapports_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Module Rapports - A venir");
+        }
+    }
+}

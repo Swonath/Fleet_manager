@@ -1,0 +1,14 @@
+﻿using System.Windows;
+using FLEET_MANAGER.ViewModels;
+
+namespace FLEET_MANAGER.Views
+{
+    public partial class VehiculeWindow : Window
+    {
+        public VehiculeWindow()
+        {
+            InitializeComponent();
+            DataContext = new VehiculeViewModel();
+        }
+    }
+}

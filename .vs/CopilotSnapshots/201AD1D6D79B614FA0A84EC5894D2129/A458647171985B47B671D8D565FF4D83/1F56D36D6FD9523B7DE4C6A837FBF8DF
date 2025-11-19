@@ -1,0 +1,434 @@
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using FLEET_MANAGER.Models;
+using FLEET_MANAGER.Repositories;
+
+namespace FLEET_MANAGER.ViewModels
+{
+    /// <summary>
+    /// ViewModel pour la gestion des utilisateurs (Admin only)
+    /// </summary>
+    public class UtilisateurViewModel : ViewModelBase
+    {
+        private ObservableCollection<Utilisateur> _utilisateurs;
+        private Utilisateur? _utilisateurSelectionne;
+        private bool _estEnEdition = false;
+        private string _messageErreur = string.Empty;
+        private bool _isLoading = false;
+        private bool _estNouveauUtilisateur = false;
+        private Utilisateur? _utilisateurConnecte;
+
+        private string _nomUtilisateur = string.Empty;
+        private string _email = string.Empty;
+        private string _nom = string.Empty;
+        private string _prenom = string.Empty;
+        private string _motDePasse = string.Empty;
+        private string _roleSelectionne = "utilisateur";
+
+        private string _nomUtilisateurError = string.Empty;
+        private string _emailError = string.Empty;
+
+        private UtilisateurRepository _repository;
+
+        public ObservableCollection<Utilisateur> Utilisateurs
+        {
+            get => _utilisateurs;
+            set => SetProperty(ref _utilisateurs, value, nameof(Utilisateurs));
+        }
+
+        public Utilisateur? UtilisateurSelectionne
+        {
+            get => _utilisateurSelectionne;
+            set
+            {
+                if (SetProperty(ref _utilisateurSelectionne, value, nameof(UtilisateurSelectionne)))
+                {
+                    if (value != null)
+                    {
+                        ChargerUtilisateurEnFormulaire(value);
+                    }
+                }
+            }
+        }
+
+        public Utilisateur? UtilisateurConnecte
+        {
+            get => _utilisateurConnecte;
+            set => SetProperty(ref _utilisateurConnecte, value, nameof(UtilisateurConnecte));
+        }
+
+        public bool EstEnEdition
+        {
+            get => _estEnEdition;
+            set => SetProperty(ref _estEnEdition, value, nameof(EstEnEdition));
+        }
+
+        public string MessageErreur
+        {
+            get => _messageErreur;
+            set => SetProperty(ref _messageErreur, value, nameof(MessageErreur));
+        }
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value, nameof(IsLoading));
+        }
+
+        public string NomUtilisateur
+        {
+            get => _nomUtilisateur;
+            set => SetProperty(ref _nomUtilisateur, value, nameof(NomUtilisateur));
+        }
+
+        public string Email
+        {
+            get => _email;
+            set => SetProperty(ref _email, value, nameof(Email));
+        }
+
+        public string Nom
+        {
+            get => _nom;
+            set => SetProperty(ref _nom, value, nameof(Nom));
+        }
+
+        public string Prenom
+        {
+            get => _prenom;
+            set => SetProperty(ref _prenom, value, nameof(Prenom));
+        }
+
+        public string MotDePasse
+        {
+            get => _motDePasse;
+            set => SetProperty(ref _motDePasse, value, nameof(MotDePasse));
+        }
+
+        public string RoleSelectionne
+        {
+            get => _roleSelectionne;
+            set => SetProperty(ref _roleSelectionne, value, nameof(RoleSelectionne));
+        }
+
+        public string NomUtilisateurError
+        {
+            get => _nomUtilisateurError;
+            set => SetProperty(ref _nomUtilisateurError, value, nameof(NomUtilisateurError));
+        }
+
+        public string EmailError
+        {
+            get => _emailError;
+            set => SetProperty(ref _emailError, value, nameof(EmailError));
+        }
+
+        // Commandes
+        public ICommand ChargerCommand { get; }
+        public ICommand AjouterCommand { get; }
+        public ICommand SauvegarderCommand { get; }
+        public ICommand ModifierCommand { get; }
+        public ICommand SupprimerCommand { get; }
+        public ICommand AnnulerCommand { get; }
+        public ICommand Nouveau { get; }
+
+        public UtilisateurViewModel()
+        {
+            _utilisateurs = new ObservableCollection<Utilisateur>();
+            _repository = new UtilisateurRepository();
+
+            ChargerCommand = new RelayCommand(_ => ChargerUtilisateurs());
+            AjouterCommand = new RelayCommand(_ => PerformerAjout(), _ => !EstEnEdition && !IsLoading);
+            SauvegarderCommand = new RelayCommand(_ => PerformerSauvegarde(), _ => EstEnEdition && !IsLoading);
+            ModifierCommand = new RelayCommand(_ => PerformerModification(), _ => UtilisateurSelectionne != null && !IsLoading && PeuxModifier());
+            SupprimerCommand = new RelayCommand(_ => PerformerSuppression(), _ => UtilisateurSelectionne != null && !IsLoading && PeuxSupprimer());
+            AnnulerCommand = new RelayCommand(_ => AnnulerEdition());
+            Nouveau = new RelayCommand(_ => NouveauUtilisateur());
+
+            ChargerUtilisateurs();
+        }
+
+        public void InitialiserAvecUtilisateurConnecte(Utilisateur utilisateur)
+        {
+            UtilisateurConnecte = utilisateur;
+        }
+
+        private bool PeuxModifier()
+        {
+            if (UtilisateurConnecte == null || UtilisateurSelectionne == null)
+                return false;
+
+            // Super Admin : tous les droits
+            if (UtilisateurConnecte.Role == "super_admin")
+                return true;
+
+            // Admin : ne peut pas modifier un Super Admin
+            if (UtilisateurConnecte.Role == "administrateur" && UtilisateurSelectionne.Role != "super_admin")
+                return true;
+
+            return false;
+        }
+
+        private bool PeuxSupprimer()
+        {
+            if (UtilisateurConnecte == null || UtilisateurSelectionne == null)
+                return false;
+
+            // Super Admin : tous les droits
+            if (UtilisateurConnecte.Role == "super_admin")
+                return true;
+
+            // Admin : ne peut pas supprimer un Super Admin
+            if (UtilisateurConnecte.Role == "administrateur" && UtilisateurSelectionne.Role != "super_admin")
+                return true;
+
+            return false;
+        }
+
+        public void ChargerUtilisateurs()
+        {
+            try
+            {
+                IsLoading = true;
+                var utilisateurs = _repository.ObtenirTousLesUtilisateurs();
+                Utilisateurs = new ObservableCollection<Utilisateur>(utilisateurs);
+                MessageErreur = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                MessageErreur = $"Erreur lors du chargement : {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private void NouveauUtilisateur()
+        {
+            EstEnEdition = true;
+            _estNouveauUtilisateur = true;
+            UtilisateurSelectionne = null;
+            ReinitialiserFormulaire();
+            MessageErreur = string.Empty;
+        }
+
+        private void ChargerUtilisateurEnFormulaire(Utilisateur utilisateur)
+        {
+            NomUtilisateur = utilisateur.NomUtilisateur;
+            Email = utilisateur.Email;
+            Nom = utilisateur.Nom;
+            Prenom = utilisateur.Prenom;
+            RoleSelectionne = utilisateur.Role;
+            MotDePasse = string.Empty; // Ne pas afficher le mot de passe
+        }
+
+        private void ReinitialiserFormulaire()
+        {
+            NomUtilisateur = string.Empty;
+            Email = string.Empty;
+            Nom = string.Empty;
+            Prenom = string.Empty;
+            MotDePasse = string.Empty;
+            RoleSelectionne = "utilisateur";
+            NomUtilisateurError = string.Empty;
+            EmailError = string.Empty;
+        }
+
+        private void PerformerAjout()
+        {
+            if (!ValiderFormulaire())
+                return;
+
+            // Vérifier que l'utilisateur connecté a le droit d'ajouter un admin
+            if (RoleSelectionne == "super_admin" || (RoleSelectionne == "administrateur" && UtilisateurConnecte?.Role != "super_admin"))
+            {
+                MessageErreur = "Vous n'avez pas les droits nécessaires pour ajouter cet utilisateur.";
+                return;
+            }
+
+            try
+            {
+                IsLoading = true;
+                var nouvel = new Utilisateur
+                {
+                    NomUtilisateur = NomUtilisateur,
+                    Email = Email,
+                    Nom = Nom,
+                    Prenom = Prenom,
+                    MotDePasse = MotDePasse,
+                    Role = RoleSelectionne,
+                    Actif = true
+                };
+
+                if (_repository.AjouterUtilisateur(nouvel))
+                {
+                    MessageErreur = "Utilisateur ajouté avec succès !";
+                    ChargerUtilisateurs();
+                    ReinitialiserFormulaire();
+                }
+                else
+                {
+                    MessageErreur = "Erreur lors de l'ajout de l'utilisateur.";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageErreur = $"Erreur : {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private void PerformerModification()
+        {
+            if (UtilisateurSelectionne == null)
+            {
+                MessageErreur = "Aucun utilisateur sélectionné.";
+                return;
+            }
+
+            EstEnEdition = true;
+            _estNouveauUtilisateur = false;
+        }
+
+        private void PerformerSauvegarde()
+        {
+            if (!ValiderFormulaire())
+                return;
+
+            try
+            {
+                IsLoading = true;
+
+                if (_estNouveauUtilisateur)
+                {
+                    // Ajouter
+                    var nouvel = new Utilisateur
+                    {
+                        NomUtilisateur = NomUtilisateur,
+                        Email = Email,
+                        Nom = Nom,
+                        Prenom = Prenom,
+                        MotDePasse = MotDePasse,
+                        Role = RoleSelectionne,
+                        Actif = true
+                    };
+
+                    if (_repository.AjouterUtilisateur(nouvel))
+                    {
+                        MessageErreur = "Utilisateur ajouté avec succès !";
+                        ChargerUtilisateurs();
+                        AnnulerEdition();
+                    }
+                    else
+                    {
+                        MessageErreur = "Erreur lors de l'ajout.";
+                    }
+                }
+                else if (UtilisateurSelectionne != null)
+                {
+                    // Modifier
+                    UtilisateurSelectionne.NomUtilisateur = NomUtilisateur;
+                    UtilisateurSelectionne.Email = Email;
+                    UtilisateurSelectionne.Nom = Nom;
+                    UtilisateurSelectionne.Prenom = Prenom;
+                    if (!string.IsNullOrWhiteSpace(MotDePasse))
+                    {
+                        UtilisateurSelectionne.MotDePasse = MotDePasse;
+                    }
+                    UtilisateurSelectionne.Role = RoleSelectionne;
+
+                    if (_repository.ModifierUtilisateur(UtilisateurSelectionne))
+                    {
+                        MessageErreur = "Utilisateur modifié avec succès !";
+                        ChargerUtilisateurs();
+                        AnnulerEdition();
+                    }
+                    else
+                    {
+                        MessageErreur = "Erreur lors de la modification.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageErreur = $"Erreur : {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private void PerformerSuppression()
+        {
+            if (UtilisateurSelectionne == null)
+            {
+                MessageErreur = "Aucun utilisateur sélectionné.";
+                return;
+            }
+
+            try
+            {
+                IsLoading = true;
+                if (_repository.SupprimerUtilisateur(UtilisateurSelectionne.IdUtilisateur))
+                {
+                    MessageErreur = "Utilisateur supprimé avec succès !";
+                    ChargerUtilisateurs();
+                    ReinitialiserFormulaire();
+                }
+                else
+                {
+                    MessageErreur = "Erreur lors de la suppression.";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageErreur = $"Erreur : {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private void AnnulerEdition()
+        {
+            EstEnEdition = false;
+            _estNouveauUtilisateur = false;
+            UtilisateurSelectionne = null;
+            ReinitialiserFormulaire();
+            MessageErreur = string.Empty;
+        }
+
+        private bool ValiderFormulaire()
+        {
+            bool valide = true;
+
+            if (string.IsNullOrWhiteSpace(NomUtilisateur))
+            {
+                NomUtilisateurError = "Le nom d'utilisateur est requis.";
+                valide = false;
+            }
+            else
+            {
+                NomUtilisateurError = string.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(Email) || !Email.Contains("@"))
+            {
+                EmailError = "Un email valide est requis.";
+                valide = false;
+            }
+            else
+            {
+                EmailError = string.Empty;
+            }
+
+            return valide;
+        }
+    }
+}

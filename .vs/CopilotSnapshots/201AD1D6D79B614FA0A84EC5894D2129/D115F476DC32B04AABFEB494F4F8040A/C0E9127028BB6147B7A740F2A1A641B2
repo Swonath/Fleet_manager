@@ -1,0 +1,90 @@
+﻿using System.Collections.ObjectModel;
+using FLEET_MANAGER.Models;
+using FLEET_MANAGER.Repositories;
+
+namespace FLEET_MANAGER.ViewModels
+{
+    /// <summary>
+    /// ViewModel pour le tableau de bord principal
+    /// </summary>
+    public class DashboardViewModel : ViewModelBase
+    {
+        private Utilisateur? _utilisateurConnecte;
+        private ObservableCollection<Vehicule> _vehicules;
+        private int _totalVehicules;
+        private int _vehiculesEnService;
+        private decimal _coutTotalCarburant;
+        private int _distanceTotaleParcourue;
+
+        public Utilisateur? UtilisateurConnecte
+        {
+            get => _utilisateurConnecte;
+            set => SetProperty(ref _utilisateurConnecte, value, nameof(UtilisateurConnecte));
+        }
+
+        public ObservableCollection<Vehicule> Vehicules
+        {
+            get => _vehicules;
+            set => SetProperty(ref _vehicules, value, nameof(Vehicules));
+        }
+
+        public int TotalVehicules
+        {
+            get => _totalVehicules;
+            set => SetProperty(ref _totalVehicules, value, nameof(TotalVehicules));
+        }
+
+        public int VehiculesEnService
+        {
+            get => _vehiculesEnService;
+            set => SetProperty(ref _vehiculesEnService, value, nameof(VehiculesEnService));
+        }
+
+        public decimal CoutTotalCarburant
+        {
+            get => _coutTotalCarburant;
+            set => SetProperty(ref _coutTotalCarburant, value, nameof(CoutTotalCarburant));
+        }
+
+        public int DistanceTotaleParcourue
+        {
+            get => _distanceTotaleParcourue;
+            set => SetProperty(ref _distanceTotaleParcourue, value, nameof(DistanceTotaleParcourue));
+        }
+
+        private VehiculeRepository _vehiculeRepository;
+
+        public DashboardViewModel()
+        {
+            _vehicules = new ObservableCollection<Vehicule>();
+            _vehiculeRepository = new VehiculeRepository();
+            ChargerDonnees();
+        }
+
+        public void ChargerDonnees()
+        {
+            try
+            {
+                var vehicules = _vehiculeRepository.ObtenirTousLesVehicules();
+                Vehicules = new ObservableCollection<Vehicule>(vehicules);
+                
+                TotalVehicules = vehicules.Count;
+                VehiculesEnService = vehicules.Count(v => v.Etat == "En service");
+                
+                // TODO: Calculer les coûts totaux et distances depuis la base de données
+                CoutTotalCarburant = 0;
+                DistanceTotaleParcourue = 0;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des données : {ex.Message}");
+            }
+        }
+
+        public void InitialiserAvecUtilisateur(Utilisateur utilisateur)
+        {
+            UtilisateurConnecte = utilisateur;
+            ChargerDonnees();
+        }
+    }
+}

@@ -1,0 +1,471 @@
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using FLEET_MANAGER.Models;
+using FLEET_MANAGER.Repositories;
+
+namespace FLEET_MANAGER.ViewModels
+{
+    /// <summary>
+    /// ViewModel pour la gestion des véhicules
+    /// </summary>
+    public class VehiculeViewModel : ViewModelBase
+    {
+        private ObservableCollection<Vehicule> _vehicules;
+        private Vehicule? _vehiculeSelectionne;
+        private Vehicule _nouveau;
+        private bool _estEnEdition = false;
+        private string _messageErreur = string.Empty;
+        private bool _isLoading = false;
+        private bool _estNouveauVehicule = false; // Ajouter cette propriété
+
+        private VehiculeRepository _repository;
+
+        // Propriétés pour le formulaire
+        private string _marque = string.Empty;
+        private string _modele = string.Empty;
+        private string _immatriculation = string.Empty;
+        private int _annee = DateTime.Now.Year;
+        private string _typeCarburant = "Essence";
+        private int _kilometrageInitial = 0;
+        private DateTime _dateAcquisition = DateTime.Now;
+        private string _etat = "En service";
+
+        // Erreurs de validation
+        private string _marqueError = string.Empty;
+        private string _modeleError = string.Empty;
+        private string _immatriculationError = string.Empty;
+
+        public ObservableCollection<Vehicule> Vehicules
+        {
+            get => _vehicules;
+            set => SetProperty(ref _vehicules, value, nameof(Vehicules));
+        }
+
+        public Vehicule? VehiculeSelectionne
+        {
+            get => _vehiculeSelectionne;
+            set
+            {
+                if (SetProperty(ref _vehiculeSelectionne, value, nameof(VehiculeSelectionne)))
+                {
+                    if (value != null)
+                    {
+                        ChargerVehiculeEnFormulaire(value);
+                    }
+                }
+            }
+        }
+
+        public string Marque
+        {
+            get => _marque;
+            set
+            {
+                if (SetProperty(ref _marque, value, nameof(Marque)))
+                {
+                    ValidateMarque();
+                }
+            }
+        }
+
+        public string Modele
+        {
+            get => _modele;
+            set
+            {
+                if (SetProperty(ref _modele, value, nameof(Modele)))
+                {
+                    ValidateModele();
+                }
+            }
+        }
+
+        public string Immatriculation
+        {
+            get => _immatriculation;
+            set
+            {
+                if (SetProperty(ref _immatriculation, value, nameof(Immatriculation)))
+                {
+                    ValidateImmatriculation();
+                }
+            }
+        }
+
+        public int Annee
+        {
+            get => _annee;
+            set => SetProperty(ref _annee, value, nameof(Annee));
+        }
+
+        public string TypeCarburant
+        {
+            get => _typeCarburant;
+            set => SetProperty(ref _typeCarburant, value, nameof(TypeCarburant));
+        }
+
+        public int KilomettrageInitial
+        {
+            get => _kilometrageInitial;
+            set => SetProperty(ref _kilometrageInitial, value, nameof(KilomettrageInitial));
+        }
+
+        public DateTime DateAcquisition
+        {
+            get => _dateAcquisition;
+            set => SetProperty(ref _dateAcquisition, value, nameof(DateAcquisition));
+        }
+
+        public string Etat
+        {
+            get => _etat;
+            set => SetProperty(ref _etat, value, nameof(Etat));
+        }
+
+        public bool EstEnEdition
+        {
+            get => _estEnEdition;
+            set => SetProperty(ref _estEnEdition, value, nameof(EstEnEdition));
+        }
+
+        public string MessageErreur
+        {
+            get => _messageErreur;
+            set => SetProperty(ref _messageErreur, value, nameof(MessageErreur));
+        }
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value, nameof(IsLoading));
+        }
+
+        public string MarqueError
+        {
+            get => _marqueError;
+            set => SetProperty(ref _marqueError, value, nameof(MarqueError));
+        }
+
+        public string ModeleError
+        {
+            get => _modeleError;
+            set => SetProperty(ref _modeleError, value, nameof(ModeleError));
+        }
+
+        public string ImmatriculationError
+        {
+            get => _immatriculationError;
+            set => SetProperty(ref _immatriculationError, value, nameof(ImmatriculationError));
+        }
+
+        // Commandes
+        public ICommand ChargerCommand { get; }
+        public ICommand AjouterCommand { get; }
+        public ICommand SauvegarderCommand { get; }
+        public ICommand ModifierCommand { get; }
+        public ICommand SupprimerCommand { get; }
+        public ICommand AnnulerCommand { get; }
+        public ICommand Nouveau { get; }
+
+        public VehiculeViewModel()
+        {
+            _vehicules = new ObservableCollection<Vehicule>();
+            _nouveau = new Vehicule();
+            _repository = new VehiculeRepository();
+
+            ChargerCommand = new RelayCommand(_ => ChargerVehicules());
+            AjouterCommand = new RelayCommand(_ => PerformerAjout(), _ => !EstEnEdition && !IsLoading);
+            SauvegarderCommand = new RelayCommand(_ => PerformerSauvegarde(), _ => EstEnEdition && !IsLoading);
+            ModifierCommand = new RelayCommand(_ => PerformerModification(), _ => VehiculeSelectionne != null && !IsLoading);
+            SupprimerCommand = new RelayCommand(_ => PerformerSuppression(), _ => VehiculeSelectionne != null && !IsLoading);
+            AnnulerCommand = new RelayCommand(_ => AnnulerEdition());
+            Nouveau = new RelayCommand(_ => NouveauVehicule());
+
+            ChargerVehicules();
+        }
+
+        public void ChargerVehicules()
+        {
+            try
+            {
+                IsLoading = true;
+                var vehicules = _repository.ObtenirTousLesVehicules();
+                Vehicules = new ObservableCollection<Vehicule>(vehicules);
+                MessageErreur = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                MessageErreur = $"Erreur lors du chargement : {ex.Message}";
+                System.Diagnostics.Debug.WriteLine(MessageErreur);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private void NouveauVehicule()
+        {
+            EstEnEdition = true;
+            _estNouveauVehicule = true; // Indiquer qu'on crée un nouveau véhicule
+            VehiculeSelectionne = null;
+            ReinitialiserFormulaire();
+            MessageErreur = string.Empty;
+        }
+
+        private void ChargerVehiculeEnFormulaire(Vehicule vehicule)
+        {
+            Marque = vehicule.Marque;
+            Modele = vehicule.Modele;
+            Immatriculation = vehicule.Immatriculation;
+            Annee = vehicule.AnneeFabrication;
+            TypeCarburant = vehicule.TypeCarburant;
+            KilomettrageInitial = vehicule.KilomettrageInitial;
+            DateAcquisition = vehicule.DateAcquisition;
+            Etat = vehicule.Etat;
+        }
+
+        private void ReinitialiserFormulaire()
+        {
+            Marque = string.Empty;
+            Modele = string.Empty;
+            Immatriculation = string.Empty;
+            Annee = DateTime.Now.Year;
+            TypeCarburant = "Essence";
+            KilomettrageInitial = 0;
+            DateAcquisition = DateTime.Now;
+            Etat = "En service";
+            MarqueError = string.Empty;
+            ModeleError = string.Empty;
+            ImmatriculationError = string.Empty;
+        }
+
+        private void PerformerAjout()
+        {
+            if (!ValiderFormulaire())
+                return;
+
+            try
+            {
+                IsLoading = true;
+                var nouveau = new Vehicule
+                {
+                    Marque = Marque,
+                    Modele = Modele,
+                    Immatriculation = Immatriculation,
+                    AnneeFabrication = Annee,
+                    TypeCarburant = TypeCarburant,
+                    KilomettrageInitial = KilomettrageInitial,
+                    KilomettrageActuel = KilomettrageInitial,
+                    DateAcquisition = DateAcquisition,
+                    Etat = Etat
+                };
+
+                if (_repository.AjouterVehicule(nouveau))
+                {
+                    MessageErreur = "Véhicule ajouté avec succès !";
+                    ChargerVehicules();
+                    ReinitialiserFormulaire();
+                }
+                else
+                {
+                    MessageErreur = "Erreur lors de l'ajout du véhicule.";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageErreur = $"Erreur : {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private void PerformerModification()
+        {
+            if (VehiculeSelectionne == null)
+            {
+                MessageErreur = "Aucun véhicule sélectionné.";
+                return;
+            }
+
+            EstEnEdition = true;
+            _estNouveauVehicule = false; // Indiquer qu'on modifie un véhicule existant
+        }
+
+        private void PerformerSauvegarde()
+        {
+            if (!ValiderFormulaire())
+                return;
+
+            try
+            {
+                IsLoading = true;
+
+                if (_estNouveauVehicule)
+                {
+                    // Cas : Ajout d'un nouveau véhicule
+                    var nouveau = new Vehicule
+                    {
+                        Marque = Marque,
+                        Modele = Modele,
+                        Immatriculation = Immatriculation,
+                        AnneeFabrication = Annee,
+                        TypeCarburant = TypeCarburant,
+                        KilomettrageInitial = KilomettrageInitial,
+                        KilomettrageActuel = KilomettrageInitial,
+                        DateAcquisition = DateAcquisition,
+                        Etat = Etat
+                    };
+
+                    if (_repository.AjouterVehicule(nouveau))
+                    {
+                        MessageErreur = "Véhicule ajouté avec succès !";
+                        ChargerVehicules();
+                        AnnulerEdition();
+                    }
+                    else
+                    {
+                        MessageErreur = "Erreur lors de l'ajout du véhicule.";
+                    }
+                }
+                else if (VehiculeSelectionne != null)
+                {
+                    // Cas : Modification d'un véhicule existant
+                    VehiculeSelectionne.Marque = Marque;
+                    VehiculeSelectionne.Modele = Modele;
+                    VehiculeSelectionne.Immatriculation = Immatriculation;
+                    VehiculeSelectionne.AnneeFabrication = Annee;
+                    VehiculeSelectionne.TypeCarburant = TypeCarburant;
+                    VehiculeSelectionne.Etat = Etat;
+
+                    if (_repository.ModifierVehicule(VehiculeSelectionne))
+                    {
+                        MessageErreur = "Véhicule modifié avec succès !";
+                        ChargerVehicules();
+                        AnnulerEdition();
+                    }
+                    else
+                    {
+                        MessageErreur = "Erreur lors de la modification.";
+                    }
+                }
+                else
+                {
+                    MessageErreur = "Aucun véhicule sélectionné.";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageErreur = $"Erreur : {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private void PerformerSuppression()
+        {
+            if (VehiculeSelectionne == null)
+            {
+                MessageErreur = "Aucun véhicule sélectionné.";
+                return;
+            }
+
+            try
+            {
+                IsLoading = true;
+                if (_repository.SupprimerVehicule(VehiculeSelectionne.IdVehicule))
+                {
+                    MessageErreur = "Véhicule supprimé avec succès !";
+                    ChargerVehicules();
+                    ReinitialiserFormulaire();
+                }
+                else
+                {
+                    MessageErreur = "Erreur lors de la suppression.";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageErreur = $"Erreur : {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private void AnnulerEdition()
+        {
+            EstEnEdition = false;
+            _estNouveauVehicule = false;
+            VehiculeSelectionne = null;
+            ReinitialiserFormulaire();
+            MessageErreur = string.Empty;
+        }
+
+        private bool ValiderFormulaire()
+        {
+            bool valide = true;
+
+            if (string.IsNullOrWhiteSpace(Marque))
+            {
+                MarqueError = "La marque est requise.";
+                valide = false;
+            }
+            else
+            {
+                MarqueError = string.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(Modele))
+            {
+                ModeleError = "Le modèle est requis.";
+                valide = false;
+            }
+            else
+            {
+                ModeleError = string.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(Immatriculation))
+            {
+                ImmatriculationError = "L'immatriculation est requise.";
+                valide = false;
+            }
+            else
+            {
+                ImmatriculationError = string.Empty;
+            }
+
+            return valide;
+        }
+
+        private void ValidateMarque()
+        {
+            if (string.IsNullOrWhiteSpace(Marque))
+                MarqueError = "La marque est requise.";
+            else
+                MarqueError = string.Empty;
+        }
+
+        private void ValidateModele()
+        {
+            if (string.IsNullOrWhiteSpace(Modele))
+                ModeleError = "Le modèle est requis.";
+            else
+                ModeleError = string.Empty;
+        }
+
+        private void ValidateImmatriculation()
+        {
+            if (string.IsNullOrWhiteSpace(Immatriculation))
+                ImmatriculationError = "L'immatriculation est requise.";
+            else
+                ImmatriculationError = string.Empty;
+        }
+    }
+}

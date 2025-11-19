@@ -1,0 +1,836 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\database\\fleet_manager.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\database\\fleet_manager.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\views\\carburanttrajetview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\views\\carburanttrajetview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\views\\dashboardview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\views\\dashboardview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\views\\utilisateurview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\views\\utilisateurview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\implementation_finale.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\implementation_finale.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\views\\dashboardview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\views\\dashboardview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\views\\utilisateurview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\views\\utilisateurview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\views\\carburanttrajetview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\views\\carburanttrajetview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\viewmodels\\utilisateurviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\viewmodels\\utilisateurviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\viewmodels\\carburanttrajetviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\viewmodels\\carburanttrajetviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\synthese_tache_donnees.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\synthese_tache_donnees.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\index_documentation.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\index_documentation.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\checklist_test.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\checklist_test.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\tache_complete.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\tache_complete.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\resume_donnees_ajoutees.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\resume_donnees_ajoutees.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\executer_script_sql.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\executer_script_sql.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\donnees_test.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\donnees_test.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\resume_final.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\resume_final.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\corrections_appliquees.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\corrections_appliquees.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\repositories\\repositories.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\repositories\\repositories.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\etape2_completed.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\etape2_completed.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\converters\\booltovisibilityconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\converters\\booltovisibilityconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\viewmodels\\vehiculeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\viewmodels\\vehiculeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\demarrage.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\demarrage.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\index.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\index.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\synthese.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\synthese.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\commandes_utiles.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\commandes_utiles.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\structure.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\structure.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\guide_developpement.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\guide_developpement.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\todo.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\todo.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\database\\requetes_utiles.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\database\\requetes_utiles.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\installation_rapide.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\installation_rapide.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\viewmodels\\dashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\viewmodels\\dashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\converters\\invertboolconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\converters\\invertboolconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\views\\loginwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\views\\loginwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\views\\loginwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\views\\loginwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\viewmodels\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\viewmodels\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\viewmodels\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\viewmodels\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\models\\models.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\models\\models.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\data\\databaseconnection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\data\\databaseconnection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\config\\databaseconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\config\\databaseconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\fleet_manager.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\fleet_manager.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\implementation_etapes.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\implementation_etapes.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|c:\\users\\natha\\desktop\\projet_lourd\\fleet_manager\\fleet_manager\\models\\sessionutilisateur.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED93043D-805E-D9C8-CB69-AA391065670F}|FLEET_MANAGER\\FLEET_MANAGER.csproj|solutionrelative:fleet_manager\\models\\sessionutilisateur.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\natha\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\-552271068\\TrajetWindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 28,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 50,
+              "Title": "TrajetWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\-552271068\\TrajetWindow.xaml.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\-552271068\\TrajetWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\natha\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\-552271068\\TrajetWindow.xaml.cs",
+              "RelativeToolTip": "..\\..\\..\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\-552271068\\TrajetWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T17:23:14.319Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "fleet_manager.sql",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Database\\fleet_manager.sql",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Database\\fleet_manager.sql",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Database\\fleet_manager.sql",
+              "RelativeToolTip": "FLEET_MANAGER\\Database\\fleet_manager.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-11-19T16:03:21.668Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "SessionUtilisateur.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Models\\SessionUtilisateur.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Models\\SessionUtilisateur.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Models\\SessionUtilisateur.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\Models\\SessionUtilisateur.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T15:58:38.596Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "IMPLEMENTATION_ETAPES.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\IMPLEMENTATION_ETAPES.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\IMPLEMENTATION_ETAPES.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\IMPLEMENTATION_ETAPES.md",
+              "RelativeToolTip": "FLEET_MANAGER\\IMPLEMENTATION_ETAPES.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAOoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T15:58:32.775Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DashboardView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\DashboardView.xaml.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Views\\DashboardView.xaml.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\DashboardView.xaml.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\Views\\DashboardView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T13:01:28.923Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UtilisateurView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\UtilisateurView.xaml.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Views\\UtilisateurView.xaml.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\UtilisateurView.xaml.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\Views\\UtilisateurView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T13:01:28.886Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IMPLEMENTATION_FINALE.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\IMPLEMENTATION_FINALE.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\IMPLEMENTATION_FINALE.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\IMPLEMENTATION_FINALE.md",
+              "RelativeToolTip": "FLEET_MANAGER\\IMPLEMENTATION_FINALE.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T12:56:35.192Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DashboardView.xaml",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\DashboardView.xaml",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Views\\DashboardView.xaml",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\DashboardView.xaml",
+              "RelativeToolTip": "FLEET_MANAGER\\Views\\DashboardView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-19T12:55:58.265Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "UtilisateurView.xaml",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\UtilisateurView.xaml",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Views\\UtilisateurView.xaml",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\UtilisateurView.xaml",
+              "RelativeToolTip": "FLEET_MANAGER\\Views\\UtilisateurView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-19T12:55:00.936Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CarburantTrajetView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\CarburantTrajetView.xaml.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Views\\CarburantTrajetView.xaml.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\CarburantTrajetView.xaml.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\Views\\CarburantTrajetView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T12:49:44.543Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CarburantTrajetView.xaml",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\CarburantTrajetView.xaml",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Views\\CarburantTrajetView.xaml",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\CarburantTrajetView.xaml",
+              "RelativeToolTip": "FLEET_MANAGER\\Views\\CarburantTrajetView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-19T12:49:28.574Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "UtilisateurViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\UtilisateurViewModel.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\ViewModels\\UtilisateurViewModel.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\UtilisateurViewModel.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\ViewModels\\UtilisateurViewModel.cs",
+              "ViewState": "AgIAALABAAAAAAAAAIBJwLIBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T12:48:22.602Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "CarburantTrajetViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\CarburantTrajetViewModel.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\ViewModels\\CarburantTrajetViewModel.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\CarburantTrajetViewModel.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\ViewModels\\CarburantTrajetViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAK4BAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T12:47:58.512Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "SYNTHESE_TACHE_DONNEES.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\SYNTHESE_TACHE_DONNEES.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\SYNTHESE_TACHE_DONNEES.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\SYNTHESE_TACHE_DONNEES.md",
+              "RelativeToolTip": "FLEET_MANAGER\\SYNTHESE_TACHE_DONNEES.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4BAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T12:13:19.604Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "INDEX_DOCUMENTATION.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\INDEX_DOCUMENTATION.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\INDEX_DOCUMENTATION.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\INDEX_DOCUMENTATION.md",
+              "RelativeToolTip": "FLEET_MANAGER\\INDEX_DOCUMENTATION.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAANsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T12:12:53.26Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "CHECKLIST_TEST.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\CHECKLIST_TEST.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\CHECKLIST_TEST.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\CHECKLIST_TEST.md",
+              "RelativeToolTip": "FLEET_MANAGER\\CHECKLIST_TEST.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0BAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T12:12:31.791Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "TACHE_COMPLETE.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\TACHE_COMPLETE.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\TACHE_COMPLETE.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\TACHE_COMPLETE.md",
+              "RelativeToolTip": "FLEET_MANAGER\\TACHE_COMPLETE.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T12:12:02.558Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "RESUME_DONNEES_AJOUTEES.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\RESUME_DONNEES_AJOUTEES.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\RESUME_DONNEES_AJOUTEES.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\RESUME_DONNEES_AJOUTEES.md",
+              "RelativeToolTip": "FLEET_MANAGER\\RESUME_DONNEES_AJOUTEES.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T12:11:19.372Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "EXECUTER_SCRIPT_SQL.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\EXECUTER_SCRIPT_SQL.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\EXECUTER_SCRIPT_SQL.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\EXECUTER_SCRIPT_SQL.md",
+              "RelativeToolTip": "FLEET_MANAGER\\EXECUTER_SCRIPT_SQL.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T12:10:48.09Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "DONNEES_TEST.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\DONNEES_TEST.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\DONNEES_TEST.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\DONNEES_TEST.md",
+              "RelativeToolTip": "FLEET_MANAGER\\DONNEES_TEST.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T12:10:27.541Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "RESUME_FINAL.txt",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\RESUME_FINAL.txt",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\RESUME_FINAL.txt",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\RESUME_FINAL.txt",
+              "RelativeToolTip": "FLEET_MANAGER\\RESUME_FINAL.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-11-19T12:08:10.428Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "CORRECTIONS_APPLIQUEES.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\CORRECTIONS_APPLIQUEES.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\CORRECTIONS_APPLIQUEES.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\CORRECTIONS_APPLIQUEES.md",
+              "RelativeToolTip": "FLEET_MANAGER\\CORRECTIONS_APPLIQUEES.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAALkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T12:08:00.848Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Repositories.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Repositories\\Repositories.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Repositories\\Repositories.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Repositories\\Repositories.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\Repositories\\Repositories.cs",
+              "ViewState": "AgIAAMYBAAAAAAAAAEBVwMoBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T12:05:24.651Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "ETAPE2_COMPLETED.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ETAPE2_COMPLETED.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\ETAPE2_COMPLETED.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ETAPE2_COMPLETED.md",
+              "RelativeToolTip": "FLEET_MANAGER\\ETAPE2_COMPLETED.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T11:50:22.969Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "BoolToVisibilityConverter.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Converters\\BoolToVisibilityConverter.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Converters\\BoolToVisibilityConverter.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Converters\\BoolToVisibilityConverter.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\Converters\\BoolToVisibilityConverter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:43:38.671Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "VehiculeViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\VehiculeViewModel.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\ViewModels\\VehiculeViewModel.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\VehiculeViewModel.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\ViewModels\\VehiculeViewModel.cs",
+              "ViewState": "AgIAAOABAAAAAAAAAEBVwOQBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:42:56.669Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\.gitignore",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\.gitignore",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\.gitignore",
+              "RelativeToolTip": "FLEET_MANAGER\\.gitignore",
+              "ViewState": "AgIAAGIAAAAAAAAAAAAiwGoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-11-19T11:39:34.679Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "DEMARRAGE.txt",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\DEMARRAGE.txt",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\DEMARRAGE.txt",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\DEMARRAGE.txt",
+              "RelativeToolTip": "FLEET_MANAGER\\DEMARRAGE.txt",
+              "ViewState": "AgIAAHsAAAAAAAAAAAAAABwBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-11-19T11:39:24.838Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "INDEX.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\INDEX.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\INDEX.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\INDEX.md",
+              "RelativeToolTip": "FLEET_MANAGER\\INDEX.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T11:38:40.526Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "SYNTHESE.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\SYNTHESE.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\SYNTHESE.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\SYNTHESE.md",
+              "RelativeToolTip": "FLEET_MANAGER\\SYNTHESE.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADQBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T11:38:13.368Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "COMMANDES_UTILES.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\COMMANDES_UTILES.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\COMMANDES_UTILES.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\COMMANDES_UTILES.md",
+              "RelativeToolTip": "FLEET_MANAGER\\COMMANDES_UTILES.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGMBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T11:37:39.947Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "STRUCTURE.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\STRUCTURE.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\STRUCTURE.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\STRUCTURE.md",
+              "RelativeToolTip": "FLEET_MANAGER\\STRUCTURE.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T11:37:17.211Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "GUIDE_DEVELOPPEMENT.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\GUIDE_DEVELOPPEMENT.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\GUIDE_DEVELOPPEMENT.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\GUIDE_DEVELOPPEMENT.md",
+              "RelativeToolTip": "FLEET_MANAGER\\GUIDE_DEVELOPPEMENT.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEMBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T11:36:50.919Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "TODO.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\TODO.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\TODO.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\TODO.md",
+              "RelativeToolTip": "FLEET_MANAGER\\TODO.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T11:36:32.066Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "requetes_utiles.sql",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Database\\requetes_utiles.sql",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Database\\requetes_utiles.sql",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Database\\requetes_utiles.sql",
+              "RelativeToolTip": "FLEET_MANAGER\\Database\\requetes_utiles.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-11-19T11:36:12.029Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "INSTALLATION_RAPIDE.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\INSTALLATION_RAPIDE.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\INSTALLATION_RAPIDE.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\INSTALLATION_RAPIDE.md",
+              "RelativeToolTip": "FLEET_MANAGER\\INSTALLATION_RAPIDE.md",
+              "ViewState": "AgIAADwAAAAAAAAAAAAAACIAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T11:35:58.305Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "README.md",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\README.md",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\README.md",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\README.md",
+              "RelativeToolTip": "FLEET_MANAGER\\README.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAN4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-19T11:35:43.351Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "DashboardViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\DashboardViewModel.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\ViewModels\\DashboardViewModel.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\DashboardViewModel.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\ViewModels\\DashboardViewModel.cs",
+              "ViewState": "AgIAAHgAAAAAAAAAAEBVwHwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:33:30.908Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "InvertBoolConverter.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Converters\\InvertBoolConverter.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Converters\\InvertBoolConverter.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Converters\\InvertBoolConverter.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\Converters\\InvertBoolConverter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:32:51.574Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\App.xaml.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\App.xaml.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\App.xaml.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\App.xaml.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAEBVwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:32:38.603Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\App.xaml",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\App.xaml",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\App.xaml",
+              "RelativeToolTip": "FLEET_MANAGER\\App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-19T11:32:26.258Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "LoginWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\LoginWindow.xaml.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Views\\LoginWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\LoginWindow.xaml.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\Views\\LoginWindow.xaml.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAABRwCEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:32:18.416Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "LoginWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\LoginWindow.xaml",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Views\\LoginWindow.xaml",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Views\\LoginWindow.xaml",
+              "RelativeToolTip": "FLEET_MANAGER\\Views\\LoginWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-19T11:32:05.72Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "LoginViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\LoginViewModel.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\ViewModels\\LoginViewModel.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\LoginViewModel.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\ViewModels\\LoginViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAH0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:31:57.283Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "ViewModelBase.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\ViewModelBase.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\ViewModels\\ViewModelBase.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\ViewModels\\ViewModelBase.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\ViewModels\\ViewModelBase.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:31:50.603Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "Models.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Models\\Models.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Models\\Models.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Models\\Models.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\Models\\Models.cs",
+              "ViewState": "AgIAAHEAAAAAAAAAAABBwHIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:31:43.142Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "DatabaseConnection.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Data\\DatabaseConnection.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Data\\DatabaseConnection.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Data\\DatabaseConnection.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\Data\\DatabaseConnection.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:31:28.91Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "DatabaseConfig.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Config\\DatabaseConfig.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\Config\\DatabaseConfig.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\Config\\DatabaseConfig.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\Config\\DatabaseConfig.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:31:31.797Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "FLEET_MANAGER.csproj",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\FLEET_MANAGER.csproj",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\FLEET_MANAGER.csproj",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\FLEET_MANAGER.csproj",
+              "RelativeToolTip": "FLEET_MANAGER\\FLEET_MANAGER.csproj",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-11-19T11:31:02.927Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\MainWindow.xaml",
+              "RelativeToolTip": "FLEET_MANAGER\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-19T11:24:05.218Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "FLEET_MANAGER\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\natha\\Desktop\\Projet_lourd\\FLEET_MANAGER\\FLEET_MANAGER\\MainWindow.xaml.cs",
+              "RelativeToolTip": "FLEET_MANAGER\\MainWindow.xaml.cs",
+              "ViewState": "AgIAAIMAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T11:24:04.666Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

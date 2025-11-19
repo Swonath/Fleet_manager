@@ -1,0 +1,320 @@
+﻿using FLEET_MANAGER.Models;
+using FLEET_MANAGER.Data;
+using MySql.Data.MySqlClient;
+using System.Collections.ObjectModel;
+
+namespace FLEET_MANAGER.Repositories
+{
+    /// <summary>
+    /// Repository pour gerer les operations sur les vehicules
+    /// </summary>
+    public class VehiculeRepository
+    {
+        public List<Vehicule> ObtenirTousLesVehicules()
+        {
+            var vehicules = new List<Vehicule>();
+            string query = "SELECT * FROM vehicules ORDER BY marque, modele";
+
+            try
+            {
+                using (var reader = DatabaseConnection.ExecuteQuery(query))
+                {
+                    while (reader.Read())
+                    {
+                        vehicules.Add(new Vehicule
+                        {
+                            IdVehicule = (int)reader["id_vehicule"],
+                            Marque = reader["marque"].ToString() ?? string.Empty,
+                            Modele = reader["modele"].ToString() ?? string.Empty,
+                            Immatriculation = reader["immatriculation"].ToString() ?? string.Empty,
+                            AnneeFabrication = (int)reader["annee_fabrication"],
+                            TypeCarburant = reader["type_carburant"].ToString() ?? string.Empty,
+                            KilomettrageInitial = (int)reader["kilométrage_initial"],
+                            KilomettrageActuel = (int)reader["kilométrage_actuel"],
+                            DateAcquisition = (DateTime)reader["date_acquisition"],
+                            Etat = reader["etat"].ToString() ?? string.Empty,
+                            DateCreation = (DateTime)reader["date_creation"],
+                            DateModification = (DateTime)reader["date_modification"]
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de la recuperation des vehicules : {ex.Message}");
+            }
+
+            return vehicules;
+        }
+
+        public Vehicule? ObtenirVehiculeParId(int idVehicule)
+        {
+            string query = "SELECT * FROM vehicules WHERE id_vehicule = @id";
+            var parameters = new Dictionary<string, object> { { "@id", idVehicule } };
+
+            try
+            {
+                using (var reader = DatabaseConnection.ExecuteQuery(query, parameters))
+                {
+                    if (reader.Read())
+                    {
+                        return new Vehicule
+                        {
+                            IdVehicule = (int)reader["id_vehicule"],
+                            Marque = reader["marque"].ToString() ?? string.Empty,
+                            Modele = reader["modele"].ToString() ?? string.Empty,
+                            Immatriculation = reader["immatriculation"].ToString() ?? string.Empty,
+                            AnneeFabrication = (int)reader["annee_fabrication"],
+                            TypeCarburant = reader["type_carburant"].ToString() ?? string.Empty,
+                            KilomettrageInitial = (int)reader["kilométrage_initial"],
+                            KilomettrageActuel = (int)reader["kilométrage_actuel"],
+                            DateAcquisition = (DateTime)reader["date_acquisition"],
+                            Etat = reader["etat"].ToString() ?? string.Empty,
+                            DateCreation = (DateTime)reader["date_creation"],
+                            DateModification = (DateTime)reader["date_modification"]
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de la recuperation du vehicule : {ex.Message}");
+            }
+
+            return null;
+        }
+
+        public bool AjouterVehicule(Vehicule vehicule)
+        {
+            string query = @"INSERT INTO vehicules 
+                (marque, modele, immatriculation, annee_fabrication, type_carburant, 
+                 kilometrage_initial, kilometrage_actuel, date_acquisition, etat)
+                VALUES (@marque, @modele, @immat, @annee, @carburant, @km_initial, @km_actuel, @date_acq, @etat)";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@marque", vehicule.Marque },
+                { "@modele", vehicule.Modele },
+                { "@immat", vehicule.Immatriculation },
+                { "@annee", vehicule.AnneeFabrication },
+                { "@carburant", vehicule.TypeCarburant },
+                { "@km_initial", vehicule.KilomettrageInitial },
+                { "@km_actuel", vehicule.KilomettrageActuel },
+                { "@date_acq", vehicule.DateAcquisition },
+                { "@etat", vehicule.Etat }
+            };
+
+            try
+            {
+                DatabaseConnection.ExecuteCommand(query, parameters);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de l'ajout du vehicule : {ex.Message}");
+                return false;
+            }
+        }
+
+        public bool ModifierVehicule(Vehicule vehicule)
+        {
+            string query = @"UPDATE vehicules SET 
+                marque = @marque, modele = @modele, annee_fabrication = @annee, 
+                type_carburant = @carburant, kilometrage_actuel = @km_actuel, etat = @etat
+                WHERE id_vehicule = @id";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@id", vehicule.IdVehicule },
+                { "@marque", vehicule.Marque },
+                { "@modele", vehicule.Modele },
+                { "@annee", vehicule.AnneeFabrication },
+                { "@carburant", vehicule.TypeCarburant },
+                { "@km_actuel", vehicule.KilomettrageActuel },
+                { "@etat", vehicule.Etat }
+            };
+
+            try
+            {
+                DatabaseConnection.ExecuteCommand(query, parameters);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de la modification du vehicule : {ex.Message}");
+                return false;
+            }
+        }
+
+        public bool SupprimerVehicule(int idVehicule)
+        {
+            string query = "DELETE FROM vehicules WHERE id_vehicule = @id";
+            var parameters = new Dictionary<string, object> { { "@id", idVehicule } };
+
+            try
+            {
+                DatabaseConnection.ExecuteCommand(query, parameters);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de la suppression du vehicule : {ex.Message}");
+                return false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Repository pour gerer les operations sur les carburants
+    /// </summary>
+    public class CarburantRepository
+    {
+        public List<Carburant> ObtenirCarburantParVehicule(int idVehicule)
+        {
+            var carburants = new List<Carburant>();
+            string query = "SELECT * FROM carburants WHERE id_vehicule = @id ORDER BY date_saisie DESC";
+            var parameters = new Dictionary<string, object> { { "@id", idVehicule } };
+
+            try
+            {
+                using (var reader = DatabaseConnection.ExecuteQuery(query, parameters))
+                {
+                    while (reader.Read())
+                    {
+                        carburants.Add(new Carburant
+                        {
+                            IdCarburant = (int)reader["id_carburant"],
+                            IdVehicule = (int)reader["id_vehicule"],
+                            DateSaisie = (DateTime)reader["date_saisie"],
+                            QuantiteLitres = (decimal)reader["quantite_litres"],
+                            CoutTotal = (decimal)reader["cout_total"],
+                            CoutParLitre = (decimal)reader["cout_par_litre"],
+                            Kilometrage = (int)reader["kilometrage"],
+                            Notes = reader["notes"] != DBNull.Value ? reader["notes"].ToString() : null,
+                            IdUtilisateur = (int)reader["id_utilisateur"],
+                            DateCreation = (DateTime)reader["date_creation"]
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de la recuperation des carburants : {ex.Message}");
+            }
+
+            return carburants;
+        }
+
+        public bool AjouterCarburant(Carburant carburant)
+        {
+            string query = @"INSERT INTO carburants 
+                (id_vehicule, date_saisie, heure_saisie, quantite_litres, cout_total, cout_par_litre, kilometrage, notes, id_utilisateur)
+                VALUES (@id_veh, @date, @heure, @quantite, @cout_total, @cout_litre, @km, @notes, @id_user)";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@id_veh", carburant.IdVehicule },
+                { "@date", carburant.DateSaisie.Date },
+                { "@heure", carburant.DateSaisie.TimeOfDay },
+                { "@quantite", carburant.QuantiteLitres },
+                { "@cout_total", carburant.CoutTotal },
+                { "@cout_litre", carburant.CoutParLitre },
+                { "@km", carburant.Kilometrage },
+                { "@notes", carburant.Notes ?? (object)DBNull.Value },
+                { "@id_user", carburant.IdUtilisateur }
+            };
+
+            try
+            {
+                DatabaseConnection.ExecuteCommand(query, parameters);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de l'ajout du carburant : {ex.Message}");
+                return false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Repository pour gerer les operations sur les trajets
+    /// </summary>
+    public class TrajetRepository
+    {
+        public List<Trajet> ObtenirTrajetsParVehicule(int idVehicule)
+        {
+            var trajets = new List<Trajet>();
+            string query = "SELECT * FROM trajets WHERE id_vehicule = @id ORDER BY date_trajet DESC";
+            var parameters = new Dictionary<string, object> { { "@id", idVehicule } };
+
+            try
+            {
+                using (var reader = DatabaseConnection.ExecuteQuery(query, parameters))
+                {
+                    while (reader.Read())
+                    {
+                        trajets.Add(new Trajet
+                        {
+                            IdTrajet = (int)reader["id_trajet"],
+                            IdVehicule = (int)reader["id_vehicule"],
+                            DateTrajet = (DateTime)reader["date_trajet"],
+                            HeureDepart = (TimeSpan)reader["heure_depart"],
+                            HeureArrivee = (TimeSpan)reader["heure_arrivee"],
+                            KilomettrageDepart = (int)reader["kilometrage_depart"],
+                            KilomettrageArrivee = (int)reader["kilometrage_arrivee"],
+                            DistanceParcourue = (int)reader["distance_parcourue"],
+                            LieuDepart = reader["lieu_depart"].ToString() ?? string.Empty,
+                            LieuArrivee = reader["lieu_arrivee"].ToString() ?? string.Empty,
+                            TypeTrajet = reader["type_trajet"].ToString() ?? string.Empty,
+                            Notes = reader["notes"] != DBNull.Value ? reader["notes"].ToString() : null,
+                            IdUtilisateur = (int)reader["id_utilisateur"],
+                            DateCreation = (DateTime)reader["date_creation"]
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de la recuperation des trajets : {ex.Message}");
+            }
+
+            return trajets;
+        }
+
+        public bool AjouterTrajet(Trajet trajet)
+        {
+            string query = @"INSERT INTO trajets 
+                (id_vehicule, date_trajet, heure_depart, heure_arrivee, kilometrage_depart, 
+                 kilometrage_arrivee, distance_parcourue, lieu_depart, lieu_arrivee, type_trajet, notes, id_utilisateur)
+                VALUES (@id_veh, @date, @h_dep, @h_arr, @km_dep, @km_arr, @distance, @lieu_dep, @lieu_arr, @type, @notes, @id_user)";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@id_veh", trajet.IdVehicule },
+                { "@date", trajet.DateTrajet },
+                { "@h_dep", trajet.HeureDepart },
+                { "@h_arr", trajet.HeureArrivee },
+                { "@km_dep", trajet.KilomettrageDepart },
+                { "@km_arr", trajet.KilomettrageArrivee },
+                { "@distance", trajet.DistanceParcourue },
+                { "@lieu_dep", trajet.LieuDepart },
+                { "@lieu_arr", trajet.LieuArrivee },
+                { "@type", trajet.TypeTrajet },
+                { "@notes", trajet.Notes ?? (object)DBNull.Value },
+                { "@id_user", trajet.IdUtilisateur }
+            };
+
+            try
+            {
+                DatabaseConnection.ExecuteCommand(query, parameters);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de l'ajout du trajet : {ex.Message}");
+                return false;
+            }
+        }
+    }
+}

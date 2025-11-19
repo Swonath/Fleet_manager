@@ -1,0 +1,112 @@
+﻿using System.Windows;
+using FLEET_MANAGER.Models;
+using FLEET_MANAGER.ViewModels;
+using FLEET_MANAGER.Views;
+
+namespace FLEET_MANAGER
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        private DashboardViewModel _dashboardViewModel;
+        private VehiculeViewModel _vehiculeViewModel;
+        private CarburantTrajetViewModel _carburantTrajetViewModel;
+        private UtilisateurViewModel _utilisateurViewModel;
+
+        private VehiculeView _vehiculeView;
+        private CarburantTrajetView _carburantTrajetView;
+        private UtilisateurView _utilisateurView;
+
+        private Utilisateur? _utilisateurConnecte;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            
+            _dashboardViewModel = new DashboardViewModel();
+            _vehiculeViewModel = new VehiculeViewModel();
+            _carburantTrajetViewModel = new CarburantTrajetViewModel();
+            _utilisateurViewModel = new UtilisateurViewModel();
+
+            _vehiculeView = new VehiculeView { DataContext = _vehiculeViewModel };
+            _carburantTrajetView = new CarburantTrajetView { DataContext = _carburantTrajetViewModel };
+            _utilisateurView = new UtilisateurView { DataContext = _utilisateurViewModel };
+            
+            // S'abonner à la notification de mise à jour des véhicules
+            _vehiculeViewModel.VéhiculesChangé += OnVéhiculesChangé;
+            
+            DataContext = _dashboardViewModel;
+        }
+
+        private void OnVéhiculesChangé()
+        {
+            // Recharger les véhicules dans les autres ViewModels
+            _carburantTrajetViewModel.RéchargerVéhicules();
+            _dashboardViewModel.RéchargerDashboard();
+        }
+
+        public void InitialiserAvecUtilisateur(Utilisateur utilisateur)
+        {
+            _utilisateurConnecte = utilisateur;
+            _dashboardViewModel.InitialiserAvecUtilisateur(utilisateur);
+            _utilisateurViewModel.InitialiserAvecUtilisateurConnecte(utilisateur);
+
+            // Afficher/masquer le bouton Utilisateurs selon les droits
+            if (utilisateur.Role != "administrateur" && utilisateur.Role != "super_admin")
+            {
+                BtnUtilisateurs.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void BtnDashboard_Click(object sender, RoutedEventArgs e)
+        {
+            DataContext = _dashboardViewModel;
+            ContentArea.Content = null;
+        }
+
+        private void BtnVehicules_Click(object sender, RoutedEventArgs e)
+        {
+            DataContext = _vehiculeViewModel;
+            ContentArea.Content = _vehiculeView;
+        }
+
+        private void BtnCarburantTrajet_Click(object sender, RoutedEventArgs e)
+        {
+            DataContext = _carburantTrajetViewModel;
+            ContentArea.Content = _carburantTrajetView;
+        }
+
+        private void BtnUtilisateurs_Click(object sender, RoutedEventArgs e)
+        {
+            if (_utilisateurConnecte?.Role != "administrateur" && _utilisateurConnecte?.Role != "super_admin")
+            {
+                MessageBox.Show("Vous n'avez pas accès à cette section.", "Accès refusé");
+                return;
+            }
+
+            DataContext = _utilisateurViewModel;
+            ContentArea.Content = _utilisateurView;
+            _utilisateurViewModel.ChargerUtilisateurs();
+        }
+
+        private void BtnMaintenances_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Module Maintenances - A venir");
+        }
+
+        private void BtnRapports_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Module Rapports - A venir");
+        }
+
+        private void BtnDeconnexion_Click(object sender, RoutedEventArgs e)
+        {
+            // Retourner à la page de connexion
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
+            this.Close();
+        }
+    }
+}

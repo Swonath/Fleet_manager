@@ -1,0 +1,36 @@
+﻿using System.Windows;
+using FLEET_MANAGER.Models;
+using FLEET_MANAGER.ViewModels;
+using FLEET_MANAGER.Views;
+
+namespace FLEET_MANAGER
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+            var dashboardViewModel = new DashboardViewModel();
+            DataContext = dashboardViewModel;
+        }
+
+        public void InitialiserAvecUtilisateur(Utilisateur utilisateur)
+        {
+            var viewModel = DataContext as DashboardViewModel;
+            if (viewModel != null)
+            {
+                viewModel.InitialiserAvecUtilisateur(utilisateur);
+            }
+        }
+
+        private void BtnVehicules_Click(object sender, RoutedEventArgs e)
+        {
+            var vehiculeWindow = new VehiculeWindow();
+            vehiculeWindow.Owner = this;
+            vehiculeWindow.ShowDialog();
+        }
+    }
+}

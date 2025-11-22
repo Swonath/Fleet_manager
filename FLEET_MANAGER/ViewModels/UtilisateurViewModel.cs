@@ -6,7 +6,8 @@ using FLEET_MANAGER.Repositories;
 namespace FLEET_MANAGER.ViewModels
 {
     /// <summary>
-    /// ViewModel pour la gestion des utilisateurs (Admin only)
+    /// ViewModel pour la gestion des utilisateurs
+    /// Gère les permissions selon le rôle de l'utilisateur connecté
     /// </summary>
     public class UtilisateurViewModel : ViewModelBase
     {
@@ -125,7 +126,6 @@ namespace FLEET_MANAGER.ViewModels
 
         // Commandes
         public ICommand ChargerCommand { get; }
-        public ICommand AjouterCommand { get; }
         public ICommand SauvegarderCommand { get; }
         public ICommand ModifierCommand { get; }
         public ICommand SupprimerCommand { get; }
@@ -138,7 +138,6 @@ namespace FLEET_MANAGER.ViewModels
             _repository = new UtilisateurRepository();
 
             ChargerCommand = new RelayCommand(_ => ChargerUtilisateurs());
-            AjouterCommand = new RelayCommand(_ => PerformerAjout(), _ => !EstEnEdition && !IsLoading);
             SauvegarderCommand = new RelayCommand(_ => PerformerSauvegarde(), _ => EstEnEdition && !IsLoading);
             ModifierCommand = new RelayCommand(_ => PerformerModification(), _ => UtilisateurSelectionne != null && !IsLoading && PeuxModifier());
             SupprimerCommand = new RelayCommand(_ => PerformerSuppression(), _ => UtilisateurSelectionne != null && !IsLoading && PeuxSupprimer());
@@ -153,6 +152,9 @@ namespace FLEET_MANAGER.ViewModels
             UtilisateurConnecte = utilisateur;
         }
 
+        /// <summary>
+        /// Vérifie si l'utilisateur connecté peut modifier l'utilisateur sélectionné
+        /// </summary>
         private bool PeuxModifier()
         {
             if (UtilisateurConnecte == null || UtilisateurSelectionne == null)
@@ -162,25 +164,61 @@ namespace FLEET_MANAGER.ViewModels
             if (UtilisateurConnecte.Role == "super_admin")
                 return true;
 
-            // Admin : ne peut pas modifier un Super Admin
-            if (UtilisateurConnecte.Role == "admin" && UtilisateurSelectionne.Role != "super_admin")
+            // Admin : ne peut pas modifier un Super Admin ou un autre Admin
+            if (UtilisateurConnecte.Role == "admin")
+            {
+                if (UtilisateurSelectionne.Role == "super_admin")
+                    return false;
+                if (UtilisateurSelectionne.Role == "admin" && UtilisateurSelectionne.IdUtilisateur != UtilisateurConnecte.IdUtilisateur)
+                    return false;
                 return true;
+            }
 
             return false;
         }
 
+        /// <summary>
+        /// Vérifie si l'utilisateur connecté peut supprimer l'utilisateur sélectionné
+        /// </summary>
         private bool PeuxSupprimer()
         {
             if (UtilisateurConnecte == null || UtilisateurSelectionne == null)
+                return false;
+
+            // Ne peut pas se supprimer soi-même
+            if (UtilisateurSelectionne.IdUtilisateur == UtilisateurConnecte.IdUtilisateur)
                 return false;
 
             // Super Admin : tous les droits
             if (UtilisateurConnecte.Role == "super_admin")
                 return true;
 
-            // Admin : ne peut pas supprimer un Super Admin
-            if (UtilisateurConnecte.Role == "admin" && UtilisateurSelectionne.Role != "super_admin")
+            // Admin : ne peut pas supprimer un Super Admin ou un autre Admin
+            if (UtilisateurConnecte.Role == "admin")
+            {
+                return UtilisateurSelectionne.Role != "super_admin" && UtilisateurSelectionne.Role != "admin";
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Vérifie si l'utilisateur connecté peut créer un utilisateur avec le rôle sélectionné
+        /// </summary>
+        private bool PeuxCreerAvecRole(string role)
+        {
+            if (UtilisateurConnecte == null)
+                return false;
+
+            // Super Admin : peut créer n'importe quel rôle
+            if (UtilisateurConnecte.Role == "super_admin")
                 return true;
+
+            // Admin : peut créer des utilisateurs normaux uniquement
+            if (UtilisateurConnecte.Role == "admin")
+            {
+                return role == "utilisateur";
+            }
 
             return false;
         }
@@ -235,58 +273,11 @@ namespace FLEET_MANAGER.ViewModels
             EmailError = string.Empty;
         }
 
-        private void PerformerAjout()
-        {
-            if (!ValiderFormulaire())
-                return;
-
-            // Vérifier que l'utilisateur connecté a le droit d'ajouter un admin
-            if (RoleSelectionne == "super_admin" || (RoleSelectionne == "admin" && UtilisateurConnecte?.Role != "super_admin"))
-            {
-                MessageErreur = "Vous n'avez pas les droits nécessaires pour ajouter cet utilisateur.";
-                return;
-            }
-
-            try
-            {
-                IsLoading = true;
-                var nouvel = new Utilisateur
-                {
-                    NomUtilisateur = NomUtilisateur,
-                    Email = Email,
-                    Nom = Nom,
-                    Prenom = Prenom,
-                    MotDePasse = MotDePasse,
-                    Role = RoleSelectionne,
-                    Actif = true
-                };
-
-                if (_repository.AjouterUtilisateur(nouvel))
-                {
-                    MessageErreur = "Utilisateur ajouté avec succès !";
-                    ChargerUtilisateurs();
-                    ReinitialiserFormulaire();
-                }
-                else
-                {
-                    MessageErreur = "Erreur lors de l'ajout de l'utilisateur.";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageErreur = $"Erreur : {ex.Message}";
-            }
-            finally
-            {
-                IsLoading = false;
-            }
-        }
-
         private void PerformerModification()
         {
             if (UtilisateurSelectionne == null)
             {
-                MessageErreur = "Aucun utilisateur sélectionné.";
+                MessageErreur = "Aucun utilisateur selectionne.";
                 return;
             }
 
@@ -305,7 +296,21 @@ namespace FLEET_MANAGER.ViewModels
 
                 if (_estNouveauUtilisateur)
                 {
-                    // Ajouter
+                    // Vérifier les permissions pour créer avec ce rôle
+                    if (!PeuxCreerAvecRole(RoleSelectionne))
+                    {
+                        MessageErreur = $"Vous n'avez pas les droits pour creer un {RoleSelectionne}.";
+                        return;
+                    }
+
+                    // Vérifier que le mot de passe est renseigné pour un nouvel utilisateur
+                    if (string.IsNullOrWhiteSpace(MotDePasse))
+                    {
+                        MessageErreur = "Le mot de passe est obligatoire pour un nouvel utilisateur.";
+                        return;
+                    }
+
+                    // Créer le nouvel utilisateur
                     var nouvel = new Utilisateur
                     {
                         NomUtilisateur = NomUtilisateur,
@@ -317,33 +322,37 @@ namespace FLEET_MANAGER.ViewModels
                         Actif = true
                     };
 
+                    System.Diagnostics.Debug.WriteLine($"Ajout utilisateur: {nouvel.NomUtilisateur}, Role: {nouvel.Role}, MdP length: {nouvel.MotDePasse.Length}");
+
                     if (_repository.AjouterUtilisateur(nouvel))
                     {
-                        MessageErreur = "Utilisateur ajouté avec succès !";
+                        MessageErreur = "Utilisateur ajoute avec succes !";
                         ChargerUtilisateurs();
                         AnnulerEdition();
                     }
                     else
                     {
-                        MessageErreur = "Erreur lors de l'ajout.";
+                        MessageErreur = "Erreur lors de l'ajout. Verifiez les donnees.";
                     }
                 }
                 else if (UtilisateurSelectionne != null)
                 {
-                    // Modifier
+                    // Modifier l'utilisateur existant
                     UtilisateurSelectionne.NomUtilisateur = NomUtilisateur;
                     UtilisateurSelectionne.Email = Email;
                     UtilisateurSelectionne.Nom = Nom;
                     UtilisateurSelectionne.Prenom = Prenom;
+                    UtilisateurSelectionne.Role = RoleSelectionne;
+
+                    // Mettre à jour le mot de passe seulement s'il est fourni
                     if (!string.IsNullOrWhiteSpace(MotDePasse))
                     {
                         UtilisateurSelectionne.MotDePasse = MotDePasse;
                     }
-                    UtilisateurSelectionne.Role = RoleSelectionne;
 
                     if (_repository.ModifierUtilisateur(UtilisateurSelectionne))
                     {
-                        MessageErreur = "Utilisateur modifié avec succès !";
+                        MessageErreur = "Utilisateur modifie avec succes !";
                         ChargerUtilisateurs();
                         AnnulerEdition();
                     }
@@ -356,6 +365,7 @@ namespace FLEET_MANAGER.ViewModels
             catch (Exception ex)
             {
                 MessageErreur = $"Erreur : {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Exception: {ex}");
             }
             finally
             {
@@ -367,7 +377,7 @@ namespace FLEET_MANAGER.ViewModels
         {
             if (UtilisateurSelectionne == null)
             {
-                MessageErreur = "Aucun utilisateur sélectionné.";
+                MessageErreur = "Aucun utilisateur selectionne.";
                 return;
             }
 
@@ -376,7 +386,7 @@ namespace FLEET_MANAGER.ViewModels
                 IsLoading = true;
                 if (_repository.SupprimerUtilisateur(UtilisateurSelectionne.IdUtilisateur))
                 {
-                    MessageErreur = "Utilisateur supprimé avec succès !";
+                    MessageErreur = "Utilisateur supprime avec succes !";
                     ChargerUtilisateurs();
                     ReinitialiserFormulaire();
                 }
@@ -426,6 +436,12 @@ namespace FLEET_MANAGER.ViewModels
             else
             {
                 EmailError = string.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(RoleSelectionne))
+            {
+                MessageErreur = "Veuillez selectionner un role.";
+                valide = false;
             }
 
             return valide;

@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="MySql.Data" Version="8.3.0" />
   </ItemGroup>
 
@@ -18,6 +19,15 @@
 
   <ItemGroup>
     <None Include="C:\Users\natha\Desktop\Projet_lourd\FLEET_MANAGER\FLEET_MANAGER\.editorconfig" />
+  </ItemGroup>
+
+  <!-- Exclure le dossier Database de l'analyse -->
+  <ItemGroup>
+    <Compile Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="Database\**" />
+    <None Remove="NewFolder\**" />
+    <Page Remove="NewFolder\**" />
   </ItemGroup>
 
 </Project>

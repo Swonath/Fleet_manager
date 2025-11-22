@@ -3,6 +3,7 @@ using System.Data;
 using System.Windows;
 using FLEET_MANAGER.Config;
 using FLEET_MANAGER.Data;
+using FLEET_MANAGER.Services;
 
 namespace FLEET_MANAGER
 {
@@ -40,7 +41,11 @@ namespace FLEET_MANAGER
                         MessageBoxImage.Error
                     );
                     this.Shutdown();
+                    return;
                 }
+
+                // Migrer les mots de passe non hashés (exécuté une seule fois)
+                MigrerMotsDePasse();
             }
             catch (Exception ex)
             {
@@ -51,6 +56,32 @@ namespace FLEET_MANAGER
                     MessageBoxImage.Error
                 );
                 this.Shutdown();
+            }
+        }
+
+        /// <summary>
+        /// Migre automatiquement les mots de passe en clair vers BCrypt
+        /// Cette méthode s'exécute au démarrage et convertit les anciens mots de passe
+        /// </summary>
+        private void MigrerMotsDePasse()
+        {
+            try
+            {
+                // Vérifier si une migration est nécessaire
+                if (PasswordMigrationService.MigrationNecessaire())
+                {
+                    int nombreMigres = PasswordMigrationService.MigrerMotsDePasse();
+
+                    if (nombreMigres > 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Migration BCrypt : {nombreMigres} mot(s) de passe converti(s)");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ne pas bloquer l'application en cas d'erreur de migration
+                System.Diagnostics.Debug.WriteLine($"Avertissement migration : {ex.Message}");
             }
         }
     }

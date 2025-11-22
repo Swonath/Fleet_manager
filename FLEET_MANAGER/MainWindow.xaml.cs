@@ -57,7 +57,11 @@ namespace FLEET_MANAGER
             _utilisateurViewModel.InitialiserAvecUtilisateurConnecte(utilisateur);
 
             // Afficher/masquer le bouton Utilisateurs selon les droits
-            if (utilisateur.Role != "admin" && utilisateur.Role != "super_admin")
+            if (utilisateur.Role == "admin" || utilisateur.Role == "super_admin")
+            {
+                BtnUtilisateurs.Visibility = Visibility.Visible;
+            }
+            else
             {
                 BtnUtilisateurs.Visibility = Visibility.Collapsed;
             }
@@ -95,6 +99,11 @@ namespace FLEET_MANAGER
             DataContext = _utilisateurViewModel;
             ContentArea.Content = _utilisateurView;
             _utilisateurViewModel.ChargerUtilisateurs();
+        }
+
+        private void BtnProfil_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Module Profil - En développement", "Profil");
         }
 
         private void BtnMaintenances_Click(object sender, RoutedEventArgs e)

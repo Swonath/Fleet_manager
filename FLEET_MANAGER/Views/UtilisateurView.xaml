@@ -2,45 +2,45 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Background="#f5f5f5">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="350"/>
-        </Grid.ColumnDefinitions>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="350"/>
+		</Grid.ColumnDefinitions>
 
-        <!-- Liste des utilisateurs -->
-        <StackPanel Grid.Column="0" Margin="20">
-            <TextBlock Text="Gestion des Utilisateurs" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
-            
-            <!-- Boutons d'action -->
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                <Button Command="{Binding ChargerCommand}" 
-                        Content="Actualiser" 
-                        Height="35" 
+		<!-- Liste des utilisateurs -->
+		<StackPanel Grid.Column="0" Margin="20">
+			<TextBlock Text="Gestion des Utilisateurs" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+
+			<!-- Boutons d'action -->
+			<StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+				<Button Command="{Binding ChargerCommand}"
+                        Content="Actualiser"
+                        Height="35"
                         Padding="15,0"
                         Background="#3b82f6"
                         Foreground="White"
                         Cursor="Hand"
                         Margin="0,0,5,0"/>
-                
-                <Button Command="{Binding Nouveau}" 
-                        Content="Nouvel Utilisateur" 
-                        Height="35" 
+
+				<Button Command="{Binding Nouveau}"
+                        Content="Nouvel Utilisateur"
+                        Height="35"
                         Padding="15,0"
                         Background="#16a34a"
                         Foreground="White"
                         Cursor="Hand"/>
-            </StackPanel>
+			</StackPanel>
 
-            <!-- Message -->
-            <TextBlock Text="{Binding MessageErreur}"
+			<!-- Message -->
+			<TextBlock Text="{Binding MessageErreur}"
                        Foreground="#dc2626"
                        TextWrapping="Wrap"
                        Margin="0,0,0,10"
                        FontSize="11"/>
 
-            <!-- Tableau des utilisateurs -->
-            <DataGrid ItemsSource="{Binding Utilisateurs}"
+			<!-- Tableau des utilisateurs -->
+			<DataGrid ItemsSource="{Binding Utilisateurs}"
                       SelectedItem="{Binding UtilisateurSelectionne}"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
@@ -50,91 +50,88 @@
                       RowBackground="White"
                       AlternatingRowBackground="#f8fafc"
                       Height="580">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Nom Utilisateur" Binding="{Binding NomUtilisateur}" Width="120"/>
-                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="150"/>
-                    <DataGridTextColumn Header="Nom" Binding="{Binding Nom}" Width="100"/>
-                    <DataGridTextColumn Header="Prenom" Binding="{Binding Prenom}" Width="100"/>
-                    <DataGridTextColumn Header="Role" Binding="{Binding Role}" Width="100"/>
-                    <DataGridTextColumn Header="Actif" Binding="{Binding Actif}" Width="60"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </StackPanel>
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Nom Utilisateur" Binding="{Binding NomUtilisateur}" Width="120"/>
+					<DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="150"/>
+					<DataGridTextColumn Header="Nom" Binding="{Binding Nom}" Width="100"/>
+					<DataGridTextColumn Header="Prenom" Binding="{Binding Prenom}" Width="100"/>
+					<DataGridTextColumn Header="Role" Binding="{Binding Role}" Width="100"/>
+					<DataGridTextColumn Header="Actif" Binding="{Binding Actif}" Width="60"/>
+				</DataGrid.Columns>
+			</DataGrid>
+		</StackPanel>
 
-        <!-- Formulaire -->
-        <Border Grid.Column="1" Background="White" Margin="20,20,20,20" CornerRadius="8" Padding="20">
-            <StackPanel>
-                <TextBlock Text="Formulaire Utilisateur" FontSize="14" FontWeight="Bold" Margin="0,0,0,15"/>
+		<!-- Formulaire -->
+		<Border Grid.Column="1" Background="White" Margin="20,20,20,20" CornerRadius="8" Padding="20">
+			<StackPanel>
+				<TextBlock Text="Formulaire Utilisateur" FontSize="14" FontWeight="Bold" Margin="0,0,0,15"/>
 
-                <!-- Nom Utilisateur -->
-                <TextBlock Text="Nom Utilisateur" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
-                <TextBox Text="{Binding NomUtilisateur, UpdateSourceTrigger=PropertyChanged}"
+				<!-- Nom Utilisateur -->
+				<TextBlock Text="Nom Utilisateur" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
+				<TextBox Text="{Binding NomUtilisateur, UpdateSourceTrigger=PropertyChanged}"
                          Height="35"
                          Padding="10"
                          Margin="0,0,0,5"
                          IsEnabled="{Binding EstEnEdition}"/>
-                <TextBlock Text="{Binding NomUtilisateurError}"
+				<TextBlock Text="{Binding NomUtilisateurError}"
                            Foreground="#dc2626"
                            FontSize="10"
                            Margin="0,0,0,10"/>
 
-                <!-- Email -->
-                <TextBlock Text="Email" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
-                <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
+				<!-- Email -->
+				<TextBlock Text="Email" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
+				<TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
                          Height="35"
                          Padding="10"
                          Margin="0,0,0,5"
                          IsEnabled="{Binding EstEnEdition}"/>
-                <TextBlock Text="{Binding EmailError}"
+				<TextBlock Text="{Binding EmailError}"
                            Foreground="#dc2626"
                            FontSize="10"
                            Margin="0,0,0,10"/>
 
-                <!-- Nom -->
-                <TextBlock Text="Nom" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
-                <TextBox Text="{Binding Nom, UpdateSourceTrigger=PropertyChanged}"
+				<!-- Nom -->
+				<TextBlock Text="Nom" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
+				<TextBox Text="{Binding Nom, UpdateSourceTrigger=PropertyChanged}"
                          Height="35"
                          Padding="10"
                          Margin="0,0,0,10"
                          IsEnabled="{Binding EstEnEdition}"/>
 
-                <!-- Prenom -->
-                <TextBlock Text="Prenom" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
-                <TextBox Text="{Binding Prenom, UpdateSourceTrigger=PropertyChanged}"
+				<!-- Prenom -->
+				<TextBlock Text="Prenom" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
+				<TextBox Text="{Binding Prenom, UpdateSourceTrigger=PropertyChanged}"
                          Height="35"
                          Padding="10"
                          Margin="0,0,0,10"
                          IsEnabled="{Binding EstEnEdition}"/>
 
-                <!-- Mot de Passe -->
-                <TextBlock Text="Mot de Passe" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
-                <PasswordBox x:Name="PasswordBox" Height="35" Padding="10" Margin="0,0,0,10"
-                             IsEnabled="{Binding EstEnEdition}"/>
+				<!-- Mot de Passe -->
+				<TextBlock Text="Mot de Passe" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
+				<PasswordBox x:Name="PasswordBox"
+                             Height="35"
+                             Padding="10"
+                             Margin="0,0,0,10"
+                             IsEnabled="{Binding EstEnEdition}"
+                             PasswordChanged="PasswordBox_PasswordChanged"/>
 
-                <!-- Role -->
-                <TextBlock Text="Role" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
-                <ComboBox Text="{Binding RoleSelectionne, UpdateSourceTrigger=PropertyChanged}"
+				<!-- Role - CORRIGE avec les bonnes valeurs -->
+				<TextBlock Text="Role" FontSize="11" Foreground="#334155" Margin="0,0,0,3"/>
+				<ComboBox x:Name="ComboRole"
+                          SelectedValue="{Binding RoleSelectionne, Mode=TwoWay}"
+                          SelectedValuePath="Tag"
                           Height="35"
                           Padding="10"
                           Margin="0,0,0,15"
                           IsEnabled="{Binding EstEnEdition}">
-                    <ComboBoxItem>utilisateur</ComboBoxItem>
-                    <ComboBoxItem>administrateur</ComboBoxItem>
-                    <ComboBoxItem>super_admin</ComboBoxItem>
-                </ComboBox>
+					<ComboBoxItem Tag="utilisateur" Content="Utilisateur"/>
+					<ComboBoxItem Tag="admin" Content="Administrateur"/>
+					<ComboBoxItem Tag="super_admin" Content="Super Administrateur"/>
+				</ComboBox>
 
-                <!-- Boutons -->
-                <StackPanel Orientation="Vertical">
-                    <Button Command="{Binding AjouterCommand}"
-                            Content="Ajouter"
-                            Height="35"
-                            Background="#16a34a"
-                            Foreground="White"
-                            Cursor="Hand"
-                            Margin="0,0,0,5"
-                            Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert, FallbackValue=Collapsed}"/>
-
-                    <Button Command="{Binding SauvegarderCommand}"
+				<!-- Boutons -->
+				<StackPanel Orientation="Vertical">
+					<Button Command="{Binding SauvegarderCommand}"
                             Content="Sauvegarder"
                             Height="35"
                             Background="#3b82f6"
@@ -143,7 +140,7 @@
                             Margin="0,0,0,5"
                             Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}"/>
 
-                    <Button Command="{Binding ModifierCommand}"
+					<Button Command="{Binding ModifierCommand}"
                             Content="Modifier"
                             Height="35"
                             Background="#f59e0b"
@@ -152,7 +149,7 @@
                             Margin="0,0,0,5"
                             Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert, FallbackValue=Collapsed}"/>
 
-                    <Button Command="{Binding SupprimerCommand}"
+					<Button Command="{Binding SupprimerCommand}"
                             Content="Supprimer"
                             Height="35"
                             Background="#dc2626"
@@ -161,15 +158,15 @@
                             Margin="0,0,0,5"
                             Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert, FallbackValue=Collapsed}"/>
 
-                    <Button Command="{Binding AnnulerCommand}"
+					<Button Command="{Binding AnnulerCommand}"
                             Content="Annuler"
                             Height="35"
                             Background="#64748b"
                             Foreground="White"
                             Cursor="Hand"
                             Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}"/>
-                </StackPanel>
-            </StackPanel>
-        </Border>
-    </Grid>
+				</StackPanel>
+			</StackPanel>
+		</Border>
+	</Grid>
 </UserControl>

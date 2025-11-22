@@ -1,12 +1,14 @@
 using System.Windows.Input;
 using FLEET_MANAGER.Data;
 using FLEET_MANAGER.Models;
+using FLEET_MANAGER.Helpers;
 using MySql.Data.MySqlClient;
 
 namespace FLEET_MANAGER.ViewModels
 {
     /// <summary>
     /// ViewModel pour l'écran de connexion
+    /// Utilise BCrypt pour vérifier les mots de passe hashés
     /// </summary>
     public class LoginViewModel : ViewModelBase
     {
@@ -84,32 +86,43 @@ namespace FLEET_MANAGER.ViewModels
             }
         }
 
+        /// <summary>
+        /// Authentifie un utilisateur en vérifiant son mot de passe avec BCrypt
+        /// </summary>
         private Utilisateur? AuthentifierUtilisateur(string nomUtilisateur, string motDePasse)
         {
             try
             {
-                string query = "SELECT * FROM utilisateurs WHERE nom_utilisateur = @username AND mot_de_passe = @password AND actif = 1";
+                // Étape 1 : Récupérer l'utilisateur par son nom (sans vérifier le mot de passe en SQL)
+                string query = "SELECT * FROM utilisateurs WHERE nom_utilisateur = @username AND actif = 1";
                 var parameters = new Dictionary<string, object>
                 {
-                    { "@username", nomUtilisateur },
-                    { "@password", motDePasse }
+                    { "@username", nomUtilisateur }
                 };
 
                 using (var reader = DatabaseConnection.ExecuteQuery(query, parameters))
                 {
                     if (reader.Read())
                     {
-                        return new Utilisateur
+                        // Récupérer le hash du mot de passe stocké en base
+                        string hashStocke = reader["mot_de_passe"]?.ToString() ?? string.Empty;
+
+                        // Étape 2 : Vérifier le mot de passe avec BCrypt
+                        if (!string.IsNullOrEmpty(hashStocke) && PasswordHelper.VerifierMotDePasse(motDePasse, hashStocke))
                         {
-                            IdUtilisateur = (int)reader["id_utilisateur"],
-                            NomUtilisateur = reader["nom_utilisateur"].ToString() ?? string.Empty,
-                            Email = reader["email"].ToString() ?? string.Empty,
-                            Nom = reader["nom"].ToString() ?? string.Empty,
-                            Prenom = reader["prenom"].ToString() ?? string.Empty,
-                            Role = reader["role"].ToString() ?? "utilisateur",
-                            DateCreation = (DateTime)reader["date_creation"],
-                            Actif = (bool)reader["actif"]
-                        };
+                            // Mot de passe correct, retourner l'utilisateur
+                            return new Utilisateur
+                            {
+                                IdUtilisateur = (int)reader["id_utilisateur"],
+                                NomUtilisateur = reader["nom_utilisateur"].ToString() ?? string.Empty,
+                                Email = reader["email"].ToString() ?? string.Empty,
+                                Nom = reader["nom"].ToString() ?? string.Empty,
+                                Prenom = reader["prenom"].ToString() ?? string.Empty,
+                                Role = reader["role"].ToString() ?? "utilisateur",
+                                DateCreation = (DateTime)reader["date_creation"],
+                                Actif = (bool)reader["actif"]
+                            };
+                        }
                     }
                 }
 

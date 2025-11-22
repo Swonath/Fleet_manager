@@ -1,5 +1,6 @@
 using FLEET_MANAGER.Models;
 using FLEET_MANAGER.Data;
+using FLEET_MANAGER.Helpers;
 using MySql.Data.MySqlClient;
 using System.Collections.ObjectModel;
 
@@ -309,6 +310,10 @@ namespace FLEET_MANAGER.Repositories
         }
     }
 
+    /// <summary>
+    /// Repository pour la gestion des utilisateurs
+    /// Les mots de passe sont hashés avec BCrypt avant stockage
+    /// </summary>
     public class UtilisateurRepository
     {
         public List<Utilisateur> ObtenirTousLesUtilisateurs()
@@ -379,8 +384,27 @@ namespace FLEET_MANAGER.Repositories
             return null;
         }
 
+        /// <summary>
+        /// Ajoute un nouvel utilisateur avec mot de passe hashé BCrypt
+        /// </summary>
         public bool AjouterUtilisateur(Utilisateur utilisateur)
         {
+            // Vérifier que le mot de passe n'est pas vide
+            if (string.IsNullOrWhiteSpace(utilisateur.MotDePasse))
+            {
+                System.Diagnostics.Debug.WriteLine("Erreur : Le mot de passe est vide");
+                return false;
+            }
+
+            // Vérifier que le rôle est valide
+            if (string.IsNullOrWhiteSpace(utilisateur.Role))
+            {
+                utilisateur.Role = "utilisateur";
+            }
+
+            // Hasher le mot de passe avec BCrypt avant de le stocker
+            string motDePasseHashe = PasswordHelper.HasherMotDePasse(utilisateur.MotDePasse);
+
             string query = @"INSERT INTO utilisateurs 
                 (nom_utilisateur, email, mot_de_passe, nom, prenom, role, actif)
                 VALUES (@nom_user, @email, @pwd, @nom, @prenom, @role, @actif)";
@@ -389,7 +413,7 @@ namespace FLEET_MANAGER.Repositories
             {
                 { "@nom_user", utilisateur.NomUtilisateur },
                 { "@email", utilisateur.Email },
-                { "@pwd", utilisateur.MotDePasse },
+                { "@pwd", motDePasseHashe },
                 { "@nom", utilisateur.Nom },
                 { "@prenom", utilisateur.Prenom },
                 { "@role", utilisateur.Role },
@@ -399,6 +423,7 @@ namespace FLEET_MANAGER.Repositories
             try
             {
                 DatabaseConnection.ExecuteCommand(query, parameters);
+                System.Diagnostics.Debug.WriteLine($"Utilisateur {utilisateur.NomUtilisateur} ajoute avec succes (role: {utilisateur.Role})");
                 return true;
             }
             catch (Exception ex)
@@ -408,26 +433,65 @@ namespace FLEET_MANAGER.Repositories
             }
         }
 
+        /// <summary>
+        /// Modifie un utilisateur existant
+        /// Si le mot de passe est fourni et n'est pas déjà hashé, il sera hashé
+        /// </summary>
         public bool ModifierUtilisateur(Utilisateur utilisateur)
         {
-            string query = @"UPDATE utilisateurs SET 
-                nom_utilisateur = @nom_user, email = @email, mot_de_passe = @pwd, 
-                nom = @nom, prenom = @prenom, role = @role
-                WHERE id_utilisateur = @id";
-
-            var parameters = new Dictionary<string, object>
-            {
-                { "@id", utilisateur.IdUtilisateur },
-                { "@nom_user", utilisateur.NomUtilisateur },
-                { "@email", utilisateur.Email },
-                { "@pwd", utilisateur.MotDePasse },
-                { "@nom", utilisateur.Nom },
-                { "@prenom", utilisateur.Prenom },
-                { "@role", utilisateur.Role }
-            };
-
             try
             {
+                string query;
+                Dictionary<string, object> parameters;
+
+                // Si un nouveau mot de passe est fourni et n'est pas déjà un hash BCrypt
+                if (!string.IsNullOrWhiteSpace(utilisateur.MotDePasse) &&
+                    !utilisateur.MotDePasse.StartsWith("$2"))
+                {
+                    string motDePasseHashe = PasswordHelper.HasherMotDePasse(utilisateur.MotDePasse);
+
+                    query = @"UPDATE utilisateurs SET 
+                        nom_utilisateur = @nom_user, 
+                        email = @email, 
+                        mot_de_passe = @pwd, 
+                        nom = @nom, 
+                        prenom = @prenom, 
+                        role = @role
+                        WHERE id_utilisateur = @id";
+
+                    parameters = new Dictionary<string, object>
+                    {
+                        { "@id", utilisateur.IdUtilisateur },
+                        { "@nom_user", utilisateur.NomUtilisateur },
+                        { "@email", utilisateur.Email },
+                        { "@pwd", motDePasseHashe },
+                        { "@nom", utilisateur.Nom },
+                        { "@prenom", utilisateur.Prenom },
+                        { "@role", utilisateur.Role }
+                    };
+                }
+                else
+                {
+                    // Pas de nouveau mot de passe
+                    query = @"UPDATE utilisateurs SET 
+                        nom_utilisateur = @nom_user, 
+                        email = @email, 
+                        nom = @nom, 
+                        prenom = @prenom, 
+                        role = @role
+                        WHERE id_utilisateur = @id";
+
+                    parameters = new Dictionary<string, object>
+                    {
+                        { "@id", utilisateur.IdUtilisateur },
+                        { "@nom_user", utilisateur.NomUtilisateur },
+                        { "@email", utilisateur.Email },
+                        { "@nom", utilisateur.Nom },
+                        { "@prenom", utilisateur.Prenom },
+                        { "@role", utilisateur.Role }
+                    };
+                }
+
                 DatabaseConnection.ExecuteCommand(query, parameters);
                 return true;
             }

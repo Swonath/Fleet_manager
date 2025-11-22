@@ -54,7 +54,7 @@
                     MouseEnter="Btn_MouseEnter"
                     MouseLeave="Btn_MouseLeave"/>
             
-            <Button Content="⛽ Carburant &amp; Trajet" 
+            <Button Content="⛽ Carburant - Trajet" 
                     Height="45" 
                     Foreground="White" 
                     Background="Transparent"
@@ -76,7 +76,8 @@
                     Padding="15,0"
                     Click="BtnMaintenances_Click"
                     MouseEnter="Btn_MouseEnter"
-                    MouseLeave="Btn_MouseLeave"/>
+                    MouseLeave="Btn_MouseLeave"
+                    Visibility="Collapsed"/>
             
             <Button Content="📊 Rapports" 
                     Height="45" 
@@ -88,7 +89,8 @@
                     Padding="15,0"
                     Click="BtnRapports_Click"
                     MouseEnter="Btn_MouseEnter"
-                    MouseLeave="Btn_MouseLeave"/>
+                    MouseLeave="Btn_MouseLeave"
+                    Visibility="Collapsed"/>
 
             <Button x:Name="BtnUtilisateurs"
                     Content="👤 Utilisateurs" 
@@ -121,6 +123,6 @@
         </StackPanel>
 
         <!-- Content Area -->
-        <ContentControl Grid.Column="1" x:Name="ContentArea"/>
+        <ContentControl Grid.Column="1" x:Name="ContentArea" Content="   "/>
     </Grid>
 </Window>

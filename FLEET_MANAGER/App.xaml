@@ -12,6 +12,7 @@
 
             <converters:InvertBoolConverter x:Key="InvertBoolConverter"/>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:FilterButtonConverter x:Key="FilterButtonConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

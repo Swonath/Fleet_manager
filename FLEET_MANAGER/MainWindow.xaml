@@ -129,7 +129,7 @@
                         </Grid>
                     </Border>
 
-                    <Button Content="🚪 Déconnexion"
+                    <Button Content="Déconnexion"
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="BtnDeconnexion_Click"/>
                 </StackPanel>

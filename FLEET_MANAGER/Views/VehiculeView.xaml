@@ -1,6 +1,7 @@
 <UserControl x:Class="FLEET_MANAGER.Views.VehiculeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:FLEET_MANAGER.Views"
              Background="{StaticResource BackgroundBrush}">
 	<Grid Margin="32">
 		<Grid.RowDefinitions>
@@ -441,26 +442,37 @@
 								Basé sur les pleins et trajets enregistrés
 							</TextBlock>
 
-							<!-- Placeholder pour le graphique -->
+							<!-- Graphique -->
 							<Border Height="200"
 									Background="{StaticResource BackgroundBrush}"
 									CornerRadius="8"
 									Padding="20">
-								<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-									<TextBlock Text="📈"
-											   FontSize="40"
-											   HorizontalAlignment="Center"
-											   Margin="0,0,0,12"/>
-									<TextBlock Text="Graphique d'évolution du kilométrage"
-											   FontSize="14"
-											   Foreground="{StaticResource TextSecondaryBrush}"
-											   HorizontalAlignment="Center"/>
-									<TextBlock Text="(À implémenter avec un composant de graphique)"
-											   FontSize="12"
-											   Foreground="{StaticResource TextSecondaryBrush}"
-											   HorizontalAlignment="Center"
-											   Margin="0,4,0,0"/>
-								</StackPanel>
+								<Grid>
+									<!-- Si pas de données, afficher message -->
+									<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+											   Visibility="{Binding PointsGraphique.Count, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}">
+										<TextBlock Text="📈"
+												   FontSize="40"
+												   HorizontalAlignment="Center"
+												   Margin="0,0,0,12"/>
+										<TextBlock Text="Aucune donnée disponible"
+												   FontSize="14"
+												   Foreground="{StaticResource TextSecondaryBrush}"
+												   HorizontalAlignment="Center"/>
+										<TextBlock Text="Les données apparaîtront après l'enregistrement de trajets et de pleins"
+												   FontSize="12"
+												   Foreground="{StaticResource TextSecondaryBrush}"
+												   HorizontalAlignment="Center"
+												   TextWrapping="Wrap"
+												   TextAlignment="Center"
+												   MaxWidth="300"
+												   Margin="0,4,0,0"/>
+									</StackPanel>
+
+									<!-- Graphique -->
+									<local:SimpleLineChart DataPoints="{Binding PointsGraphique}"
+														  Visibility="{Binding PointsGraphique.Count, Converter={StaticResource BoolToVisibilityConverter}}"/>
+								</Grid>
 							</Border>
 						</StackPanel>
 					</Border>
@@ -480,23 +492,38 @@
 								<Button Content="Tout"
 										Command="{Binding ChangerFiltreHistoriqueCommand}"
 										CommandParameter="Tout"
-										Style="{StaticResource SecondaryButtonStyle}"
-										Height="32"
-										Padding="12,0"
-										Margin="0,0,8,0"/>
+										Style="{StaticResource FilterButtonStyle}"
+										Margin="0,0,8,0">
+									<Button.Tag>
+										<MultiBinding Converter="{StaticResource FilterButtonConverter}">
+											<Binding Path="FiltreHistorique"/>
+											<Binding Source="Tout"/>
+										</MultiBinding>
+									</Button.Tag>
+								</Button>
 								<Button Content="Pleins"
 										Command="{Binding ChangerFiltreHistoriqueCommand}"
 										CommandParameter="Pleins"
-										Style="{StaticResource SecondaryButtonStyle}"
-										Height="32"
-										Padding="12,0"
-										Margin="0,0,8,0"/>
+										Style="{StaticResource FilterButtonStyle}"
+										Margin="0,0,8,0">
+									<Button.Tag>
+										<MultiBinding Converter="{StaticResource FilterButtonConverter}">
+											<Binding Path="FiltreHistorique"/>
+											<Binding Source="Pleins"/>
+										</MultiBinding>
+									</Button.Tag>
+								</Button>
 								<Button Content="Trajets"
 										Command="{Binding ChangerFiltreHistoriqueCommand}"
 										CommandParameter="Trajets"
-										Style="{StaticResource SecondaryButtonStyle}"
-										Height="32"
-										Padding="12,0"/>
+										Style="{StaticResource FilterButtonStyle}">
+									<Button.Tag>
+										<MultiBinding Converter="{StaticResource FilterButtonConverter}">
+											<Binding Path="FiltreHistorique"/>
+											<Binding Source="Trajets"/>
+										</MultiBinding>
+									</Button.Tag>
+								</Button>
 							</StackPanel>
 
 							<!-- Liste d'historique -->

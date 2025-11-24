@@ -24,6 +24,7 @@ namespace FLEET_MANAGER.ViewModels
         private ObservableCollection<ElementHistorique> _historique;
         private List<ElementHistorique> _historiqueComplet = new List<ElementHistorique>();
         private string _filtreHistorique = "Tout";
+        private ObservableCollection<PointGraphique> _pointsGraphique;
 
         private VehiculeRepository _repository;
         private CarburantRepository _carburantRepository;
@@ -87,6 +88,12 @@ namespace FLEET_MANAGER.ViewModels
         {
             get => _historique;
             set => SetProperty(ref _historique, value, nameof(Historique));
+        }
+
+        public ObservableCollection<PointGraphique> PointsGraphique
+        {
+            get => _pointsGraphique;
+            set => SetProperty(ref _pointsGraphique, value, nameof(PointsGraphique));
         }
 
         public Vehicule? VehiculeSelectionne
@@ -244,6 +251,7 @@ namespace FLEET_MANAGER.ViewModels
             _vehicules = new ObservableCollection<Vehicule>();
             _vehiculesFiltres = new ObservableCollection<Vehicule>();
             _historique = new ObservableCollection<ElementHistorique>();
+            _pointsGraphique = new ObservableCollection<PointGraphique>();
             _nouveau = new Vehicule();
             _repository = new VehiculeRepository();
             _carburantRepository = new CarburantRepository();
@@ -580,6 +588,7 @@ namespace FLEET_MANAGER.ViewModels
             try
             {
                 var historique = new List<ElementHistorique>();
+                var pointsGraphique = new List<PointGraphique>();
 
                 // Charger les ravitaillements en carburant
                 var carburants = _carburantRepository.ObtenirCarburantParVehicule(idVehicule);
@@ -595,6 +604,16 @@ namespace FLEET_MANAGER.ViewModels
                         Icone = "⛽",
                         CouleurFond = "#10B981"
                     });
+
+                    if (c.Kilometrage > 0)
+                    {
+                        pointsGraphique.Add(new PointGraphique
+                        {
+                            Date = c.DateSaisie,
+                            Valeur = c.Kilometrage,
+                            Label = c.DateSaisie.ToString("dd/MM")
+                        });
+                    }
                 }
 
                 // Charger les trajets
@@ -611,10 +630,25 @@ namespace FLEET_MANAGER.ViewModels
                         Icone = "🚗",
                         CouleurFond = "#3B82F6"
                     });
+
+                    if (t.KilomettrageArrivee > 0)
+                    {
+                        pointsGraphique.Add(new PointGraphique
+                        {
+                            Date = t.DateTrajet,
+                            Valeur = t.KilomettrageArrivee,
+                            Label = t.DateTrajet.ToString("dd/MM")
+                        });
+                    }
                 }
 
                 // Stocker la liste complète et trier
                 _historiqueComplet = historique.OrderByDescending(h => h.Date).ToList();
+
+                // Créer les points du graphique triés par date
+                PointsGraphique = new ObservableCollection<PointGraphique>(
+                    pointsGraphique.OrderBy(p => p.Date).Take(10)
+                );
 
                 // Appliquer le filtre actuel
                 AppliquerFiltreHistorique();
@@ -624,6 +658,7 @@ namespace FLEET_MANAGER.ViewModels
                 System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement de l'historique : {ex.Message}");
                 _historiqueComplet = new List<ElementHistorique>();
                 Historique = new ObservableCollection<ElementHistorique>();
+                PointsGraphique = new ObservableCollection<PointGraphique>();
             }
         }
 

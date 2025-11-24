@@ -125,4 +125,14 @@ namespace FLEET_MANAGER.Models
         public string Icone { get; set; } = string.Empty; // Pour afficher l'icone appropriee
         public string CouleurFond { get; set; } = string.Empty; // Pour la couleur de fond de l'icone
     }
+
+    /// <summary>
+    /// Modele representant un point sur un graphique
+    /// </summary>
+    public class PointGraphique
+    {
+        public DateTime Date { get; set; }
+        public int Valeur { get; set; }
+        public string Label { get; set; } = string.Empty;
+    }
 }

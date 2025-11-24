@@ -5,7 +5,13 @@
              xmlns:converters="clr-namespace:FLEET_MANAGER.Converters"
              StartupUri="Views/LoginWindow.xaml">
     <Application.Resources>
-        <converters:InvertBoolConverter x:Key="InvertBoolConverter"/>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:InvertBoolConverter x:Key="InvertBoolConverter"/>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

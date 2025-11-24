@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using FLEET_MANAGER.Models;
 using FLEET_MANAGER.Repositories;
@@ -6,24 +7,32 @@ using FLEET_MANAGER.Repositories;
 namespace FLEET_MANAGER.ViewModels
 {
     /// <summary>
-    /// ViewModel pour la gestion des véhicules
+    /// ViewModel pour la gestion des vï¿½hicules
     /// </summary>
     public class VehiculeViewModel : ViewModelBase
     {
         private ObservableCollection<Vehicule> _vehicules;
+        private ObservableCollection<Vehicule> _vehiculesFiltres;
         private Vehicule? _vehiculeSelectionne;
         private Vehicule _nouveau;
         private bool _estEnEdition = false;
         private string _messageErreur = string.Empty;
         private bool _isLoading = false;
-        private bool _estNouveauVehicule = false; // Ajouter cette propriété
+        private bool _estNouveauVehicule = false; // Ajouter cette propriï¿½tï¿½
+        private string _rechercheTexte = string.Empty;
+        private string _filtreStatut = "Tous";
+        private ObservableCollection<ElementHistorique> _historique;
+        private List<ElementHistorique> _historiqueComplet = new List<ElementHistorique>();
+        private string _filtreHistorique = "Tout";
 
         private VehiculeRepository _repository;
+        private CarburantRepository _carburantRepository;
+        private TrajetRepository _trajetRepository;
 
-        // Événement pour notifier les changements
-        public event Action? VéhiculesChangé;
+        // Evenement pour notifier les changements
+        public event Action? VehiculesChange;
 
-        // Propriétés pour le formulaire
+        // Proprietes pour le formulaire
         private string _marque = string.Empty;
         private string _modele = string.Empty;
         private string _immatriculation = string.Empty;
@@ -44,6 +53,42 @@ namespace FLEET_MANAGER.ViewModels
             set => SetProperty(ref _vehicules, value, nameof(Vehicules));
         }
 
+        public ObservableCollection<Vehicule> VehiculesFiltres
+        {
+            get => _vehiculesFiltres;
+            set => SetProperty(ref _vehiculesFiltres, value, nameof(VehiculesFiltres));
+        }
+
+        public string RechercheTexte
+        {
+            get => _rechercheTexte;
+            set
+            {
+                if (SetProperty(ref _rechercheTexte, value, nameof(RechercheTexte)))
+                {
+                    AppliquerFiltres();
+                }
+            }
+        }
+
+        public string FiltreStatut
+        {
+            get => _filtreStatut;
+            set
+            {
+                if (SetProperty(ref _filtreStatut, value, nameof(FiltreStatut)))
+                {
+                    AppliquerFiltres();
+                }
+            }
+        }
+
+        public ObservableCollection<ElementHistorique> Historique
+        {
+            get => _historique;
+            set => SetProperty(ref _historique, value, nameof(Historique));
+        }
+
         public Vehicule? VehiculeSelectionne
         {
             get => _vehiculeSelectionne;
@@ -54,6 +99,11 @@ namespace FLEET_MANAGER.ViewModels
                     if (value != null)
                     {
                         ChargerVehiculeEnFormulaire(value);
+                        ChargerHistorique(value.IdVehicule);
+                    }
+                    else
+                    {
+                        Historique = new ObservableCollection<ElementHistorique>();
                     }
                 }
             }
@@ -167,6 +217,18 @@ namespace FLEET_MANAGER.ViewModels
             set => SetProperty(ref _estNouveauVehicule, value, nameof(EstNouveauVehicule));
         }
 
+        public string FiltreHistorique
+        {
+            get => _filtreHistorique;
+            set
+            {
+                if (SetProperty(ref _filtreHistorique, value, nameof(FiltreHistorique)))
+                {
+                    AppliquerFiltreHistorique();
+                }
+            }
+        }
+
         // Commandes
         public ICommand ChargerCommand { get; }
         public ICommand AjouterCommand { get; }
@@ -175,12 +237,17 @@ namespace FLEET_MANAGER.ViewModels
         public ICommand SupprimerCommand { get; }
         public ICommand AnnulerCommand { get; }
         public ICommand Nouveau { get; }
+        public ICommand ChangerFiltreHistoriqueCommand { get; }
 
         public VehiculeViewModel()
         {
             _vehicules = new ObservableCollection<Vehicule>();
+            _vehiculesFiltres = new ObservableCollection<Vehicule>();
+            _historique = new ObservableCollection<ElementHistorique>();
             _nouveau = new Vehicule();
             _repository = new VehiculeRepository();
+            _carburantRepository = new CarburantRepository();
+            _trajetRepository = new TrajetRepository();
 
             ChargerCommand = new RelayCommand(_ => ChargerVehicules());
             AjouterCommand = new RelayCommand(_ => PerformerAjout(), _ => !EstEnEdition && !IsLoading);
@@ -189,6 +256,7 @@ namespace FLEET_MANAGER.ViewModels
             SupprimerCommand = new RelayCommand(_ => PerformerSuppression(), _ => VehiculeSelectionne != null && !IsLoading);
             AnnulerCommand = new RelayCommand(_ => AnnulerEdition());
             Nouveau = new RelayCommand(_ => NouveauVehicule());
+            ChangerFiltreHistoriqueCommand = new RelayCommand(param => ChangerFiltreHistorique(param?.ToString() ?? "Tout"));
 
             ChargerVehicules();
         }
@@ -200,6 +268,7 @@ namespace FLEET_MANAGER.ViewModels
                 IsLoading = true;
                 var vehicules = _repository.ObtenirTousLesVehicules();
                 Vehicules = new ObservableCollection<Vehicule>(vehicules);
+                AppliquerFiltres();
                 MessageErreur = string.Empty;
             }
             catch (Exception ex)
@@ -211,6 +280,29 @@ namespace FLEET_MANAGER.ViewModels
             {
                 IsLoading = false;
             }
+        }
+
+        private void AppliquerFiltres()
+        {
+            var vehiculesFiltres = Vehicules.AsEnumerable();
+
+            // Filtre par texte de recherche
+            if (!string.IsNullOrWhiteSpace(RechercheTexte))
+            {
+                var recherche = RechercheTexte.ToLower();
+                vehiculesFiltres = vehiculesFiltres.Where(v =>
+                    v.Marque.ToLower().Contains(recherche) ||
+                    v.Modele.ToLower().Contains(recherche) ||
+                    v.Immatriculation.ToLower().Contains(recherche));
+            }
+
+            // Filtre par statut
+            if (FiltreStatut != "Tous")
+            {
+                vehiculesFiltres = vehiculesFiltres.Where(v => v.Etat == FiltreStatut);
+            }
+
+            VehiculesFiltres = new ObservableCollection<Vehicule>(vehiculesFiltres);
         }
 
         private void NouveauVehicule()
@@ -272,14 +364,14 @@ namespace FLEET_MANAGER.ViewModels
 
                 if (_repository.AjouterVehicule(nouveau))
                 {
-                    MessageErreur = "Véhicule ajouté avec succès !";
+                    MessageErreur = "Vehicule ajoute avec succes !";
                     ChargerVehicules();
                     ReinitialiserFormulaire();
-                    VéhiculesChangé?.Invoke();  // Notifier le changement
+                    VehiculesChange?.Invoke();  // Notifier le changement
                 }
                 else
                 {
-                    MessageErreur = "Erreur lors de l'ajout du véhicule.";
+                    MessageErreur = "Erreur lors de l'ajout du vehicule.";
                 }
             }
             catch (Exception ex)
@@ -296,12 +388,14 @@ namespace FLEET_MANAGER.ViewModels
         {
             if (VehiculeSelectionne == null)
             {
-                MessageErreur = "Aucun véhicule sélectionné.";
+                MessageErreur = "Aucun vehicule selectionne.";
                 return;
             }
 
             EstEnEdition = true;
             EstNouveauVehicule = false;
+            ChargerVehiculeEnFormulaire(VehiculeSelectionne);
+            MessageErreur = string.Empty;
         }
 
         private void PerformerSauvegarde()
@@ -315,7 +409,7 @@ namespace FLEET_MANAGER.ViewModels
 
                 if (EstNouveauVehicule)
                 {
-                    // Cas : Ajout d'un nouveau véhicule
+                    // Cas : Ajout d'un nouveau vehicule
                     var nouveau = new Vehicule
                     {
                         Marque = Marque,
@@ -331,19 +425,19 @@ namespace FLEET_MANAGER.ViewModels
 
                     if (_repository.AjouterVehicule(nouveau))
                     {
-                        MessageErreur = "Véhicule ajouté avec succès !";
+                        MessageErreur = "Vehicule ajoute avec succes !";
                         ChargerVehicules();
                         AnnulerEdition();
-                        VéhiculesChangé?.Invoke();  // Notifier le changement
+                        VehiculesChange?.Invoke();  // Notifier le changement
                     }
                     else
                     {
-                        MessageErreur = "Erreur lors de l'ajout du véhicule.";
+                        MessageErreur = "Erreur lors de l'ajout du vehicule.";
                     }
                 }
                 else if (VehiculeSelectionne != null)
                 {
-                    // Cas : Modification d'un véhicule existant
+                    // Cas : Modification d'un vehicule existant
                     VehiculeSelectionne.Marque = Marque;
                     VehiculeSelectionne.Modele = Modele;
                     VehiculeSelectionne.Immatriculation = Immatriculation;
@@ -353,10 +447,10 @@ namespace FLEET_MANAGER.ViewModels
 
                     if (_repository.ModifierVehicule(VehiculeSelectionne))
                     {
-                        MessageErreur = "Véhicule modifié avec succès !";
+                        MessageErreur = "Vehicule modifie avec succes !";
                         ChargerVehicules();
                         AnnulerEdition();
-                        VéhiculesChangé?.Invoke();  // Notifier le changement
+                        VehiculesChange?.Invoke();  // Notifier le changement
                     }
                     else
                     {
@@ -365,7 +459,7 @@ namespace FLEET_MANAGER.ViewModels
                 }
                 else
                 {
-                    MessageErreur = "Aucun véhicule sélectionné.";
+                    MessageErreur = "Aucun vehicule selectionne.";
                 }
             }
             catch (Exception ex)
@@ -382,7 +476,7 @@ namespace FLEET_MANAGER.ViewModels
         {
             if (VehiculeSelectionne == null)
             {
-                MessageErreur = "Aucun véhicule sélectionné.";
+                MessageErreur = "Aucun vehicule selectionne.";
                 return;
             }
 
@@ -391,10 +485,10 @@ namespace FLEET_MANAGER.ViewModels
                 IsLoading = true;
                 if (_repository.SupprimerVehicule(VehiculeSelectionne.IdVehicule))
                 {
-                    MessageErreur = "Véhicule supprimé avec succès !";
+                    MessageErreur = "Vehicule supprime avec succes !";
                     ChargerVehicules();
                     ReinitialiserFormulaire();
-                    VéhiculesChangé?.Invoke();  // Notifier le changement
+                    VehiculesChange?.Invoke();  // Notifier le changement
                 }
                 else
                 {
@@ -436,7 +530,7 @@ namespace FLEET_MANAGER.ViewModels
 
             if (string.IsNullOrWhiteSpace(Modele))
             {
-                ModeleError = "Le modèle est requis.";
+                ModeleError = "Le modele est requis.";
                 valide = false;
             }
             else
@@ -468,7 +562,7 @@ namespace FLEET_MANAGER.ViewModels
         private void ValidateModele()
         {
             if (string.IsNullOrWhiteSpace(Modele))
-                ModeleError = "Le modèle est requis.";
+                ModeleError = "Le modele est requis.";
             else
                 ModeleError = string.Empty;
         }
@@ -479,6 +573,80 @@ namespace FLEET_MANAGER.ViewModels
                 ImmatriculationError = "L'immatriculation est requise.";
             else
                 ImmatriculationError = string.Empty;
+        }
+
+        private void ChargerHistorique(int idVehicule)
+        {
+            try
+            {
+                var historique = new List<ElementHistorique>();
+
+                // Charger les ravitaillements en carburant
+                var carburants = _carburantRepository.ObtenirCarburantParVehicule(idVehicule);
+                foreach (var c in carburants)
+                {
+                    historique.Add(new ElementHistorique
+                    {
+                        Date = c.DateSaisie,
+                        Type = "Carburant",
+                        Titre = "Plein de carburant",
+                        Description = $"{c.QuantiteLitres}L â€¢ {c.CoutTotal:F2} â‚¬",
+                        Kilometrage = c.Kilometrage,
+                        Icone = "â›½",
+                        CouleurFond = "#10B981"
+                    });
+                }
+
+                // Charger les trajets
+                var trajets = _trajetRepository.ObtenirTrajetsParVehicule(idVehicule);
+                foreach (var t in trajets)
+                {
+                    historique.Add(new ElementHistorique
+                    {
+                        Date = t.DateTrajet,
+                        Type = "Trajet",
+                        Titre = "Trajet effectuÃ©",
+                        Description = $"{t.LieuDepart} â†’ {t.LieuArrivee} â€¢ {t.DistanceParcourue} km",
+                        Kilometrage = t.KilomettrageArrivee,
+                        Icone = "ðŸš—",
+                        CouleurFond = "#3B82F6"
+                    });
+                }
+
+                // Stocker la liste complÃ¨te et trier
+                _historiqueComplet = historique.OrderByDescending(h => h.Date).ToList();
+
+                // Appliquer le filtre actuel
+                AppliquerFiltreHistorique();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement de l'historique : {ex.Message}");
+                _historiqueComplet = new List<ElementHistorique>();
+                Historique = new ObservableCollection<ElementHistorique>();
+            }
+        }
+
+        private void ChangerFiltreHistorique(string filtre)
+        {
+            FiltreHistorique = filtre;
+        }
+
+        private void AppliquerFiltreHistorique()
+        {
+            IEnumerable<ElementHistorique> historiqueFiltrÃ© = _historiqueComplet;
+
+            if (FiltreHistorique == "Pleins")
+            {
+                historiqueFiltrÃ© = _historiqueComplet.Where(h => h.Type == "Carburant");
+            }
+            else if (FiltreHistorique == "Trajets")
+            {
+                historiqueFiltrÃ© = _historiqueComplet.Where(h => h.Type == "Trajet");
+            }
+            // Si "Tout", on garde tous les Ã©lÃ©ments
+
+            Historique = new ObservableCollection<ElementHistorique>(historiqueFiltrÃ©);
         }
     }
 }

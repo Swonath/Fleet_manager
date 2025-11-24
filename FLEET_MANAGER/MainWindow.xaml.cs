@@ -37,15 +37,15 @@ namespace FLEET_MANAGER
             _carburantTrajetView = new CarburantTrajetView { DataContext = _carburantTrajetViewModel };
             _utilisateurView = new UtilisateurView { DataContext = _utilisateurViewModel };
             
-            // S'abonner à la notification de mise à jour des véhicules
-            _vehiculeViewModel.VéhiculesChangé += OnVéhiculesChangé;
+            // S'abonner a la notification de mise a jour des vehicules
+            _vehiculeViewModel.VehiculesChange += OnVehiculesChange;
             
             DataContext = _dashboardViewModel;
         }
 
-        private void OnVéhiculesChangé()
+        private void OnVehiculesChange()
         {
-            // Recharger les véhicules dans les autres ViewModels
+            // Recharger les vehicules dans les autres ViewModels
             _carburantTrajetViewModel.RéchargerVéhicules();
             _dashboardViewModel.RéchargerDashboard();
         }

@@ -1,0 +1,236 @@
+<Window x:Class="FLEET_MANAGER.Views.AddVehiculeDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Ajouter un véhicule"
+        Height="650" Width="800"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        ResizeMode="NoResize">
+    <Border Background="White" CornerRadius="16" Margin="20">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="0" Opacity="0.3"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0" Background="{StaticResource PrimaryBrush}" Height="60">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           x:Name="TitleTextBlock"
+                           Text="Ajouter un véhicule"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           Margin="24,0"/>
+
+                <Button Grid.Column="1"
+                        Content="✕"
+                        FontSize="20"
+                        Width="40" Height="40"
+                        Background="Transparent"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="BtnClose_Click"
+                        Margin="0,0,12,0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="8">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#60FFFFFF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="24,24,24,0">
+                <StackPanel>
+                    <!-- Marque et Modèle -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Marque -->
+                        <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                            <TextBlock Style="{StaticResource FormLabelStyle}">
+                                Marque <Run Foreground="{StaticResource DangerBrush}">*</Run>
+                            </TextBlock>
+                            <TextBox Text="{Binding Marque, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBoxStyle}"/>
+                            <TextBlock Text="{Binding MarqueError}"
+                                       Style="{StaticResource ErrorTextStyle}"
+                                       Visibility="{Binding MarqueError, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        </StackPanel>
+
+                        <!-- Modèle -->
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                            <TextBlock Style="{StaticResource FormLabelStyle}">
+                                Modèle <Run Foreground="{StaticResource DangerBrush}">*</Run>
+                            </TextBlock>
+                            <TextBox Text="{Binding Modele, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBoxStyle}"/>
+                            <TextBlock Text="{Binding ModeleError}"
+                                       Style="{StaticResource ErrorTextStyle}"
+                                       Visibility="{Binding ModeleError, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Immatriculation et Année -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Immatriculation -->
+                        <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                            <TextBlock Style="{StaticResource FormLabelStyle}">
+                                Immatriculation <Run Foreground="{StaticResource DangerBrush}">*</Run>
+                            </TextBlock>
+                            <TextBox Text="{Binding Immatriculation, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBoxStyle}"/>
+                            <TextBlock Text="{Binding ImmatriculationError}"
+                                       Style="{StaticResource ErrorTextStyle}"
+                                       Visibility="{Binding ImmatriculationError, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        </StackPanel>
+
+                        <!-- Année -->
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                            <TextBlock Style="{StaticResource FormLabelStyle}">
+                                Année <Run Foreground="{StaticResource DangerBrush}">*</Run>
+                            </TextBlock>
+                            <TextBox Text="{Binding Annee, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBoxStyle}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Type de carburant et Kilométrage initial -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Type de carburant -->
+                        <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                            <TextBlock Style="{StaticResource FormLabelStyle}">
+                                Type de carburant <Run Foreground="{StaticResource DangerBrush}">*</Run>
+                            </TextBlock>
+                            <ComboBox SelectedValue="{Binding TypeCarburant, Mode=TwoWay}"
+                                      SelectedValuePath="Content"
+                                      Style="{StaticResource ModernComboBoxStyle}">
+                                <ComboBoxItem Content="Essence"/>
+                                <ComboBoxItem Content="Diesel"/>
+                                <ComboBoxItem Content="Hybride"/>
+                                <ComboBoxItem Content="Électrique"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <!-- Kilométrage initial -->
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                            <TextBlock Style="{StaticResource FormLabelStyle}">
+                                Kilométrage initial
+                            </TextBlock>
+                            <TextBox Text="{Binding KilomettrageInitial, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBoxStyle}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Statut initial et Date d'acquisition -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Statut initial -->
+                        <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                            <TextBlock Style="{StaticResource FormLabelStyle}">
+                                Statut initial
+                            </TextBlock>
+                            <ComboBox SelectedValue="{Binding Etat, Mode=TwoWay}"
+                                      SelectedValuePath="Content"
+                                      Style="{StaticResource ModernComboBoxStyle}">
+                                <ComboBoxItem Content="Disponible"/>
+                                <ComboBoxItem Content="En service"/>
+                                <ComboBoxItem Content="En maintenance"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <!-- Date d'acquisition -->
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                            <TextBlock Style="{StaticResource FormLabelStyle}">
+                                Date d'acquisition
+                            </TextBlock>
+                            <DatePicker SelectedDate="{Binding DateAcquisition, Mode=TwoWay}"
+                                        Height="42"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        BorderThickness="1"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Notes -->
+                    <StackPanel Margin="0,0,0,20">
+                        <TextBlock Style="{StaticResource FormLabelStyle}">
+                            Notes
+                        </TextBlock>
+                        <TextBox Height="80"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Style="{StaticResource ModernTextBoxStyle}"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Footer -->
+            <Border Grid.Row="2"
+                    Background="{StaticResource BackgroundBrush}"
+                    Padding="24"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Annuler"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Width="120"
+                            Height="42"
+                            Margin="0,0,12,0"
+                            Click="BtnCancel_Click"/>
+
+                    <Button Content="Ajouter le véhicule"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Width="160"
+                            Height="42"
+                            Click="BtnSave_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

@@ -5,24 +5,35 @@ using System.Windows.Data;
 namespace FLEET_MANAGER.Converters
 {
     /// <summary>
-    /// Convertisseur pour transformer une valeur booléenne en Visibility
+    /// Convertisseur pour transformer une valeur booleenne ou un objet en Visibility
     /// </summary>
     public class BoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            bool isVisible = false;
+
             if (value is bool boolValue)
             {
-                // Si le paramètre est "Invert", on inverse la logique
-                bool invert = parameter is string param && param.Equals("Invert", StringComparison.OrdinalIgnoreCase);
-                
-                if (invert)
-                    boolValue = !boolValue;
-
-                return boolValue ? Visibility.Visible : Visibility.Collapsed;
+                isVisible = boolValue;
+            }
+            else if (value is string stringValue)
+            {
+                isVisible = !string.IsNullOrEmpty(stringValue);
+            }
+            else
+            {
+                // Pour les objets : visible si non null
+                isVisible = value != null;
             }
 
-            return Visibility.Collapsed;
+            // Si le parametre est "Invert", on inverse la logique
+            bool invert = parameter is string param && param.Equals("Invert", StringComparison.OrdinalIgnoreCase);
+
+            if (invert)
+                isVisible = !isVisible;
+
+            return isVisible ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

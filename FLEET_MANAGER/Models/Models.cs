@@ -1,7 +1,7 @@
 namespace FLEET_MANAGER.Models
 {
     /// <summary>
-    /// Modèle représentant un utilisateur
+    /// Modï¿½le reprï¿½sentant un utilisateur
     /// </summary>
     public class Utilisateur
     {
@@ -19,7 +19,7 @@ namespace FLEET_MANAGER.Models
     }
 
     /// <summary>
-    /// Modèle représentant un véhicule
+    /// Modï¿½le reprï¿½sentant un vï¿½hicule
     /// </summary>
     public class Vehicule
     {
@@ -28,11 +28,11 @@ namespace FLEET_MANAGER.Models
         public string Modele { get; set; } = string.Empty;
         public string Immatriculation { get; set; } = string.Empty;
         public int AnneeFabrication { get; set; }
-        public string TypeCarburant { get; set; } = string.Empty; // Essence, Diesel, Hybride, Électrique
+        public string TypeCarburant { get; set; } = string.Empty; // Essence, Diesel, Hybride, ï¿½lectrique
         public int KilomettrageInitial { get; set; }
         public int KilomettrageActuel { get; set; }
         public DateTime DateAcquisition { get; set; }
-        public string Etat { get; set; } = "En service"; // En service, En maintenance, Retiré du service
+        public string Etat { get; set; } = "En service"; // En service, En maintenance, Retirï¿½ du service
         public DateTime DateCreation { get; set; }
         public DateTime DateModification { get; set; }
 
@@ -40,7 +40,7 @@ namespace FLEET_MANAGER.Models
     }
 
     /// <summary>
-    /// Modèle représentant un ravitaillement en carburant
+    /// Modï¿½le reprï¿½sentant un ravitaillement en carburant
     /// </summary>
     public class Carburant
     {
@@ -59,7 +59,7 @@ namespace FLEET_MANAGER.Models
     }
 
     /// <summary>
-    /// Modèle représentant un trajet
+    /// Modï¿½le reprï¿½sentant un trajet
     /// </summary>
     public class Trajet
     {
@@ -80,7 +80,7 @@ namespace FLEET_MANAGER.Models
     }
 
     /// <summary>
-    /// Modèle représentant une maintenance
+    /// Modï¿½le reprï¿½sentant une maintenance
     /// </summary>
     public class Maintenance
     {
@@ -98,17 +98,31 @@ namespace FLEET_MANAGER.Models
     }
 
     /// <summary>
-    /// Modèle représentant un rapport
+    /// Modï¿½le reprï¿½sentant un rapport
     /// </summary>
     public class Rapport
     {
         public int IdRapport { get; set; }
         public int? IdVehicule { get; set; }
-        public string TypeRapport { get; set; } = string.Empty; // Consommation, Coûts, Utilisation, etc.
+        public string TypeRapport { get; set; } = string.Empty; // Consommation, Coï¿½ts, Utilisation, etc.
         public DateTime DateDebut { get; set; }
         public DateTime DateFin { get; set; }
         public string? DonneesJson { get; set; }
         public DateTime DateGeneration { get; set; }
         public int IdUtilisateur { get; set; }
+    }
+
+    /// <summary>
+    /// Modele representant un element d'historique pour un vehicule
+    /// </summary>
+    public class ElementHistorique
+    {
+        public DateTime Date { get; set; }
+        public string Type { get; set; } = string.Empty; // "Carburant", "Trajet", "Maintenance"
+        public string Titre { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public int? Kilometrage { get; set; }
+        public string Icone { get; set; } = string.Empty; // Pour afficher l'icone appropriee
+        public string CouleurFond { get; set; } = string.Empty; // Pour la couleur de fond de l'icone
     }
 }

@@ -109,7 +109,7 @@
                                     Width="40" Height="40"
                                     CornerRadius="10"
                                     Background="#3B82F6">
-                                <TextBlock Text="{Binding UtilisateurConnecte.NomUtilisateur, StringFormat={}{0:C2}}"
+                                <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=UtilisateurConnecte.NomUtilisateur, StringFormat={}{0:C2}}"
                                            FontSize="16"
                                            FontWeight="Bold"
                                            Foreground="White"
@@ -118,11 +118,11 @@
                             </Border>
 
                             <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding UtilisateurConnecte.NomComplet}"
+                                <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=UtilisateurConnecte.NomComplet}"
                                            FontSize="13"
                                            FontWeight="SemiBold"
                                            Foreground="White"/>
-                                <TextBlock Text="{Binding UtilisateurConnecte.Role}"
+                                <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=UtilisateurConnecte.Role}"
                                            FontSize="11"
                                            Foreground="#94A3B8"/>
                             </StackPanel>

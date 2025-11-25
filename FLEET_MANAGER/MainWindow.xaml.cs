@@ -23,6 +23,12 @@ namespace FLEET_MANAGER
 
         private Utilisateur? _utilisateurConnecte;
 
+        public Utilisateur? UtilisateurConnecte
+        {
+            get => _utilisateurConnecte;
+            set => _utilisateurConnecte = value;
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,7 +58,7 @@ namespace FLEET_MANAGER
 
         public void InitialiserAvecUtilisateur(Utilisateur utilisateur)
         {
-            _utilisateurConnecte = utilisateur;
+            UtilisateurConnecte = utilisateur;
             _dashboardViewModel.InitialiserAvecUtilisateur(utilisateur);
             _utilisateurViewModel.InitialiserAvecUtilisateurConnecte(utilisateur);
 
@@ -90,7 +96,7 @@ namespace FLEET_MANAGER
 
         private void BtnUtilisateurs_Click(object sender, RoutedEventArgs e)
         {
-            if (_utilisateurConnecte?.Role != "admin" && _utilisateurConnecte?.Role != "super_admin")
+            if (UtilisateurConnecte?.Role != "admin" && UtilisateurConnecte?.Role != "super_admin")
             {
                 MessageBox.Show("Vous n'avez pas accès à cette section.", "Accès refusé");
                 return;

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using FLEET_MANAGER.Models;
 using FLEET_MANAGER.Repositories;
 
@@ -16,6 +17,7 @@ namespace FLEET_MANAGER.ViewModels
         private int _vehiculesEnMaintenance;
         private int _vehiculesDisponibles;
         private decimal _coutTotalCarburant;
+        private bool _estEnChargement;
 
         public Utilisateur? UtilisateurConnecte
         {
@@ -59,15 +61,96 @@ namespace FLEET_MANAGER.ViewModels
             set => SetProperty(ref _coutTotalCarburant, value, nameof(CoutTotalCarburant));
         }
 
+        public bool EstEnChargement
+        {
+            get => _estEnChargement;
+            set => SetProperty(ref _estEnChargement, value, nameof(EstEnChargement));
+        }
+
         private VehiculeRepository _vehiculeRepository;
         private CarburantRepository _carburantRepository;
+        private bool _donneesChargees = false;
+        private int _nombreVehiculesCharges = 0;
+        private const int TAILLE_PAGE = 12;
+        private List<Vehicule> _tousLesVehicules = new List<Vehicule>();
+        private bool _tousVehiculesCharges = false;
+
+        public bool TousVehiculesCharges
+        {
+            get => _tousVehiculesCharges;
+            set => SetProperty(ref _tousVehiculesCharges, value, nameof(TousVehiculesCharges));
+        }
+
+        public ICommand ChargerPlusCommand { get; }
 
         public DashboardViewModel()
         {
             _vehicules = new ObservableCollection<Vehicule>();
             _vehiculeRepository = new VehiculeRepository();
             _carburantRepository = new CarburantRepository();
-            ChargerDonnees();
+            ChargerPlusCommand = new RelayCommand(_ => ChargerVehiculesSuivants());
+            // Ne plus charger les données au constructeur
+        }
+
+        public async Task ChargerDonneesAsync()
+        {
+            if (_donneesChargees)
+                return; // Éviter de recharger si déjà chargé
+
+            EstEnChargement = true;
+            try
+            {
+                await Task.Run(() =>
+                {
+                    // Charger tous les véhicules en arrière-plan pour les statistiques
+                    _tousLesVehicules = _vehiculeRepository.ObtenirTousLesVehicules();
+
+                    // Calculer les statistiques sur tous les véhicules
+                    TotalVehicules = _tousLesVehicules.Count;
+                    VehiculesEnService = _tousLesVehicules.Count(v => v.Etat == "En service");
+                    VehiculesEnMaintenance = _tousLesVehicules.Count(v => v.Etat == "En maintenance");
+                    VehiculesDisponibles = _tousLesVehicules.Count(v => v.Etat == "Disponible");
+
+                    // Calculer le coût total de carburant
+                    CalculerCoutTotalCarburant();
+                });
+
+                // Charger seulement les 12 premiers véhicules pour l'affichage
+                ChargerVehiculesSuivants();
+
+                _donneesChargees = true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des données : {ex.Message}");
+            }
+            finally
+            {
+                EstEnChargement = false;
+            }
+        }
+
+        private void ChargerVehiculesSuivants()
+        {
+            try
+            {
+                var vehiculesACharger = _tousLesVehicules
+                    .Skip(_nombreVehiculesCharges)
+                    .Take(TAILLE_PAGE)
+                    .ToList();
+
+                foreach (var vehicule in vehiculesACharger)
+                {
+                    Vehicules.Add(vehicule);
+                }
+
+                _nombreVehiculesCharges += vehiculesACharger.Count;
+                TousVehiculesCharges = _nombreVehiculesCharges >= _tousLesVehicules.Count;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des véhicules suivants : {ex.Message}");
+            }
         }
 
         public void ChargerDonnees()
@@ -83,12 +166,12 @@ namespace FLEET_MANAGER.ViewModels
                 VehiculesEnMaintenance = vehicules.Count(v => v.Etat == "En maintenance");
                 VehiculesDisponibles = vehicules.Count(v => v.Etat == "Disponible");
                 
-                // Calculer le co�t total de carburant pour tous les v�hicules
+                // Calculer le co�t total de carburant pour tous les v�hicules
                 CalculerCoutTotalCarburant();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des donn�es : {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des donn�es : {ex.Message}");
             }
         }
 
@@ -97,7 +180,7 @@ namespace FLEET_MANAGER.ViewModels
             try
             {
                 decimal total = 0;
-                foreach (var vehicule in Vehicules)
+                foreach (var vehicule in _tousLesVehicules)
                 {
                     var carburants = _carburantRepository.ObtenirCarburantParVehicule(vehicule.IdVehicule);
                     total += carburants.Sum(c => c.CoutTotal);
@@ -106,19 +189,24 @@ namespace FLEET_MANAGER.ViewModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors du calcul du co�t : {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du calcul du coût : {ex.Message}");
             }
         }
 
         public void InitialiserAvecUtilisateur(Utilisateur utilisateur)
         {
             UtilisateurConnecte = utilisateur;
-            ChargerDonnees();
+            _ = ChargerDonneesAsync();
         }
 
-        public void R�chargerDashboard()
+        public void RéchargerDashboard()
         {
-            ChargerDonnees();
+            _donneesChargees = false;
+            _nombreVehiculesCharges = 0;
+            _tousVehiculesCharges = false;
+            Vehicules.Clear();
+            _tousLesVehicules.Clear();
+            _ = ChargerDonneesAsync();
         }
     }
 }

@@ -33,6 +33,17 @@ namespace FLEET_MANAGER.ViewModels
         private string _emailError = string.Empty;
 
         private UtilisateurRepository _repository;
+        private const int TAILLE_PAGE = 12;
+        private List<Utilisateur> _tousLesUtilisateurs = new List<Utilisateur>();
+        private List<Utilisateur> _utilisateursFiltresComplet = new List<Utilisateur>();
+        private int _nombreUtilisateursCharges = 0;
+        private bool _tousUtilisateursCharges = false;
+
+        public bool TousUtilisateursCharges
+        {
+            get => _tousUtilisateursCharges;
+            set => SetProperty(ref _tousUtilisateursCharges, value, nameof(TousUtilisateursCharges));
+        }
 
         public ObservableCollection<Utilisateur> Utilisateurs
         {
@@ -161,6 +172,7 @@ namespace FLEET_MANAGER.ViewModels
         public ICommand SupprimerCommand { get; }
         public ICommand AnnulerCommand { get; }
         public ICommand Nouveau { get; }
+        public ICommand ChargerPlusCommand { get; }
 
         public UtilisateurViewModel()
         {
@@ -174,6 +186,7 @@ namespace FLEET_MANAGER.ViewModels
             SupprimerCommand = new RelayCommand(_ => PerformerSuppression(), _ => UtilisateurSelectionne != null && !IsLoading && PeuxSupprimer());
             AnnulerCommand = new RelayCommand(_ => AnnulerEdition());
             Nouveau = new RelayCommand(_ => NouveauUtilisateur());
+            ChargerPlusCommand = new RelayCommand(_ => ChargerUtilisateursSuivants());
 
             ChargerUtilisateurs();
         }
@@ -259,8 +272,15 @@ namespace FLEET_MANAGER.ViewModels
             try
             {
                 IsLoading = true;
-                var utilisateurs = _repository.ObtenirTousLesUtilisateurs();
-                Utilisateurs = new ObservableCollection<Utilisateur>(utilisateurs);
+                // Charger tous les utilisateurs pour les stats et la recherche
+                _tousLesUtilisateurs = _repository.ObtenirTousLesUtilisateurs();
+                Utilisateurs = new ObservableCollection<Utilisateur>(_tousLesUtilisateurs);
+
+                // Réinitialiser la pagination
+                _nombreUtilisateursCharges = 0;
+                UtilisateursFiltres.Clear();
+
+                // Filtrer et charger la première page
                 FiltrerUtilisateurs();
                 MessageErreur = string.Empty;
             }
@@ -276,21 +296,49 @@ namespace FLEET_MANAGER.ViewModels
 
         private void FiltrerUtilisateurs()
         {
+            // Appliquer le filtre de recherche
             if (string.IsNullOrWhiteSpace(RechercheTexte))
             {
-                UtilisateursFiltres = new ObservableCollection<Utilisateur>(Utilisateurs);
+                _utilisateursFiltresComplet = _tousLesUtilisateurs.ToList();
             }
             else
             {
                 var recherche = RechercheTexte.ToLower();
-                var filtres = Utilisateurs.Where(u =>
+                _utilisateursFiltresComplet = _tousLesUtilisateurs.Where(u =>
                     u.NomUtilisateur.ToLower().Contains(recherche) ||
                     u.Email.ToLower().Contains(recherche) ||
                     u.Nom.ToLower().Contains(recherche) ||
                     u.Prenom.ToLower().Contains(recherche) ||
                     u.Role.ToLower().Contains(recherche)
                 ).ToList();
-                UtilisateursFiltres = new ObservableCollection<Utilisateur>(filtres);
+            }
+
+            // Réinitialiser et charger la première page
+            _nombreUtilisateursCharges = 0;
+            UtilisateursFiltres.Clear();
+            ChargerUtilisateursSuivants();
+        }
+
+        private void ChargerUtilisateursSuivants()
+        {
+            try
+            {
+                var utilisateursACharger = _utilisateursFiltresComplet
+                    .Skip(_nombreUtilisateursCharges)
+                    .Take(TAILLE_PAGE)
+                    .ToList();
+
+                foreach (var utilisateur in utilisateursACharger)
+                {
+                    UtilisateursFiltres.Add(utilisateur);
+                }
+
+                _nombreUtilisateursCharges += utilisateursACharger.Count;
+                TousUtilisateursCharges = _nombreUtilisateursCharges >= _utilisateursFiltresComplet.Count;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des utilisateurs suivants : {ex.Message}");
             }
         }
 

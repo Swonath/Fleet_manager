@@ -95,11 +95,12 @@ namespace FLEET_MANAGER
                 (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#3b82f6"));
         }
 
-        private void BtnDashboard_Click(object sender, RoutedEventArgs e)
+        private async void BtnDashboard_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton(BtnDashboard);
             DataContext = _dashboardViewModel;
             ContentArea.Content = _dashboardView;
+            await _dashboardViewModel.ChargerDonneesAsync();
         }
 
         private void BtnVehicules_Click(object sender, RoutedEventArgs e)
@@ -130,12 +131,12 @@ namespace FLEET_MANAGER
             _utilisateurViewModel.ChargerUtilisateurs();
         }
 
-        private void BtnStatistiques_Click(object sender, RoutedEventArgs e)
+        private async void BtnStatistiques_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton(BtnStatistiques);
             DataContext = _statistiquesViewModel;
             ContentArea.Content = _statistiquesView;
-            _statistiquesViewModel.Rafraichir();
+            await _statistiquesViewModel.ChargerStatistiquesAsync();
         }
 
         private void BtnProfil_Click(object sender, RoutedEventArgs e)

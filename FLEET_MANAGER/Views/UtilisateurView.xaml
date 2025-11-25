@@ -1,6 +1,7 @@
 <UserControl x:Class="FLEET_MANAGER.Views.UtilisateurView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:FLEET_MANAGER.Views"
              Background="{StaticResource BackgroundBrush}">
 	<Grid Margin="32">
 		<Grid.RowDefinitions>
@@ -135,6 +136,7 @@
 						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="*"/>
+						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 
 					<TextBlock Grid.Row="0" Style="{StaticResource SectionTitleStyle}">
@@ -143,7 +145,7 @@
 
 					<TextBlock Grid.Row="1" Style="{StaticResource SubtitleStyle}">
 						<Run Text="{Binding UtilisateursFiltres.Count, Mode=OneWay}"/>
-						<Run Text="utilisateurs"/>
+						<Run Text="utilisateurs affichés"/>
 					</TextBlock>
 
 					<!-- DataGrid -->
@@ -195,6 +197,39 @@
 							<DataGridTextColumn Header="Rôle" Binding="{Binding Role}" Width="140"/>
 						</DataGrid.Columns>
 					</DataGrid>
+
+					<!-- Bouton Voir Plus et message de fin -->
+					<StackPanel Grid.Row="3" Margin="0,16,0,0">
+						<!-- Bouton Voir Plus -->
+						<Button Command="{Binding ChargerPlusCommand}"
+								Style="{StaticResource SecondaryButtonStyle}"
+								Height="45"
+								HorizontalAlignment="Center"
+								Padding="40,0">
+							<Button.Visibility>
+								<Binding Path="TousUtilisateursCharges">
+									<Binding.Converter>
+										<local:InverseBoolToVisibilityConverter/>
+									</Binding.Converter>
+								</Binding>
+							</Button.Visibility>
+							<StackPanel Orientation="Horizontal">
+								<TextBlock Text="👇" FontSize="16" Margin="0,0,8,0"/>
+								<TextBlock Text="Voir plus d'utilisateurs" FontSize="14" FontWeight="Medium"/>
+							</StackPanel>
+						</Button>
+
+						<!-- Message fin de liste -->
+						<Border Background="{StaticResource BackgroundBrush}"
+								CornerRadius="8"
+								Padding="16"
+								HorizontalAlignment="Center"
+								Visibility="{Binding TousUtilisateursCharges, Converter={StaticResource BoolToVisibilityConverter}}">
+							<TextBlock Text="✅ Tous les utilisateurs sont affichés"
+									   FontSize="13"
+									   Foreground="{StaticResource TextSecondaryBrush}"/>
+						</Border>
+					</StackPanel>
 				</Grid>
 			</Border>
 

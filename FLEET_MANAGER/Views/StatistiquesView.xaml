@@ -12,6 +12,27 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- Indicateur de chargement -->
+        <Border Grid.Row="1"
+                Background="#F8FAFC"
+                CornerRadius="12"
+                Padding="40"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Visibility="{Binding EstEnChargement, Converter={StaticResource BoolToVisibilityConverter}}">
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="⏳"
+                           FontSize="48"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,16"/>
+                <TextBlock Text="Calcul des statistiques..."
+                           FontSize="16"
+                           FontWeight="Medium"
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
         <!-- Header -->
         <StackPanel Grid.Row="0" Style="{StaticResource PageHeaderStyle}" Margin="0,0,0,32">
             <TextBlock Style="{StaticResource PageTitleStyle}">

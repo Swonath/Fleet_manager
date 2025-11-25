@@ -1,6 +1,7 @@
 <UserControl x:Class="FLEET_MANAGER.Views.CarburantTrajetView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:FLEET_MANAGER.Views"
              Background="{StaticResource BackgroundBrush}">
 	<Grid Margin="32">
 		<Grid.RowDefinitions>
@@ -259,6 +260,7 @@
 								<RowDefinition Height="Auto"/>
 								<RowDefinition Height="Auto"/>
 								<RowDefinition Height="*"/>
+								<RowDefinition Height="Auto"/>
 							</Grid.RowDefinitions>
 
 							<TextBlock Grid.Row="0" Style="{StaticResource SectionTitleStyle}">
@@ -267,7 +269,7 @@
 
 							<TextBlock Grid.Row="1" Style="{StaticResource SubtitleStyle}" Margin="0,0,0,16">
 								<Run Text="{Binding Historique.Count, Mode=OneWay}"/>
-								<Run Text="ravitaillements"/>
+								<Run Text="ravitaillements affichés"/>
 							</TextBlock>
 
 							<DataGrid Grid.Row="2"
@@ -311,6 +313,39 @@
 									<DataGridTextColumn Header="Notes" Binding="{Binding Notes}" Width="*"/>
 								</DataGrid.Columns>
 							</DataGrid>
+
+							<!-- Bouton Voir Plus et message de fin -->
+							<StackPanel Grid.Row="3" Margin="0,16,0,0">
+								<!-- Bouton Voir Plus -->
+								<Button Command="{Binding ChargerPlusCarburantCommand}"
+										Style="{StaticResource SecondaryButtonStyle}"
+										Height="45"
+										HorizontalAlignment="Center"
+										Padding="40,0">
+									<Button.Visibility>
+										<Binding Path="TousCarburantsCharges">
+											<Binding.Converter>
+												<local:InverseBoolToVisibilityConverter/>
+											</Binding.Converter>
+										</Binding>
+									</Button.Visibility>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="👇" FontSize="16" Margin="0,0,8,0"/>
+										<TextBlock Text="Voir plus de pleins" FontSize="14" FontWeight="Medium"/>
+									</StackPanel>
+								</Button>
+
+								<!-- Message fin de liste -->
+								<Border Background="{StaticResource BackgroundBrush}"
+										CornerRadius="8"
+										Padding="16"
+										HorizontalAlignment="Center"
+										Visibility="{Binding TousCarburantsCharges, Converter={StaticResource BoolToVisibilityConverter}}">
+									<TextBlock Text="✅ Tous les ravitaillements sont affichés"
+											   FontSize="13"
+											   Foreground="{StaticResource TextSecondaryBrush}"/>
+								</Border>
+							</StackPanel>
 						</Grid>
 					</Border>
 				</Grid>
@@ -467,6 +502,7 @@
 								<RowDefinition Height="Auto"/>
 								<RowDefinition Height="Auto"/>
 								<RowDefinition Height="*"/>
+								<RowDefinition Height="Auto"/>
 							</Grid.RowDefinitions>
 
 							<TextBlock Grid.Row="0" Style="{StaticResource SectionTitleStyle}">
@@ -475,7 +511,7 @@
 
 							<TextBlock Grid.Row="1" Style="{StaticResource SubtitleStyle}" Margin="0,0,0,16">
 								<Run Text="{Binding Trajets.Count, Mode=OneWay}"/>
-								<Run Text="trajets"/>
+								<Run Text="trajets affichés"/>
 							</TextBlock>
 
 							<DataGrid Grid.Row="2"
@@ -519,6 +555,39 @@
 									<DataGridTextColumn Header="Notes" Binding="{Binding Notes}" Width="*"/>
 								</DataGrid.Columns>
 							</DataGrid>
+
+							<!-- Bouton Voir Plus et message de fin -->
+							<StackPanel Grid.Row="3" Margin="0,16,0,0">
+								<!-- Bouton Voir Plus -->
+								<Button Command="{Binding ChargerPlusTrajetsCommand}"
+										Style="{StaticResource SecondaryButtonStyle}"
+										Height="45"
+										HorizontalAlignment="Center"
+										Padding="40,0">
+									<Button.Visibility>
+										<Binding Path="TousTrajetsCharges">
+											<Binding.Converter>
+												<local:InverseBoolToVisibilityConverter/>
+											</Binding.Converter>
+										</Binding>
+									</Button.Visibility>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="👇" FontSize="16" Margin="0,0,8,0"/>
+										<TextBlock Text="Voir plus de trajets" FontSize="14" FontWeight="Medium"/>
+									</StackPanel>
+								</Button>
+
+								<!-- Message fin de liste -->
+								<Border Background="{StaticResource BackgroundBrush}"
+										CornerRadius="8"
+										Padding="16"
+										HorizontalAlignment="Center"
+										Visibility="{Binding TousTrajetsCharges, Converter={StaticResource BoolToVisibilityConverter}}">
+									<TextBlock Text="✅ Tous les trajets sont affichés"
+											   FontSize="13"
+											   Foreground="{StaticResource TextSecondaryBrush}"/>
+								</Border>
+							</StackPanel>
 						</Grid>
 					</Border>
 				</Grid>

@@ -7,19 +7,19 @@ namespace FLEET_MANAGER.Views
 {
     /// <summary>
     /// Vue pour la gestion des utilisateurs
-    /// Gère notamment le PasswordBox qui ne supporte pas le binding en WPF
+    /// Gï¿½re notamment le PasswordBox qui ne supporte pas le binding en WPF
     /// </summary>
     public partial class UtilisateurView : UserControl
     {
         public UtilisateurView()
         {
             InitializeComponent();
-            // Le DataContext est assigné par MainWindow, ne pas en créer un ici
+            // Le DataContext est assignï¿½ par MainWindow, ne pas en crï¿½er un ici
         }
 
         /// <summary>
-        /// Gestionnaire d'événement pour transmettre le mot de passe au ViewModel
-        /// Le PasswordBox ne supporte pas le binding direct en WPF pour des raisons de sécurité
+        /// Gestionnaire d'ï¿½vï¿½nement pour transmettre le mot de passe au ViewModel
+        /// Le PasswordBox ne supporte pas le binding direct en WPF pour des raisons de sï¿½curitï¿½
         /// </summary>
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {

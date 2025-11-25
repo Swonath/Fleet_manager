@@ -6,7 +6,7 @@ using FLEET_MANAGER.Repositories;
 namespace FLEET_MANAGER.ViewModels
 {
     /// <summary>
-    /// ViewModel combiné pour la gestion du carburant et des trajets
+    /// ViewModel combinï¿½ pour la gestion du carburant et des trajets
     /// </summary>
     public class CarburantTrajetViewModel : ViewModelBase
     {
@@ -15,7 +15,7 @@ namespace FLEET_MANAGER.ViewModels
         private ObservableCollection<Carburant> _historique;
         private ObservableCollection<Trajet> _trajets;
 
-        // Propriétés Carburant
+        // Propriï¿½tï¿½s Carburant
         private decimal _quantiteLitres = 0;
         private decimal _coutTotal = 0;
         private decimal _coutParLitre = 0;
@@ -23,7 +23,7 @@ namespace FLEET_MANAGER.ViewModels
         private int _kilometrageCarburant = 0;
         private string _notesCarburant = string.Empty;
 
-        // Propriétés Trajet
+        // Propriï¿½tï¿½s Trajet
         private TimeSpan _heureDepart = new TimeSpan(9, 0, 0);
         private TimeSpan _heureArrivee = new TimeSpan(17, 0, 0);
         private int _kilometrageDepart = 0;
@@ -42,6 +42,29 @@ namespace FLEET_MANAGER.ViewModels
         private CarburantRepository _carburantRepository;
         private TrajetRepository _trajetRepository;
 
+        // Pagination Carburant
+        private const int TAILLE_PAGE = 12;
+        private List<Carburant> _tousLesCarburants = new List<Carburant>();
+        private int _nombreCarburantsCharges = 0;
+        private bool _tousCarburantsCharges = false;
+
+        // Pagination Trajets
+        private List<Trajet> _tousLesTrajets = new List<Trajet>();
+        private int _nombreTrajetsCharges = 0;
+        private bool _tousTrajetsCharges = false;
+
+        public bool TousCarburantsCharges
+        {
+            get => _tousCarburantsCharges;
+            set => SetProperty(ref _tousCarburantsCharges, value, nameof(TousCarburantsCharges));
+        }
+
+        public bool TousTrajetsCharges
+        {
+            get => _tousTrajetsCharges;
+            set => SetProperty(ref _tousTrajetsCharges, value, nameof(TousTrajetsCharges));
+        }
+
         public ObservableCollection<Vehicule> Vehicules
         {
             get => _vehicules;
@@ -59,7 +82,7 @@ namespace FLEET_MANAGER.ViewModels
                     {
                         ChargerHistorique(value.IdVehicule);
                         ChargerTrajets(value.IdVehicule);
-                        // Pré-remplir les kilomètres depuis le dernier carburant
+                        // Prï¿½-remplir les kilomï¿½tres depuis le dernier carburant
                         if (_historique.Count > 0)
                         {
                             _kilometrageDepart = _historique.Last().Kilometrage;
@@ -81,7 +104,7 @@ namespace FLEET_MANAGER.ViewModels
             set => SetProperty(ref _trajets, value, nameof(Trajets));
         }
 
-        // Propriétés Carburant
+        // Propriï¿½tï¿½s Carburant
         public decimal QuantiteLitres
         {
             get => _quantiteLitres;
@@ -130,7 +153,7 @@ namespace FLEET_MANAGER.ViewModels
             set => SetProperty(ref _notesCarburant, value, nameof(NotesCarburant));
         }
 
-        // Propriétés Trajet
+        // Propriï¿½tï¿½s Trajet
         public DateTime DateTrajet
         {
             get => _dateTrajet;
@@ -219,6 +242,8 @@ namespace FLEET_MANAGER.ViewModels
         public ICommand EnregistrerCarburantCommand { get; }
         public ICommand EnregistrerTrajetCommand { get; }
         public ICommand ReinitialiserCommand { get; }
+        public ICommand ChargerPlusCarburantCommand { get; }
+        public ICommand ChargerPlusTrajetsCommand { get; }
 
         public CarburantTrajetViewModel()
         {
@@ -232,6 +257,8 @@ namespace FLEET_MANAGER.ViewModels
             EnregistrerCarburantCommand = new RelayCommand(_ => PerformerEnregistrementCarburant(), _ => VehiculeSelectionne != null && !IsLoading);
             EnregistrerTrajetCommand = new RelayCommand(_ => PerformerEnregistrementTrajet(), _ => VehiculeSelectionne != null && !IsLoading);
             ReinitialiserCommand = new RelayCommand(_ => Reinitialiser());
+            ChargerPlusCarburantCommand = new RelayCommand(_ => ChargerCarburantsSuivants());
+            ChargerPlusTrajetsCommand = new RelayCommand(_ => ChargerTrajetsSuivants());
 
             ChargerVehicules();
         }
@@ -250,7 +277,7 @@ namespace FLEET_MANAGER.ViewModels
             }
         }
 
-        public void RéchargerVéhicules()
+        public void RÃ©chargerVÃ©hicules()
         {
             ChargerVehicules();
         }
@@ -259,8 +286,15 @@ namespace FLEET_MANAGER.ViewModels
         {
             try
             {
-                var historique = _carburantRepository.ObtenirCarburantParVehicule(idVehicule);
-                Historique = new ObservableCollection<Carburant>(historique);
+                // Charger tous les carburants pour le vÃ©hicule
+                _tousLesCarburants = _carburantRepository.ObtenirCarburantParVehicule(idVehicule);
+
+                // RÃ©initialiser la pagination
+                _nombreCarburantsCharges = 0;
+                Historique.Clear();
+
+                // Charger la premiÃ¨re page
+                ChargerCarburantsSuivants();
             }
             catch (Exception ex)
             {
@@ -268,16 +302,69 @@ namespace FLEET_MANAGER.ViewModels
             }
         }
 
+        private void ChargerCarburantsSuivants()
+        {
+            try
+            {
+                var carburantsACharger = _tousLesCarburants
+                    .Skip(_nombreCarburantsCharges)
+                    .Take(TAILLE_PAGE)
+                    .ToList();
+
+                foreach (var carburant in carburantsACharger)
+                {
+                    Historique.Add(carburant);
+                }
+
+                _nombreCarburantsCharges += carburantsACharger.Count;
+                TousCarburantsCharges = _nombreCarburantsCharges >= _tousLesCarburants.Count;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des carburants suivants : {ex.Message}");
+            }
+        }
+
         private void ChargerTrajets(int idVehicule)
         {
             try
             {
-                var trajets = _trajetRepository.ObtenirTrajetsParVehicule(idVehicule);
-                Trajets = new ObservableCollection<Trajet>(trajets);
+                // Charger tous les trajets pour le vÃ©hicule
+                _tousLesTrajets = _trajetRepository.ObtenirTrajetsParVehicule(idVehicule);
+
+                // RÃ©initialiser la pagination
+                _nombreTrajetsCharges = 0;
+                Trajets.Clear();
+
+                // Charger la premiÃ¨re page
+                ChargerTrajetsSuivants();
             }
             catch (Exception ex)
             {
                 MessageErreur = $"Erreur lors du chargement des trajets : {ex.Message}";
+            }
+        }
+
+        private void ChargerTrajetsSuivants()
+        {
+            try
+            {
+                var trajetsACharger = _tousLesTrajets
+                    .Skip(_nombreTrajetsCharges)
+                    .Take(TAILLE_PAGE)
+                    .ToList();
+
+                foreach (var trajet in trajetsACharger)
+                {
+                    Trajets.Add(trajet);
+                }
+
+                _nombreTrajetsCharges += trajetsACharger.Count;
+                TousTrajetsCharges = _nombreTrajetsCharges >= _tousLesTrajets.Count;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des trajets suivants : {ex.Message}");
             }
         }
 
@@ -315,7 +402,7 @@ namespace FLEET_MANAGER.ViewModels
                 {
                     MessageErreur = "Ravitaillement enregistre avec succes !";
                     ChargerHistorique(VehiculeSelectionne.IdVehicule);
-                    // Pré-remplir le kilométrage du trajet
+                    // Prï¿½-remplir le kilomï¿½trage du trajet
                     KilometrageDepart = KilometrageCarburant;
                 }
                 else

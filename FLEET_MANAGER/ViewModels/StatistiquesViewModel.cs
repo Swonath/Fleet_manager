@@ -16,6 +16,7 @@ namespace FLEET_MANAGER.ViewModels
         private int _totalTrajets;
         private decimal _kilometrageTotalParcouru;
         private decimal _coutTotalGlobal;
+        private bool _estEnChargement;
 
         public int TotalVehicules
         {
@@ -39,6 +40,12 @@ namespace FLEET_MANAGER.ViewModels
         {
             get => _coutTotalGlobal;
             set => SetProperty(ref _coutTotalGlobal, value, nameof(CoutTotalGlobal));
+        }
+
+        public bool EstEnChargement
+        {
+            get => _estEnChargement;
+            set => SetProperty(ref _estEnChargement, value, nameof(EstEnChargement));
         }
 
         #endregion
@@ -176,6 +183,7 @@ namespace FLEET_MANAGER.ViewModels
         private VehiculeRepository _vehiculeRepository;
         private CarburantRepository _carburantRepository;
         private TrajetRepository _trajetRepository;
+        private bool _donneesChargees = false;
 
         public StatistiquesViewModel()
         {
@@ -189,21 +197,27 @@ namespace FLEET_MANAGER.ViewModels
             _repartitionTypesTrajet = new ObservableCollection<RepartitionStatistique>();
             _repartitionTypesCarburant = new ObservableCollection<RepartitionStatistique>();
 
-            ChargerStatistiques();
+            // Ne plus charger au constructeur
         }
 
-        public void ChargerStatistiques()
+        public async Task ChargerStatistiquesAsync()
         {
+            if (_donneesChargees)
+                return;
+
+            EstEnChargement = true;
             try
             {
-                var vehicules = _vehiculeRepository.ObtenirTousLesVehicules();
-                TotalVehicules = vehicules.Count;
-
-                if (vehicules.Count == 0)
+                await Task.Run(() =>
                 {
-                    System.Diagnostics.Debug.WriteLine("Aucun véhicule trouvé dans la base de données");
-                    return;
-                }
+                    var vehicules = _vehiculeRepository.ObtenirTousLesVehicules();
+                    TotalVehicules = vehicules.Count;
+
+                    if (vehicules.Count == 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Aucun véhicule trouvé dans la base de données");
+                        return;
+                    }
 
                 // Récupérer toutes les données
                 var tousLesCarburants = new List<Carburant>();
@@ -256,8 +270,11 @@ namespace FLEET_MANAGER.ViewModels
                 // Top véhicules
                 CalculerTopVehicules(statsParVehicule);
 
-                // Répartitions
-                CalculerRepartitions(tousLesTrajets, vehicules);
+                    // Répartitions
+                    CalculerRepartitions(tousLesTrajets, vehicules);
+
+                    _donneesChargees = true;
+                });
             }
             catch (Exception ex)
             {
@@ -265,6 +282,15 @@ namespace FLEET_MANAGER.ViewModels
                 System.Diagnostics.Debug.WriteLine($"Stack trace : {ex.StackTrace}");
                 System.Windows.MessageBox.Show($"Erreur lors du chargement des statistiques :\n{ex.Message}", "Erreur", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
+            finally
+            {
+                EstEnChargement = false;
+            }
+        }
+
+        public void ChargerStatistiques()
+        {
+            _ = ChargerStatistiquesAsync();
         }
 
         private void CalculerStatistiquesGlobales(List<Carburant> carburants, List<Trajet> trajets, int nbVehicules)
@@ -370,7 +396,8 @@ namespace FLEET_MANAGER.ViewModels
 
         public void Rafraichir()
         {
-            ChargerStatistiques();
+            _donneesChargees = false;
+            _ = ChargerStatistiquesAsync();
         }
     }
 

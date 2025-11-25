@@ -1,112 +1,498 @@
 <UserControl x:Class="FLEET_MANAGER.Views.CarburantTrajetView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="#f5f5f5">
-	<Grid>
+             Background="{StaticResource BackgroundBrush}">
+	<Grid Margin="32">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
-			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Border Grid.Row="0" Background="#2196F3" Padding="20">
-			<Grid>
+		<!-- Header -->
+		<Grid Grid.Row="0" Margin="0,0,0,32">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+
+			<!-- Titre et description -->
+			<StackPanel Grid.Row="0" Style="{StaticResource PageHeaderStyle}">
+				<TextBlock Style="{StaticResource PageTitleStyle}">
+					Carburant et Trajets
+				</TextBlock>
+				<TextBlock Style="{StaticResource PageDescriptionStyle}">
+					Gestion des ravitaillements et trajets de vos véhicules
+				</TextBlock>
+			</StackPanel>
+
+			<!-- Sélecteur de véhicule -->
+			<Grid Grid.Row="1" Margin="0,16,0,0">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="400"/>
+					<ColumnDefinition Width="*"/>
 				</Grid.ColumnDefinitions>
 
-				<TextBlock Grid.Column="0" Text="Carburant et Trajets" FontSize="24" FontWeight="Bold" Foreground="White"/>
+				<TextBlock Grid.Column="0"
+						   Text="Véhicule :"
+						   FontSize="14"
+						   FontWeight="SemiBold"
+						   Foreground="{StaticResource TextPrimaryBrush}"
+						   VerticalAlignment="Center"
+						   Margin="0,0,12,0"/>
 
-				<StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-					<TextBlock Text="Vehicule :" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0"/>
-					<ComboBox Width="300" Height="35" ItemsSource="{Binding Vehicules}" SelectedItem="{Binding VehiculeSelectionne, Mode=TwoWay}" DisplayMemberPath="DescriptionComplete"/>
-				</StackPanel>
+				<ComboBox Grid.Column="1"
+						  ItemsSource="{Binding Vehicules}"
+						  SelectedItem="{Binding VehiculeSelectionne, Mode=TwoWay}"
+						  DisplayMemberPath="DescriptionComplete"
+						  Height="42"
+						  FontSize="14"
+						  Padding="12,0"/>
 			</Grid>
-		</Border>
+		</Grid>
 
-		<TabControl Grid.Row="1" Margin="20">
+		<!-- Message d'erreur/succès -->
+		<TextBlock Grid.Row="1"
+				   Text="{Binding MessageErreur}"
+				   Foreground="{StaticResource DangerBrush}"
+				   FontSize="13"
+				   Margin="0,0,0,16"
+				   VerticalAlignment="Top"
+				   Visibility="{Binding MessageErreur, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+		<!-- TabControl -->
+		<TabControl Grid.Row="1" Margin="0,8,0,0" BorderThickness="0" Background="Transparent">
+			<TabControl.Resources>
+				<Style TargetType="TabItem">
+					<Setter Property="Template">
+						<Setter.Value>
+							<ControlTemplate TargetType="TabItem">
+								<Border Name="Border"
+										Background="Transparent"
+										BorderThickness="0,0,0,2"
+										BorderBrush="Transparent"
+										Padding="20,12"
+										Margin="0,0,4,0"
+										Cursor="Hand">
+									<ContentPresenter x:Name="ContentSite"
+													  VerticalAlignment="Center"
+													  HorizontalAlignment="Center"
+													  ContentSource="Header"/>
+								</Border>
+								<ControlTemplate.Triggers>
+									<Trigger Property="IsSelected" Value="True">
+										<Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+										<Setter TargetName="Border" Property="Background" Value="Transparent"/>
+									</Trigger>
+									<Trigger Property="IsSelected" Value="False">
+										<Setter TargetName="Border" Property="BorderBrush" Value="Transparent"/>
+									</Trigger>
+								</ControlTemplate.Triggers>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+					<Setter Property="FontSize" Value="14"/>
+					<Setter Property="FontWeight" Value="SemiBold"/>
+					<Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+					<Style.Triggers>
+						<Trigger Property="IsSelected" Value="True">
+							<Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</TabControl.Resources>
+
+			<!-- Onglet Carburant -->
 			<TabItem Header="Carburant">
-				<Grid Margin="15">
+				<Grid Margin="0,24,0,0">
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="350"/>
+						<ColumnDefinition Width="380"/>
 						<ColumnDefinition Width="*"/>
 					</Grid.ColumnDefinitions>
 
-					<Border Grid.Column="0" Background="White" Padding="20" Margin="0,0,15,0">
+					<!-- Formulaire Carburant -->
+					<Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,24,0">
 						<StackPanel>
-							<TextBlock Text="Nouveau ravitaillement" FontSize="16" FontWeight="Bold" Foreground="#2196F3" Margin="0,0,0,15"/>
-							<TextBlock Text="Date" Margin="0,0,0,5"/>
-							<DatePicker SelectedDate="{Binding DateSaisie}" Margin="0,0,0,10"/>
-							<TextBlock Text="Quantite (litres)" Margin="0,0,0,5"/>
-							<TextBox Text="{Binding QuantiteLitres, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
-							<TextBlock Text="Cout total" Margin="0,0,0,5"/>
-							<TextBox Text="{Binding CoutTotal, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
-							<TextBlock Text="Kilometrage" Margin="0,0,0,5"/>
-							<TextBox Text="{Binding KilometrageCarburant, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
-							<TextBlock Text="Notes" Margin="0,0,0,5"/>
-							<TextBox Text="{Binding NotesCarburant}" Height="50" TextWrapping="Wrap" Margin="0,0,0,15"/>
-							<Button Content="Enregistrer" Command="{Binding EnregistrerCarburantCommand}" Height="35" Background="#4CAF50" Foreground="White"/>
+							<TextBlock Style="{StaticResource SectionTitleStyle}">
+								Nouveau ravitaillement
+							</TextBlock>
+							<TextBlock Style="{StaticResource SubtitleStyle}" Margin="0,0,0,24">
+								Enregistrer un plein de carburant
+							</TextBlock>
+
+							<!-- Date -->
+							<TextBlock Text="Date"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<DatePicker SelectedDate="{Binding DateSaisie}"
+										Height="42"
+										Margin="0,0,0,16"/>
+
+							<!-- Quantité -->
+							<TextBlock Text="Quantité (litres)"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,16">
+								<TextBox Text="{Binding QuantiteLitres, UpdateSourceTrigger=PropertyChanged}"
+										 BorderThickness="0"
+										 VerticalAlignment="Center"
+										 Padding="12,0"
+										 FontSize="14"
+										 Foreground="{StaticResource TextPrimaryBrush}"/>
+							</Border>
+
+							<!-- Coût total -->
+							<TextBlock Text="Coût total (€)"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,16">
+								<TextBox Text="{Binding CoutTotal, UpdateSourceTrigger=PropertyChanged}"
+										 BorderThickness="0"
+										 VerticalAlignment="Center"
+										 Padding="12,0"
+										 FontSize="14"
+										 Foreground="{StaticResource TextPrimaryBrush}"/>
+							</Border>
+
+							<!-- Kilométrage -->
+							<TextBlock Text="Kilométrage"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,16">
+								<TextBox Text="{Binding KilometrageCarburant, UpdateSourceTrigger=PropertyChanged}"
+										 BorderThickness="0"
+										 VerticalAlignment="Center"
+										 Padding="12,0"
+										 FontSize="14"
+										 Foreground="{StaticResource TextPrimaryBrush}"/>
+							</Border>
+
+							<!-- Notes -->
+							<TextBlock Text="Notes"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="80"
+									Margin="0,0,0,24">
+								<TextBox Text="{Binding NotesCarburant}"
+										 BorderThickness="0"
+										 VerticalAlignment="Top"
+										 Padding="12"
+										 FontSize="14"
+										 TextWrapping="Wrap"
+										 AcceptsReturn="True"
+										 Foreground="{StaticResource TextPrimaryBrush}"/>
+							</Border>
+
+							<!-- Bouton Enregistrer -->
+							<Button Command="{Binding EnregistrerCarburantCommand}"
+									Style="{StaticResource PrimaryButtonStyle}"
+									Height="42">
+								<StackPanel Orientation="Horizontal">
+									<TextBlock Text="+" FontSize="18" FontWeight="Bold" Margin="0,0,8,0"/>
+									<TextBlock Text="Enregistrer le plein" FontSize="14"/>
+								</StackPanel>
+							</Button>
 						</StackPanel>
 					</Border>
 
-					<Border Grid.Column="1" Background="White" Padding="20">
-						<DataGrid ItemsSource="{Binding Historique}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False">
-							<DataGrid.Columns>
-								<DataGridTextColumn Header="Date" Binding="{Binding DateSaisie, StringFormat=d}" Width="90"/>
-								<DataGridTextColumn Header="Litres" Binding="{Binding QuantiteLitres}" Width="70"/>
-								<DataGridTextColumn Header="Cout" Binding="{Binding CoutTotal}" Width="70"/>
-								<DataGridTextColumn Header="Km" Binding="{Binding Kilometrage}" Width="70"/>
-								<DataGridTextColumn Header="Notes" Binding="{Binding Notes}" Width="*"/>
-							</DataGrid.Columns>
-						</DataGrid>
+					<!-- Historique Carburant -->
+					<Border Grid.Column="1" Style="{StaticResource CardStyle}">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="*"/>
+							</Grid.RowDefinitions>
+
+							<TextBlock Grid.Row="0" Style="{StaticResource SectionTitleStyle}">
+								Historique des pleins
+							</TextBlock>
+
+							<TextBlock Grid.Row="1" Style="{StaticResource SubtitleStyle}" Margin="0,0,0,16">
+								<Run Text="{Binding Historique.Count, Mode=OneWay}"/>
+								<Run Text="ravitaillements"/>
+							</TextBlock>
+
+							<DataGrid Grid.Row="2"
+									  ItemsSource="{Binding Historique}"
+									  AutoGenerateColumns="False"
+									  IsReadOnly="True"
+									  CanUserAddRows="False"
+									  BorderThickness="0"
+									  Background="Transparent"
+									  RowBackground="White"
+									  AlternatingRowBackground="{StaticResource BackgroundBrush}"
+									  GridLinesVisibility="None"
+									  HeadersVisibility="Column"
+									  SelectionMode="Single"
+									  CanUserResizeRows="False">
+								<DataGrid.Resources>
+									<Style TargetType="DataGridColumnHeader">
+										<Setter Property="Background" Value="Transparent"/>
+										<Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+										<Setter Property="FontWeight" Value="SemiBold"/>
+										<Setter Property="FontSize" Value="12"/>
+										<Setter Property="Padding" Value="12,8"/>
+										<Setter Property="BorderThickness" Value="0,0,0,1"/>
+										<Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+									</Style>
+									<Style TargetType="DataGridCell">
+										<Setter Property="BorderThickness" Value="0"/>
+										<Setter Property="Padding" Value="12,12"/>
+										<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+										<Setter Property="FontSize" Value="13"/>
+									</Style>
+									<Style TargetType="DataGridRow">
+										<Setter Property="Height" Value="48"/>
+									</Style>
+								</DataGrid.Resources>
+								<DataGrid.Columns>
+									<DataGridTextColumn Header="Date" Binding="{Binding DateSaisie, StringFormat=dd/MM/yyyy}" Width="100"/>
+									<DataGridTextColumn Header="Litres" Binding="{Binding QuantiteLitres, StringFormat={}{0:N2}}" Width="80"/>
+									<DataGridTextColumn Header="Coût (€)" Binding="{Binding CoutTotal, StringFormat={}{0:N2}}" Width="90"/>
+									<DataGridTextColumn Header="Kilométrage" Binding="{Binding Kilometrage, StringFormat={}{0:N0}}" Width="110"/>
+									<DataGridTextColumn Header="Notes" Binding="{Binding Notes}" Width="*"/>
+								</DataGrid.Columns>
+							</DataGrid>
+						</Grid>
 					</Border>
 				</Grid>
 			</TabItem>
 
+			<!-- Onglet Trajets -->
 			<TabItem Header="Trajets">
-				<Grid Margin="15">
+				<Grid Margin="0,24,0,0">
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="350"/>
+						<ColumnDefinition Width="380"/>
 						<ColumnDefinition Width="*"/>
 					</Grid.ColumnDefinitions>
 
-					<Border Grid.Column="0" Background="White" Padding="20" Margin="0,0,15,0">
+					<!-- Formulaire Trajet -->
+					<Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,24,0">
 						<StackPanel>
-							<TextBlock Text="Nouveau trajet" FontSize="16" FontWeight="Bold" Foreground="#2196F3" Margin="0,0,0,15"/>
-							<TextBlock Text="Date" Margin="0,0,0,5"/>
-							<DatePicker SelectedDate="{Binding DateTrajet}" Margin="0,0,0,10"/>
-							<TextBlock Text="Lieu depart" Margin="0,0,0,5"/>
-							<TextBox Text="{Binding LieuDepart}" Margin="0,0,0,10"/>
-							<TextBlock Text="Lieu arrivee" Margin="0,0,0,5"/>
-							<TextBox Text="{Binding LieuArrivee}" Margin="0,0,0,10"/>
-							<TextBlock Text="Km depart" Margin="0,0,0,5"/>
-							<TextBox Text="{Binding KilometrageDepart, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
-							<TextBlock Text="Km arrivee" Margin="0,0,0,5"/>
-							<TextBox Text="{Binding KilometrageArrivee, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
-							<TextBlock Text="Notes" Margin="0,0,0,5"/>
-							<TextBox Text="{Binding NotesTrajet}" Height="50" TextWrapping="Wrap" Margin="0,0,0,15"/>
-							<Button Content="Enregistrer" Command="{Binding EnregistrerTrajetCommand}" Height="35" Background="#4CAF50" Foreground="White"/>
+							<TextBlock Style="{StaticResource SectionTitleStyle}">
+								Nouveau trajet
+							</TextBlock>
+							<TextBlock Style="{StaticResource SubtitleStyle}" Margin="0,0,0,24">
+								Enregistrer un déplacement
+							</TextBlock>
+
+							<!-- Date -->
+							<TextBlock Text="Date"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<DatePicker SelectedDate="{Binding DateTrajet}"
+										Height="42"
+										Margin="0,0,0,16"/>
+
+							<!-- Lieu départ -->
+							<TextBlock Text="Lieu de départ"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,16">
+								<TextBox Text="{Binding LieuDepart}"
+										 BorderThickness="0"
+										 VerticalAlignment="Center"
+										 Padding="12,0"
+										 FontSize="14"
+										 Foreground="{StaticResource TextPrimaryBrush}"/>
+							</Border>
+
+							<!-- Lieu arrivée -->
+							<TextBlock Text="Lieu d'arrivée"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,16">
+								<TextBox Text="{Binding LieuArrivee}"
+										 BorderThickness="0"
+										 VerticalAlignment="Center"
+										 Padding="12,0"
+										 FontSize="14"
+										 Foreground="{StaticResource TextPrimaryBrush}"/>
+							</Border>
+
+							<!-- Km départ -->
+							<TextBlock Text="Kilométrage départ"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,16">
+								<TextBox Text="{Binding KilometrageDepart, UpdateSourceTrigger=PropertyChanged}"
+										 BorderThickness="0"
+										 VerticalAlignment="Center"
+										 Padding="12,0"
+										 FontSize="14"
+										 Foreground="{StaticResource TextPrimaryBrush}"/>
+							</Border>
+
+							<!-- Km arrivée -->
+							<TextBlock Text="Kilométrage arrivée"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,16">
+								<TextBox Text="{Binding KilometrageArrivee, UpdateSourceTrigger=PropertyChanged}"
+										 BorderThickness="0"
+										 VerticalAlignment="Center"
+										 Padding="12,0"
+										 FontSize="14"
+										 Foreground="{StaticResource TextPrimaryBrush}"/>
+							</Border>
+
+							<!-- Notes -->
+							<TextBlock Text="Notes"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="80"
+									Margin="0,0,0,24">
+								<TextBox Text="{Binding NotesTrajet}"
+										 BorderThickness="0"
+										 VerticalAlignment="Top"
+										 Padding="12"
+										 FontSize="14"
+										 TextWrapping="Wrap"
+										 AcceptsReturn="True"
+										 Foreground="{StaticResource TextPrimaryBrush}"/>
+							</Border>
+
+							<!-- Bouton Enregistrer -->
+							<Button Command="{Binding EnregistrerTrajetCommand}"
+									Style="{StaticResource PrimaryButtonStyle}"
+									Height="42">
+								<StackPanel Orientation="Horizontal">
+									<TextBlock Text="+" FontSize="18" FontWeight="Bold" Margin="0,0,8,0"/>
+									<TextBlock Text="Enregistrer le trajet" FontSize="14"/>
+								</StackPanel>
+							</Button>
 						</StackPanel>
 					</Border>
 
-					<Border Grid.Column="1" Background="White" Padding="20">
-						<DataGrid ItemsSource="{Binding Trajets}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False">
-							<DataGrid.Columns>
-								<DataGridTextColumn Header="Date" Binding="{Binding DateTrajet, StringFormat=d}" Width="90"/>
-								<DataGridTextColumn Header="Depart" Binding="{Binding LieuDepart}" Width="100"/>
-								<DataGridTextColumn Header="Arrivee" Binding="{Binding LieuArrivee}" Width="100"/>
-								<DataGridTextColumn Header="Distance" Binding="{Binding DistanceParcourue}" Width="70"/>
-								<DataGridTextColumn Header="Notes" Binding="{Binding Notes}" Width="*"/>
-							</DataGrid.Columns>
-						</DataGrid>
+					<!-- Historique Trajets -->
+					<Border Grid.Column="1" Style="{StaticResource CardStyle}">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="*"/>
+							</Grid.RowDefinitions>
+
+							<TextBlock Grid.Row="0" Style="{StaticResource SectionTitleStyle}">
+								Historique des trajets
+							</TextBlock>
+
+							<TextBlock Grid.Row="1" Style="{StaticResource SubtitleStyle}" Margin="0,0,0,16">
+								<Run Text="{Binding Trajets.Count, Mode=OneWay}"/>
+								<Run Text="trajets"/>
+							</TextBlock>
+
+							<DataGrid Grid.Row="2"
+									  ItemsSource="{Binding Trajets}"
+									  AutoGenerateColumns="False"
+									  IsReadOnly="True"
+									  CanUserAddRows="False"
+									  BorderThickness="0"
+									  Background="Transparent"
+									  RowBackground="White"
+									  AlternatingRowBackground="{StaticResource BackgroundBrush}"
+									  GridLinesVisibility="None"
+									  HeadersVisibility="Column"
+									  SelectionMode="Single"
+									  CanUserResizeRows="False">
+								<DataGrid.Resources>
+									<Style TargetType="DataGridColumnHeader">
+										<Setter Property="Background" Value="Transparent"/>
+										<Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+										<Setter Property="FontWeight" Value="SemiBold"/>
+										<Setter Property="FontSize" Value="12"/>
+										<Setter Property="Padding" Value="12,8"/>
+										<Setter Property="BorderThickness" Value="0,0,0,1"/>
+										<Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+									</Style>
+									<Style TargetType="DataGridCell">
+										<Setter Property="BorderThickness" Value="0"/>
+										<Setter Property="Padding" Value="12,12"/>
+										<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+										<Setter Property="FontSize" Value="13"/>
+									</Style>
+									<Style TargetType="DataGridRow">
+										<Setter Property="Height" Value="48"/>
+									</Style>
+								</DataGrid.Resources>
+								<DataGrid.Columns>
+									<DataGridTextColumn Header="Date" Binding="{Binding DateTrajet, StringFormat=dd/MM/yyyy}" Width="100"/>
+									<DataGridTextColumn Header="Départ" Binding="{Binding LieuDepart}" Width="120"/>
+									<DataGridTextColumn Header="Arrivée" Binding="{Binding LieuArrivee}" Width="120"/>
+									<DataGridTextColumn Header="Distance (km)" Binding="{Binding DistanceParcourue, StringFormat={}{0:N0}}" Width="110"/>
+									<DataGridTextColumn Header="Notes" Binding="{Binding Notes}" Width="*"/>
+								</DataGrid.Columns>
+							</DataGrid>
+						</Grid>
 					</Border>
 				</Grid>
 			</TabItem>
 		</TabControl>
-
-		<Border Grid.Row="2" Background="#ECEFF1" Padding="10">
-			<TextBlock Text="{Binding MessageErreur}" FontWeight="SemiBold"/>
-		</Border>
 	</Grid>
 </UserControl>

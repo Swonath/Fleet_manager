@@ -57,7 +57,8 @@
                                Foreground="#64748B"
                                Margin="24,0,24,12"/>
 
-                    <Button Content="📊 Tableau de bord"
+                    <Button x:Name="BtnDashboard"
+                            Content="📊 Tableau de bord"
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="BtnDashboard_Click"/>
 
@@ -66,11 +67,13 @@
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="BtnVehicules_Click"/>
 
-                    <Button Content="⛽ Carburant &amp; Trajets"
+                    <Button x:Name="BtnCarburantTrajet"
+                            Content="⛽ Carburant &amp; Trajets"
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="BtnCarburantTrajet_Click"/>
 
-                    <Button Content="📈 Statistiques"
+                    <Button x:Name="BtnStatistiques"
+                            Content="📈 Statistiques"
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="BtnStatistiques_Click"/>
 

@@ -81,20 +81,37 @@ namespace FLEET_MANAGER
             BtnDashboard_Click(null, null);
         }
 
+        private void SetActiveButton(Button activeButton)
+        {
+            // Réinitialiser tous les boutons
+            BtnDashboard.Background = System.Windows.Media.Brushes.Transparent;
+            BtnVehiculesNav.Background = System.Windows.Media.Brushes.Transparent;
+            BtnCarburantTrajet.Background = System.Windows.Media.Brushes.Transparent;
+            BtnStatistiques.Background = System.Windows.Media.Brushes.Transparent;
+            BtnUtilisateurs.Background = System.Windows.Media.Brushes.Transparent;
+
+            // Mettre le bouton actif en surbrillance
+            activeButton.Background = new System.Windows.Media.SolidColorBrush(
+                (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#3b82f6"));
+        }
+
         private void BtnDashboard_Click(object sender, RoutedEventArgs e)
         {
+            SetActiveButton(BtnDashboard);
             DataContext = _dashboardViewModel;
             ContentArea.Content = _dashboardView;
         }
 
         private void BtnVehicules_Click(object sender, RoutedEventArgs e)
         {
+            SetActiveButton(BtnVehiculesNav);
             DataContext = _vehiculeViewModel;
             ContentArea.Content = _vehiculeView;
         }
 
         private void BtnCarburantTrajet_Click(object sender, RoutedEventArgs e)
         {
+            SetActiveButton(BtnCarburantTrajet);
             DataContext = _carburantTrajetViewModel;
             ContentArea.Content = _carburantTrajetView;
         }
@@ -107,6 +124,7 @@ namespace FLEET_MANAGER
                 return;
             }
 
+            SetActiveButton(BtnUtilisateurs);
             DataContext = _utilisateurViewModel;
             ContentArea.Content = _utilisateurView;
             _utilisateurViewModel.ChargerUtilisateurs();
@@ -114,6 +132,7 @@ namespace FLEET_MANAGER
 
         private void BtnStatistiques_Click(object sender, RoutedEventArgs e)
         {
+            SetActiveButton(BtnStatistiques);
             DataContext = _statistiquesViewModel;
             ContentArea.Content = _statistiquesView;
             _statistiquesViewModel.Rafraichir();

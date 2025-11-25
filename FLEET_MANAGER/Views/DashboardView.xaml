@@ -19,20 +19,35 @@
 		</StackPanel>
 
 		<!-- Contenu principal -->
-		<ScrollViewer Grid.Row="1" Style="{StaticResource ModernScrollViewerStyle}">
-			<StackPanel>
+		<ScrollViewer Grid.Row="1"
+		              VerticalScrollBarVisibility="Auto"
+		              HorizontalScrollBarVisibility="Disabled"
+		              Margin="0,0,8,0">
+			<StackPanel Margin="0,0,8,0">
 				<!-- Statistiques -->
-				<Grid Margin="0,0,0,32">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="*"/>
-						<ColumnDefinition Width="*"/>
-						<ColumnDefinition Width="*"/>
-						<ColumnDefinition Width="*"/>
-						<ColumnDefinition Width="*"/>
-					</Grid.ColumnDefinitions>
+				<Border Style="{StaticResource CardStyle}" Margin="0,0,0,24">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
 
-					<!-- Bloc 1: Total Véhicules -->
-					<Border Grid.Column="0" Style="{StaticResource StatBoxStyle}">
+						<TextBlock Grid.Row="0"
+						           Text="📊 Vue d'ensemble"
+						           Style="{StaticResource SectionTitleStyle}"
+						           Margin="0,0,0,20"/>
+
+						<Grid Grid.Row="1">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+
+							<!-- Bloc 1: Total Véhicules -->
+							<Border Grid.Column="0" Style="{StaticResource StatBoxStyle}">
 						<StackPanel>
 							<TextBlock Style="{StaticResource StatLabelStyle}">
 								Total Véhicules
@@ -120,7 +135,9 @@
 									   Margin="0,4,0,0"/>
 						</StackPanel>
 					</Border>
-				</Grid>
+						</Grid>
+					</Grid>
+				</Border>
 
 				<!-- Liste des véhicules -->
 				<Border Style="{StaticResource CardStyle}">
@@ -131,60 +148,212 @@
 							<RowDefinition Height="*"/>
 						</Grid.RowDefinitions>
 
-						<TextBlock Grid.Row="0" Style="{StaticResource SectionTitleStyle}">
-							Tous les Véhicules
-						</TextBlock>
+						<TextBlock Grid.Row="0"
+						           Text="🚗 Tous les Véhicules"
+						           Style="{StaticResource SectionTitleStyle}"/>
 
 						<TextBlock Grid.Row="1" Style="{StaticResource SubtitleStyle}">
 							<Run Text="{Binding Vehicules.Count, Mode=OneWay}"/>
 							<Run Text="véhicules enregistrés"/>
 						</TextBlock>
 
-						<DataGrid Grid.Row="2"
-								  ItemsSource="{Binding Vehicules}"
-								  AutoGenerateColumns="False"
-								  CanUserAddRows="False"
-								  IsReadOnly="True"
-								  BorderThickness="0"
-								  Background="Transparent"
-								  RowBackground="White"
-								  AlternatingRowBackground="{StaticResource BackgroundBrush}"
-								  GridLinesVisibility="None"
-								  HeadersVisibility="Column"
-								  SelectionMode="Single"
-								  CanUserResizeRows="False"
-								  Margin="0,16,0,0"
-								  MaxHeight="400">
-							<DataGrid.Resources>
-								<Style TargetType="DataGridColumnHeader">
-									<Setter Property="Background" Value="Transparent"/>
-									<Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
-									<Setter Property="FontWeight" Value="SemiBold"/>
-									<Setter Property="FontSize" Value="12"/>
-									<Setter Property="Padding" Value="12,8"/>
-									<Setter Property="BorderThickness" Value="0,0,0,1"/>
-									<Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
-								</Style>
-								<Style TargetType="DataGridCell">
-									<Setter Property="BorderThickness" Value="0"/>
-									<Setter Property="Padding" Value="12,12"/>
-									<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
-									<Setter Property="FontSize" Value="13"/>
-								</Style>
-								<Style TargetType="DataGridRow">
-									<Setter Property="Height" Value="48"/>
-								</Style>
-							</DataGrid.Resources>
-							<DataGrid.Columns>
-								<DataGridTextColumn Header="Marque" Binding="{Binding Marque}" Width="120"/>
-								<DataGridTextColumn Header="Modèle" Binding="{Binding Modele}" Width="140"/>
-								<DataGridTextColumn Header="Immatriculation" Binding="{Binding Immatriculation}" Width="140"/>
-								<DataGridTextColumn Header="Année" Binding="{Binding AnneeFabrication}" Width="90"/>
-								<DataGridTextColumn Header="Type" Binding="{Binding TypeCarburant}" Width="110"/>
-								<DataGridTextColumn Header="État" Binding="{Binding Etat}" Width="140"/>
-								<DataGridTextColumn Header="Kilométrage" Binding="{Binding KilomettrageActuel, StringFormat={}{0:N0}}" Width="*"/>
-							</DataGrid.Columns>
-						</DataGrid>
+						<!-- Grille de cartes de véhicules -->
+						<ScrollViewer Grid.Row="2"
+						              VerticalScrollBarVisibility="Auto"
+						              MaxHeight="500"
+						              Margin="0,8,0,0">
+							<ItemsControl ItemsSource="{Binding Vehicules}">
+								<ItemsControl.ItemsPanel>
+									<ItemsPanelTemplate>
+										<WrapPanel Orientation="Horizontal"/>
+									</ItemsPanelTemplate>
+								</ItemsControl.ItemsPanel>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Border Background="White"
+										        BorderBrush="{StaticResource BorderBrush}"
+										        BorderThickness="1"
+										        CornerRadius="12"
+										        Padding="20"
+										        Margin="0,0,16,16"
+										        Width="340">
+											<Border.Effect>
+												<DropShadowEffect Color="#E2E8F0" BlurRadius="8" ShadowDepth="2" Opacity="0.15"/>
+											</Border.Effect>
+											<Grid>
+												<Grid.RowDefinitions>
+													<RowDefinition Height="Auto"/>
+													<RowDefinition Height="Auto"/>
+													<RowDefinition Height="Auto"/>
+												</Grid.RowDefinitions>
+
+												<!-- Entête avec icône -->
+												<Grid Grid.Row="0" Margin="0,0,0,16">
+													<Grid.ColumnDefinitions>
+														<ColumnDefinition Width="Auto"/>
+														<ColumnDefinition Width="*"/>
+													</Grid.ColumnDefinitions>
+
+													<Border Grid.Column="0"
+													        Width="56"
+													        Height="56"
+													        CornerRadius="12"
+													        Background="{StaticResource PrimaryLightBrush}"
+													        VerticalAlignment="Top">
+														<TextBlock Text="🚗"
+														           FontSize="28"
+														           HorizontalAlignment="Center"
+														           VerticalAlignment="Center"/>
+													</Border>
+
+													<StackPanel Grid.Column="1" Margin="16,0,0,0">
+														<TextBlock Text="{Binding Marque}"
+														           FontSize="18"
+														           FontWeight="Bold"
+														           Foreground="{StaticResource TextPrimaryBrush}"/>
+														<TextBlock Text="{Binding Modele}"
+														           FontSize="14"
+														           Foreground="{StaticResource TextSecondaryBrush}"
+														           Margin="0,2,0,0"/>
+													</StackPanel>
+												</Grid>
+
+												<!-- Informations -->
+												<StackPanel Grid.Row="1" Margin="0,0,0,12">
+													<!-- Immatriculation -->
+													<Border Background="{StaticResource BackgroundBrush}"
+													        CornerRadius="6"
+													        Padding="12,8"
+													        Margin="0,0,0,8">
+														<Grid>
+															<Grid.ColumnDefinitions>
+																<ColumnDefinition Width="*"/>
+																<ColumnDefinition Width="Auto"/>
+															</Grid.ColumnDefinitions>
+															<TextBlock Grid.Column="0"
+															           Text="Immatriculation"
+															           FontSize="11"
+															           Foreground="{StaticResource TextSecondaryBrush}"/>
+															<TextBlock Grid.Column="1"
+															           Text="{Binding Immatriculation}"
+															           FontSize="13"
+															           FontWeight="SemiBold"
+															           Foreground="{StaticResource TextPrimaryBrush}"/>
+														</Grid>
+													</Border>
+
+													<!-- Année et Type -->
+													<Grid Margin="0,0,0,8">
+														<Grid.ColumnDefinitions>
+															<ColumnDefinition Width="*"/>
+															<ColumnDefinition Width="*"/>
+														</Grid.ColumnDefinitions>
+
+														<Border Grid.Column="0"
+														        Background="{StaticResource BackgroundBrush}"
+														        CornerRadius="6"
+														        Padding="12,8"
+														        Margin="0,0,4,0">
+															<StackPanel>
+																<TextBlock Text="Année"
+																           FontSize="11"
+																           Foreground="{StaticResource TextSecondaryBrush}"/>
+																<TextBlock Text="{Binding AnneeFabrication}"
+																           FontSize="13"
+																           FontWeight="SemiBold"
+																           Foreground="{StaticResource TextPrimaryBrush}"
+																           Margin="0,2,0,0"/>
+															</StackPanel>
+														</Border>
+
+														<Border Grid.Column="1"
+														        Background="{StaticResource BackgroundBrush}"
+														        CornerRadius="6"
+														        Padding="12,8"
+														        Margin="4,0,0,0">
+															<StackPanel>
+																<TextBlock Text="Carburant"
+																           FontSize="11"
+																           Foreground="{StaticResource TextSecondaryBrush}"/>
+																<TextBlock Text="{Binding TypeCarburant}"
+																           FontSize="13"
+																           FontWeight="SemiBold"
+																           Foreground="{StaticResource TextPrimaryBrush}"
+																           Margin="0,2,0,0"/>
+															</StackPanel>
+														</Border>
+													</Grid>
+
+													<!-- Kilométrage -->
+													<Border Background="{StaticResource BackgroundBrush}"
+													        CornerRadius="6"
+													        Padding="12,8">
+														<Grid>
+															<Grid.ColumnDefinitions>
+																<ColumnDefinition Width="*"/>
+																<ColumnDefinition Width="Auto"/>
+															</Grid.ColumnDefinitions>
+															<TextBlock Grid.Column="0"
+															           Text="Kilométrage actuel"
+															           FontSize="11"
+															           Foreground="{StaticResource TextSecondaryBrush}"/>
+															<TextBlock Grid.Column="1"
+															           Text="{Binding KilomettrageActuel, StringFormat={}{0:N0} km}"
+															           FontSize="13"
+															           FontWeight="Bold"
+															           Foreground="{StaticResource PrimaryBrush}"/>
+														</Grid>
+													</Border>
+												</StackPanel>
+
+												<!-- Badge État -->
+												<Grid Grid.Row="2">
+													<Border CornerRadius="8"
+													        Padding="12,6"
+													        HorizontalAlignment="Stretch">
+														<Border.Style>
+															<Style TargetType="Border">
+																<Style.Triggers>
+																	<DataTrigger Binding="{Binding Etat}" Value="En service">
+																		<Setter Property="Background" Value="{StaticResource SuccessLightBrush}"/>
+																	</DataTrigger>
+																	<DataTrigger Binding="{Binding Etat}" Value="En maintenance">
+																		<Setter Property="Background" Value="{StaticResource WarningLightBrush}"/>
+																	</DataTrigger>
+																	<DataTrigger Binding="{Binding Etat}" Value="Disponible">
+																		<Setter Property="Background" Value="{StaticResource InfoLightBrush}"/>
+																	</DataTrigger>
+																</Style.Triggers>
+															</Style>
+														</Border.Style>
+														<TextBlock Text="{Binding Etat}"
+														           FontSize="12"
+														           FontWeight="SemiBold"
+														           HorizontalAlignment="Center">
+															<TextBlock.Style>
+																<Style TargetType="TextBlock">
+																	<Style.Triggers>
+																		<DataTrigger Binding="{Binding Etat}" Value="En service">
+																			<Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
+																		</DataTrigger>
+																		<DataTrigger Binding="{Binding Etat}" Value="En maintenance">
+																			<Setter Property="Foreground" Value="{StaticResource WarningBrush}"/>
+																		</DataTrigger>
+																		<DataTrigger Binding="{Binding Etat}" Value="Disponible">
+																			<Setter Property="Foreground" Value="{StaticResource InfoBrush}"/>
+																		</DataTrigger>
+																	</Style.Triggers>
+																</Style>
+															</TextBlock.Style>
+														</TextBlock>
+													</Border>
+												</Grid>
+											</Grid>
+										</Border>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						</ScrollViewer>
 					</Grid>
 				</Border>
 			</StackPanel>

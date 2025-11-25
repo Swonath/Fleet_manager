@@ -23,8 +23,11 @@
         </StackPanel>
 
         <!-- Contenu principal -->
-        <ScrollViewer Grid.Row="1" Style="{StaticResource ModernScrollViewerStyle}">
-            <StackPanel>
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Margin="0,0,8,0">
+            <StackPanel Margin="0,0,8,0">
 
                 <!-- Vue d'ensemble - 4 KPI principaux -->
                 <Grid Margin="0,0,0,32">

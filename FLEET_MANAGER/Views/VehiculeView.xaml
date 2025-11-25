@@ -145,18 +145,44 @@
 						</TextBlock>
 
 						<!-- Filtre de statuts -->
-						<ComboBox Grid.Column="1"
-								  SelectedValue="{Binding FiltreStatut, Mode=TwoWay}"
-								  SelectedValuePath="Content"
-								  Width="150"
-								  Height="32"
-								  FontSize="12"
-								  Margin="8,0,0,0">
-							<ComboBoxItem Content="Tous"/>
-							<ComboBoxItem Content="Disponible"/>
-							<ComboBoxItem Content="En service"/>
-							<ComboBoxItem Content="En maintenance"/>
-						</ComboBox>
+						<Border Grid.Column="1"
+								BorderBrush="{StaticResource BorderBrush}"
+								BorderThickness="1"
+								CornerRadius="8"
+								Background="White"
+								Margin="8,0,0,0">
+							<ComboBox SelectedValue="{Binding FiltreStatut, Mode=TwoWay}"
+									  SelectedValuePath="Content"
+									  Width="150"
+									  Height="38"
+									  FontSize="13"
+									  BorderThickness="0"
+									  Background="Transparent"
+									  Padding="12,0"
+									  Foreground="{StaticResource TextPrimaryBrush}">
+								<ComboBox.Resources>
+									<Style TargetType="ComboBoxItem">
+										<Setter Property="Padding" Value="12,10"/>
+										<Setter Property="Background" Value="Transparent"/>
+										<Setter Property="FontSize" Value="13"/>
+										<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+										<Style.Triggers>
+											<Trigger Property="IsHighlighted" Value="True">
+												<Setter Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+											</Trigger>
+											<Trigger Property="IsSelected" Value="True">
+												<Setter Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+												<Setter Property="FontWeight" Value="SemiBold"/>
+											</Trigger>
+										</Style.Triggers>
+									</Style>
+								</ComboBox.Resources>
+								<ComboBoxItem Content="Tous"/>
+								<ComboBoxItem Content="Disponible"/>
+								<ComboBoxItem Content="En service"/>
+								<ComboBoxItem Content="En maintenance"/>
+							</ComboBox>
+						</Border>
 					</Grid>
 
 					<TextBlock Grid.Row="1" Style="{StaticResource SubtitleStyle}">

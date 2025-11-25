@@ -29,7 +29,7 @@
 			<Grid Grid.Row="1" Margin="0,16,0,0">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="400"/>
+					<ColumnDefinition Width="450"/>
 					<ColumnDefinition Width="*"/>
 				</Grid.ColumnDefinitions>
 
@@ -41,13 +41,39 @@
 						   VerticalAlignment="Center"
 						   Margin="0,0,12,0"/>
 
-				<ComboBox Grid.Column="1"
-						  ItemsSource="{Binding Vehicules}"
-						  SelectedItem="{Binding VehiculeSelectionne, Mode=TwoWay}"
-						  DisplayMemberPath="DescriptionComplete"
-						  Height="42"
-						  FontSize="14"
-						  Padding="12,0"/>
+				<Border Grid.Column="1"
+						BorderBrush="{StaticResource BorderBrush}"
+						BorderThickness="1"
+						CornerRadius="8"
+						Background="White">
+					<ComboBox ItemsSource="{Binding Vehicules}"
+							  SelectedItem="{Binding VehiculeSelectionne, Mode=TwoWay}"
+							  DisplayMemberPath="DescriptionComplete"
+							  Height="42"
+							  FontSize="14"
+							  BorderThickness="0"
+							  Background="Transparent"
+							  Padding="12,0"
+							  Foreground="{StaticResource TextPrimaryBrush}">
+						<ComboBox.Resources>
+							<Style TargetType="ComboBoxItem">
+								<Setter Property="Padding" Value="12,10"/>
+								<Setter Property="Background" Value="Transparent"/>
+								<Setter Property="FontSize" Value="14"/>
+								<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+								<Style.Triggers>
+									<Trigger Property="IsHighlighted" Value="True">
+										<Setter Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+									</Trigger>
+									<Trigger Property="IsSelected" Value="True">
+										<Setter Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+										<Setter Property="FontWeight" Value="SemiBold"/>
+									</Trigger>
+								</Style.Triggers>
+							</Style>
+						</ComboBox.Resources>
+					</ComboBox>
+				</Border>
 			</Grid>
 		</Grid>
 
@@ -112,7 +138,7 @@
 
 					<!-- Formulaire Carburant -->
 					<Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,24,0">
-						<ScrollViewer Style="{StaticResource ModernScrollViewerStyle}">
+						<ScrollViewer Style="{StaticResource ModernScrollViewerStyle}" Padding="0,0,8,0">
 							<StackPanel>
 								<TextBlock Style="{StaticResource SectionTitleStyle}">
 									Nouveau ravitaillement
@@ -300,7 +326,7 @@
 
 					<!-- Formulaire Trajet -->
 					<Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,24,0">
-						<ScrollViewer Style="{StaticResource ModernScrollViewerStyle}">
+						<ScrollViewer Style="{StaticResource ModernScrollViewerStyle}" Padding="0,0,8,0">
 							<StackPanel>
 								<TextBlock Style="{StaticResource SectionTitleStyle}">
 									Nouveau trajet

@@ -112,13 +112,14 @@
 
 					<!-- Formulaire Carburant -->
 					<Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,24,0">
-						<StackPanel>
-							<TextBlock Style="{StaticResource SectionTitleStyle}">
-								Nouveau ravitaillement
-							</TextBlock>
-							<TextBlock Style="{StaticResource SubtitleStyle}" Margin="0,0,0,24">
-								Enregistrer un plein de carburant
-							</TextBlock>
+						<ScrollViewer Style="{StaticResource ModernScrollViewerStyle}">
+							<StackPanel>
+								<TextBlock Style="{StaticResource SectionTitleStyle}">
+									Nouveau ravitaillement
+								</TextBlock>
+								<TextBlock Style="{StaticResource SubtitleStyle}" Margin="0,0,0,24">
+									Enregistrer un plein de carburant
+								</TextBlock>
 
 							<!-- Date -->
 							<TextBlock Text="Date"
@@ -212,16 +213,17 @@
 										 Foreground="{StaticResource TextPrimaryBrush}"/>
 							</Border>
 
-							<!-- Bouton Enregistrer -->
-							<Button Command="{Binding EnregistrerCarburantCommand}"
-									Style="{StaticResource PrimaryButtonStyle}"
-									Height="42">
-								<StackPanel Orientation="Horizontal">
-									<TextBlock Text="+" FontSize="18" FontWeight="Bold" Margin="0,0,8,0"/>
-									<TextBlock Text="Enregistrer le plein" FontSize="14"/>
-								</StackPanel>
-							</Button>
-						</StackPanel>
+								<!-- Bouton Enregistrer -->
+								<Button Command="{Binding EnregistrerCarburantCommand}"
+										Style="{StaticResource PrimaryButtonStyle}"
+										Height="42">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="+" FontSize="18" FontWeight="Bold" Margin="0,0,8,0"/>
+										<TextBlock Text="Enregistrer le plein" FontSize="14"/>
+									</StackPanel>
+								</Button>
+							</StackPanel>
+						</ScrollViewer>
 					</Border>
 
 					<!-- Historique Carburant -->
@@ -298,13 +300,14 @@
 
 					<!-- Formulaire Trajet -->
 					<Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,24,0">
-						<StackPanel>
-							<TextBlock Style="{StaticResource SectionTitleStyle}">
-								Nouveau trajet
-							</TextBlock>
-							<TextBlock Style="{StaticResource SubtitleStyle}" Margin="0,0,0,24">
-								Enregistrer un déplacement
-							</TextBlock>
+						<ScrollViewer Style="{StaticResource ModernScrollViewerStyle}">
+							<StackPanel>
+								<TextBlock Style="{StaticResource SectionTitleStyle}">
+									Nouveau trajet
+								</TextBlock>
+								<TextBlock Style="{StaticResource SubtitleStyle}" Margin="0,0,0,24">
+									Enregistrer un déplacement
+								</TextBlock>
 
 							<!-- Date -->
 							<TextBlock Text="Date"
@@ -418,16 +421,17 @@
 										 Foreground="{StaticResource TextPrimaryBrush}"/>
 							</Border>
 
-							<!-- Bouton Enregistrer -->
-							<Button Command="{Binding EnregistrerTrajetCommand}"
-									Style="{StaticResource PrimaryButtonStyle}"
-									Height="42">
-								<StackPanel Orientation="Horizontal">
-									<TextBlock Text="+" FontSize="18" FontWeight="Bold" Margin="0,0,8,0"/>
-									<TextBlock Text="Enregistrer le trajet" FontSize="14"/>
-								</StackPanel>
-							</Button>
-						</StackPanel>
+								<!-- Bouton Enregistrer -->
+								<Button Command="{Binding EnregistrerTrajetCommand}"
+										Style="{StaticResource PrimaryButtonStyle}"
+										Height="42">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="+" FontSize="18" FontWeight="Bold" Margin="0,0,8,0"/>
+										<TextBlock Text="Enregistrer le trajet" FontSize="14"/>
+									</StackPanel>
+								</Button>
+							</StackPanel>
+						</ScrollViewer>
 					</Border>
 
 					<!-- Historique Trajets -->

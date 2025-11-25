@@ -25,45 +25,107 @@
 				</TextBlock>
 			</StackPanel>
 
-			<!-- Boutons d'action -->
-			<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,16,0,0">
-				<Button Command="{Binding ChargerCommand}"
-						Style="{StaticResource PrimaryButtonStyle}"
-						Height="42"
-						Padding="20,0"
-						Margin="0,0,12,0">
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="🔄" FontSize="14" Margin="0,0,8,0"/>
-						<TextBlock Text="Actualiser" FontSize="14"/>
-					</StackPanel>
-				</Button>
+			<!-- Barre d'actions -->
+			<Grid Grid.Row="1" Margin="0,16,0,0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
 
-				<Button Command="{Binding Nouveau}"
-						Style="{StaticResource PrimaryButtonStyle}"
+				<!-- Barre de recherche -->
+				<Border Grid.Column="0"
+						BorderBrush="{StaticResource BorderBrush}"
+						BorderThickness="1"
+						CornerRadius="8"
+						Background="White"
 						Height="42"
-						Padding="20,0">
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="+" FontSize="18" FontWeight="Bold" Margin="0,0,8,0"/>
-						<TextBlock Text="Nouvel Utilisateur" FontSize="14"/>
-					</StackPanel>
-				</Button>
-			</StackPanel>
+						Margin="0,0,16,0">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+
+						<TextBlock Grid.Column="0"
+								   Text="🔍"
+								   FontSize="16"
+								   VerticalAlignment="Center"
+								   Margin="12,0,8,0"
+								   Foreground="{StaticResource TextSecondaryBrush}"/>
+
+						<TextBox Grid.Column="1"
+								 Text="{Binding RechercheTexte, UpdateSourceTrigger=PropertyChanged}"
+								 BorderThickness="0"
+								 Background="Transparent"
+								 VerticalAlignment="Center"
+								 FontSize="14"
+								 Foreground="{StaticResource TextPrimaryBrush}">
+							<TextBox.Style>
+								<Style TargetType="TextBox">
+									<Setter Property="Template">
+										<Setter.Value>
+											<ControlTemplate TargetType="TextBox">
+												<Grid>
+													<TextBlock Text="Rechercher un utilisateur..."
+															   Foreground="{StaticResource TextSecondaryBrush}"
+															   VerticalAlignment="Center"
+															   Visibility="Collapsed"
+															   x:Name="Placeholder"/>
+													<ScrollViewer x:Name="PART_ContentHost"
+																  VerticalAlignment="Center"
+																  Foreground="{TemplateBinding Foreground}"/>
+												</Grid>
+												<ControlTemplate.Triggers>
+													<Trigger Property="Text" Value="">
+														<Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+													</Trigger>
+													<Trigger Property="Text" Value="{x:Null}">
+														<Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+													</Trigger>
+												</ControlTemplate.Triggers>
+											</ControlTemplate>
+										</Setter.Value>
+									</Setter>
+								</Style>
+							</TextBox.Style>
+						</TextBox>
+					</Grid>
+				</Border>
+
+				<!-- Message d'erreur/succès -->
+				<Border Grid.Column="1"
+						Visibility="{Binding MessageErreur, Converter={StaticResource BoolToVisibilityConverter}}"
+						Background="{StaticResource InfoLightBrush}"
+						BorderBrush="{StaticResource InfoBrush}"
+						BorderThickness="1"
+						CornerRadius="8"
+						Padding="12,8"
+						Margin="0,0,16,0">
+					<TextBlock Text="{Binding MessageErreur}"
+							   FontSize="13"
+							   Foreground="{StaticResource TextPrimaryBrush}"/>
+				</Border>
+
+				<!-- Boutons d'action -->
+				<StackPanel Grid.Column="2" Orientation="Horizontal">
+					<Button Command="{Binding Nouveau}"
+							Style="{StaticResource PrimaryButtonStyle}"
+							Height="42"
+							Padding="20,0">
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="+" FontSize="18" FontWeight="Bold" Margin="0,0,8,0"/>
+							<TextBlock Text="Nouvel Utilisateur" FontSize="14"/>
+						</StackPanel>
+					</Button>
+				</StackPanel>
+			</Grid>
 		</Grid>
-
-		<!-- Message d'erreur/succès -->
-		<TextBlock Grid.Row="1"
-				   Text="{Binding MessageErreur}"
-				   Foreground="{StaticResource DangerBrush}"
-				   FontSize="13"
-				   Margin="0,0,0,16"
-				   VerticalAlignment="Top"
-				   Visibility="{Binding MessageErreur, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
 		<!-- Contenu principal -->
 		<Grid Grid.Row="1">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="400"/>
+				<ColumnDefinition Width="420"/>
 			</Grid.ColumnDefinitions>
 
 			<!-- Liste des utilisateurs -->
@@ -80,13 +142,13 @@
 					</TextBlock>
 
 					<TextBlock Grid.Row="1" Style="{StaticResource SubtitleStyle}">
-						<Run Text="{Binding Utilisateurs.Count, Mode=OneWay}"/>
+						<Run Text="{Binding UtilisateursFiltres.Count, Mode=OneWay}"/>
 						<Run Text="utilisateurs"/>
 					</TextBlock>
 
 					<!-- DataGrid -->
 					<DataGrid Grid.Row="2"
-							  ItemsSource="{Binding Utilisateurs}"
+							  ItemsSource="{Binding UtilisateursFiltres}"
 							  SelectedItem="{Binding UtilisateurSelectionne}"
 							  AutoGenerateColumns="False"
 							  CanUserAddRows="False"
@@ -118,234 +180,665 @@
 							</Style>
 							<Style TargetType="DataGridRow">
 								<Setter Property="Height" Value="48"/>
+								<Style.Triggers>
+									<Trigger Property="IsSelected" Value="True">
+										<Setter Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+									</Trigger>
+								</Style.Triggers>
 							</Style>
 						</DataGrid.Resources>
 						<DataGrid.Columns>
-							<DataGridTextColumn Header="Nom Utilisateur" Binding="{Binding NomUtilisateur}" Width="140"/>
-							<DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="180"/>
+							<DataGridTextColumn Header="Nom d'utilisateur" Binding="{Binding NomUtilisateur}" Width="150"/>
+							<DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="200"/>
 							<DataGridTextColumn Header="Nom" Binding="{Binding Nom}" Width="120"/>
 							<DataGridTextColumn Header="Prénom" Binding="{Binding Prenom}" Width="120"/>
-							<DataGridTextColumn Header="Rôle" Binding="{Binding Role}" Width="120"/>
-							<DataGridTextColumn Header="Actif" Binding="{Binding Actif}" Width="*"/>
+							<DataGridTextColumn Header="Rôle" Binding="{Binding Role}" Width="140"/>
 						</DataGrid.Columns>
 					</DataGrid>
 				</Grid>
 			</Border>
 
 			<!-- Panneau de détail / Formulaire -->
-			<Border Grid.Column="1" Style="{StaticResource CardStyle}">
-				<StackPanel>
-					<TextBlock Style="{StaticResource SectionTitleStyle}">
-						Formulaire Utilisateur
-					</TextBlock>
-					<TextBlock Style="{StaticResource SubtitleStyle}" Margin="0,0,0,24">
-						Créer ou modifier un utilisateur
-					</TextBlock>
-
-					<!-- Nom Utilisateur -->
-					<TextBlock Text="Nom Utilisateur"
-							   FontSize="13"
-							   FontWeight="Medium"
-							   Foreground="{StaticResource TextPrimaryBrush}"
-							   Margin="0,0,0,6"/>
-					<Border BorderBrush="{StaticResource BorderBrush}"
-							BorderThickness="1"
-							CornerRadius="8"
-							Background="White"
-							Height="42"
-							Margin="0,0,0,6">
-						<TextBox Text="{Binding NomUtilisateur, UpdateSourceTrigger=PropertyChanged}"
-								 BorderThickness="0"
-								 VerticalAlignment="Center"
-								 Padding="12,0"
-								 FontSize="14"
-								 Foreground="{StaticResource TextPrimaryBrush}"
-								 IsEnabled="{Binding EstEnEdition}"/>
-					</Border>
-					<TextBlock Text="{Binding NomUtilisateurError}"
-							   Foreground="{StaticResource DangerBrush}"
-							   FontSize="11"
-							   Margin="0,0,0,12"/>
-
-					<!-- Email -->
-					<TextBlock Text="Email"
-							   FontSize="13"
-							   FontWeight="Medium"
-							   Foreground="{StaticResource TextPrimaryBrush}"
-							   Margin="0,0,0,6"/>
-					<Border BorderBrush="{StaticResource BorderBrush}"
-							BorderThickness="1"
-							CornerRadius="8"
-							Background="White"
-							Height="42"
-							Margin="0,0,0,6">
-						<TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
-								 BorderThickness="0"
-								 VerticalAlignment="Center"
-								 Padding="12,0"
-								 FontSize="14"
-								 Foreground="{StaticResource TextPrimaryBrush}"
-								 IsEnabled="{Binding EstEnEdition}"/>
-					</Border>
-					<TextBlock Text="{Binding EmailError}"
-							   Foreground="{StaticResource DangerBrush}"
-							   FontSize="11"
-							   Margin="0,0,0,12"/>
-
-					<!-- Nom -->
-					<TextBlock Text="Nom"
-							   FontSize="13"
-							   FontWeight="Medium"
-							   Foreground="{StaticResource TextPrimaryBrush}"
-							   Margin="0,0,0,6"/>
-					<Border BorderBrush="{StaticResource BorderBrush}"
-							BorderThickness="1"
-							CornerRadius="8"
-							Background="White"
-							Height="42"
-							Margin="0,0,0,16">
-						<TextBox Text="{Binding Nom, UpdateSourceTrigger=PropertyChanged}"
-								 BorderThickness="0"
-								 VerticalAlignment="Center"
-								 Padding="12,0"
-								 FontSize="14"
-								 Foreground="{StaticResource TextPrimaryBrush}"
-								 IsEnabled="{Binding EstEnEdition}"/>
-					</Border>
-
-					<!-- Prénom -->
-					<TextBlock Text="Prénom"
-							   FontSize="13"
-							   FontWeight="Medium"
-							   Foreground="{StaticResource TextPrimaryBrush}"
-							   Margin="0,0,0,6"/>
-					<Border BorderBrush="{StaticResource BorderBrush}"
-							BorderThickness="1"
-							CornerRadius="8"
-							Background="White"
-							Height="42"
-							Margin="0,0,0,16">
-						<TextBox Text="{Binding Prenom, UpdateSourceTrigger=PropertyChanged}"
-								 BorderThickness="0"
-								 VerticalAlignment="Center"
-								 Padding="12,0"
-								 FontSize="14"
-								 Foreground="{StaticResource TextPrimaryBrush}"
-								 IsEnabled="{Binding EstEnEdition}"/>
-					</Border>
-
-					<!-- Mot de Passe -->
-					<TextBlock Text="Mot de Passe"
-							   FontSize="13"
-							   FontWeight="Medium"
-							   Foreground="{StaticResource TextPrimaryBrush}"
-							   Margin="0,0,0,6"/>
-					<Border BorderBrush="{StaticResource BorderBrush}"
-							BorderThickness="1"
-							CornerRadius="8"
-							Background="White"
-							Height="42"
-							Margin="0,0,0,16">
-						<PasswordBox x:Name="PasswordBox"
-									 BorderThickness="0"
-									 VerticalAlignment="Center"
-									 Padding="12,0"
-									 FontSize="14"
-									 IsEnabled="{Binding EstEnEdition}"
-									 PasswordChanged="PasswordBox_PasswordChanged"/>
-					</Border>
-
-					<!-- Rôle -->
-					<TextBlock Text="Rôle"
-							   FontSize="13"
-							   FontWeight="Medium"
-							   Foreground="{StaticResource TextPrimaryBrush}"
-							   Margin="0,0,0,6"/>
-					<ComboBox x:Name="ComboRole"
-							  SelectedValue="{Binding RoleSelectionne, Mode=TwoWay}"
-							  SelectedValuePath="Tag"
-							  Height="42"
-							  FontSize="14"
-							  Padding="12,0"
-							  Margin="0,0,0,24"
-							  IsEnabled="{Binding EstEnEdition}">
-						<ComboBoxItem Tag="utilisateur" Content="Utilisateur"/>
-						<ComboBoxItem Tag="admin" Content="Administrateur"/>
-						<ComboBoxItem Tag="super_admin" Content="Super Administrateur"/>
-					</ComboBox>
-
-					<!-- Boutons -->
+			<ScrollViewer Grid.Column="1" Style="{StaticResource ModernScrollViewerStyle}">
+				<Border Style="{StaticResource CardStyle}">
 					<StackPanel>
-						<!-- Bouton Sauvegarder (mode édition) -->
-						<Button Command="{Binding SauvegarderCommand}"
-								Style="{StaticResource PrimaryButtonStyle}"
-								Height="42"
-								Margin="0,0,0,8"
-								Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}">
-							<StackPanel Orientation="Horizontal">
-								<TextBlock Text="💾" FontSize="14" Margin="0,0,8,0"/>
-								<TextBlock Text="Sauvegarder" FontSize="14"/>
-							</StackPanel>
-						</Button>
+						<!-- En-tête du formulaire -->
+						<Grid Margin="0,0,0,24">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
 
-						<!-- Bouton Modifier (mode lecture) -->
-						<Button Command="{Binding ModifierCommand}"
-								Style="{StaticResource WarningButtonStyle}"
-								Height="42"
-								Margin="0,0,0,8"
-								Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert, FallbackValue=Collapsed}">
-							<StackPanel Orientation="Horizontal">
-								<TextBlock Text="✏️" FontSize="14" Margin="0,0,6,0"/>
-								<TextBlock Text="Modifier" FontSize="14"/>
+							<StackPanel Grid.Column="0">
+								<TextBlock>
+									<TextBlock.Style>
+										<Style TargetType="TextBlock" BasedOn="{StaticResource SectionTitleStyle}">
+											<Setter Property="Text" Value="Détails de l'utilisateur"/>
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding EstEnEdition}" Value="True">
+													<Setter Property="Text" Value="Édition utilisateur"/>
+												</DataTrigger>
+												<DataTrigger Binding="{Binding UtilisateurSelectionne}" Value="{x:Null}">
+													<Setter Property="Text" Value="Sélectionner un utilisateur"/>
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</TextBlock.Style>
+								</TextBlock>
+								<TextBlock>
+									<TextBlock.Style>
+										<Style TargetType="TextBlock" BasedOn="{StaticResource SubtitleStyle}">
+											<Setter Property="Text" Value="Cliquez sur un utilisateur pour voir ses détails"/>
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding EstEnEdition}" Value="True">
+													<Setter Property="Text" Value="Modifier les informations ci-dessous"/>
+												</DataTrigger>
+												<MultiDataTrigger>
+													<MultiDataTrigger.Conditions>
+														<Condition Binding="{Binding EstEnEdition}" Value="False"/>
+														<Condition Binding="{Binding UtilisateurSelectionne, Converter={StaticResource BoolToVisibilityConverter}}" Value="Visible"/>
+													</MultiDataTrigger.Conditions>
+													<Setter Property="Text" Value="Informations du compte"/>
+												</MultiDataTrigger>
+											</Style.Triggers>
+										</Style>
+									</TextBlock.Style>
+								</TextBlock>
 							</StackPanel>
-						</Button>
 
-						<!-- Bouton Supprimer (mode lecture) -->
-						<Button Command="{Binding SupprimerCommand}"
-								Style="{StaticResource DangerButtonStyle}"
-								Height="42"
-								Margin="0,0,0,8"
-								Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert, FallbackValue=Collapsed}">
-							<StackPanel Orientation="Horizontal">
-								<TextBlock Text="🗑️" FontSize="14" Margin="0,0,6,0"/>
-								<TextBlock Text="Supprimer" FontSize="14"/>
-							</StackPanel>
-						</Button>
+							<!-- Badge statut -->
+							<Border Grid.Column="1"
+									Visibility="{Binding UtilisateurSelectionne, Converter={StaticResource BoolToVisibilityConverter}}"
+									Margin="0">
+								<Border.Style>
+									<Style TargetType="Border" BasedOn="{StaticResource SuccessBadgeStyle}">
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding UtilisateurSelectionne.Actif}" Value="False">
+												<Setter Property="Background" Value="{StaticResource DangerLightBrush}"/>
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</Border.Style>
+								<TextBlock FontSize="12" FontWeight="Medium">
+									<TextBlock.Style>
+										<Style TargetType="TextBlock">
+											<Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
+											<Setter Property="Text" Value="Actif"/>
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding UtilisateurSelectionne.Actif}" Value="False">
+													<Setter Property="Foreground" Value="{StaticResource DangerBrush}"/>
+													<Setter Property="Text" Value="Inactif"/>
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</TextBlock.Style>
+								</TextBlock>
+							</Border>
+						</Grid>
 
-						<!-- Bouton Annuler (mode édition) -->
-						<Button Command="{Binding AnnulerCommand}"
-								Height="42"
-								Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}">
-							<Button.Style>
-								<Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-									<Setter Property="Background" Value="{StaticResource TextSecondaryBrush}"/>
-									<Setter Property="Foreground" Value="White"/>
-									<Setter Property="BorderThickness" Value="0"/>
-									<Setter Property="Cursor" Value="Hand"/>
-									<Setter Property="FontWeight" Value="SemiBold"/>
-									<Setter Property="Template">
-										<Setter.Value>
-											<ControlTemplate TargetType="Button">
-												<Border Background="{TemplateBinding Background}"
-														CornerRadius="8"
-														Padding="{TemplateBinding Padding}">
-													<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-												</Border>
-											</ControlTemplate>
-										</Setter.Value>
-									</Setter>
-									<Style.Triggers>
-										<Trigger Property="IsMouseOver" Value="True">
-											<Setter Property="Opacity" Value="0.9"/>
-										</Trigger>
-									</Style.Triggers>
-								</Style>
-							</Button.Style>
-							<TextBlock Text="Annuler" FontSize="14"/>
-						</Button>
+						<!-- Formulaire -->
+						<StackPanel Visibility="{Binding AfficherFormulaire, Converter={StaticResource BoolToVisibilityConverter}}">
+							<!-- Nom d'utilisateur -->
+							<TextBlock Text="Nom d'utilisateur"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,6">
+								<TextBox Text="{Binding NomUtilisateur, UpdateSourceTrigger=PropertyChanged}"
+										 BorderThickness="0"
+										 VerticalAlignment="Center"
+										 Padding="12,0"
+										 FontSize="14"
+										 Foreground="{StaticResource TextPrimaryBrush}"
+										 IsEnabled="{Binding EstEnEdition}"/>
+							</Border>
+							<TextBlock Text="{Binding NomUtilisateurError}"
+									   Foreground="{StaticResource DangerBrush}"
+									   FontSize="11"
+									   Margin="0,0,0,16"
+									   Visibility="{Binding NomUtilisateurError, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+							<!-- Email -->
+							<TextBlock Text="Email"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,6">
+								<TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
+										 BorderThickness="0"
+										 VerticalAlignment="Center"
+										 Padding="12,0"
+										 FontSize="14"
+										 Foreground="{StaticResource TextPrimaryBrush}"
+										 IsEnabled="{Binding EstEnEdition}"/>
+							</Border>
+							<TextBlock Text="{Binding EmailError}"
+									   Foreground="{StaticResource DangerBrush}"
+									   FontSize="11"
+									   Margin="0,0,0,16"
+									   Visibility="{Binding EmailError, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+							<!-- Nom -->
+							<TextBlock Text="Nom"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,16">
+								<TextBox Text="{Binding Nom, UpdateSourceTrigger=PropertyChanged}"
+										 BorderThickness="0"
+										 VerticalAlignment="Center"
+										 Padding="12,0"
+										 FontSize="14"
+										 Foreground="{StaticResource TextPrimaryBrush}"
+										 IsEnabled="{Binding EstEnEdition}"/>
+							</Border>
+
+							<!-- Prénom -->
+							<TextBlock Text="Prénom"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,16">
+								<TextBox Text="{Binding Prenom, UpdateSourceTrigger=PropertyChanged}"
+										 BorderThickness="0"
+										 VerticalAlignment="Center"
+										 Padding="12,0"
+										 FontSize="14"
+										 Foreground="{StaticResource TextPrimaryBrush}"
+										 IsEnabled="{Binding EstEnEdition}"/>
+							</Border>
+
+							<!-- Mot de passe -->
+							<TextBlock FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6">
+								<TextBlock.Style>
+									<Style TargetType="TextBlock">
+										<Setter Property="Text" Value="Mot de passe"/>
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding EstEnEdition}" Value="True">
+												<Setter Property="Text" Value="Mot de passe (laisser vide pour ne pas changer)"/>
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</TextBlock.Style>
+							</TextBlock>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Height="42"
+									Margin="0,0,0,16">
+								<PasswordBox x:Name="PasswordBox"
+											 BorderThickness="0"
+											 VerticalAlignment="Center"
+											 Padding="12,0"
+											 FontSize="14"
+											 IsEnabled="{Binding EstEnEdition}"
+											 PasswordChanged="PasswordBox_PasswordChanged"/>
+							</Border>
+
+							<!-- Rôle -->
+							<TextBlock Text="Rôle"
+									   FontSize="13"
+									   FontWeight="Medium"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   Margin="0,0,0,6"/>
+							<Border BorderBrush="{StaticResource BorderBrush}"
+									BorderThickness="1"
+									CornerRadius="8"
+									Background="White"
+									Margin="0,0,0,24">
+								<ComboBox x:Name="ComboRole"
+										  SelectedValue="{Binding RoleSelectionne, Mode=TwoWay}"
+										  SelectedValuePath="Tag"
+										  Height="40"
+										  FontSize="14"
+										  BorderThickness="0"
+										  Background="Transparent"
+										  Padding="12,0"
+										  IsEnabled="{Binding EstEnEdition}">
+									<ComboBox.Resources>
+										<Style TargetType="ComboBoxItem">
+											<Setter Property="Height" Value="42"/>
+											<Setter Property="Padding" Value="12,8"/>
+											<Setter Property="Background" Value="Transparent"/>
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="ComboBoxItem">
+														<Border x:Name="ItemBorder"
+																Background="{TemplateBinding Background}"
+																Padding="{TemplateBinding Padding}"
+																CornerRadius="6"
+																Margin="4,2">
+															<Grid>
+																<Grid.ColumnDefinitions>
+																	<ColumnDefinition Width="Auto"/>
+																	<ColumnDefinition Width="*"/>
+																</Grid.ColumnDefinitions>
+
+																<Border Grid.Column="0"
+																		Width="28"
+																		Height="28"
+																		CornerRadius="14"
+																		Margin="0,0,12,0"
+																		x:Name="IconBorder">
+																	<Border.Style>
+																		<Style TargetType="Border">
+																			<Setter Property="Background" Value="{StaticResource InfoLightBrush}"/>
+																			<Style.Triggers>
+																				<DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource AncestorType=ComboBoxItem}}" Value="admin">
+																					<Setter Property="Background" Value="{StaticResource WarningLightBrush}"/>
+																				</DataTrigger>
+																				<DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource AncestorType=ComboBoxItem}}" Value="super_admin">
+																					<Setter Property="Background" Value="{StaticResource DangerLightBrush}"/>
+																				</DataTrigger>
+																			</Style.Triggers>
+																		</Style>
+																	</Border.Style>
+																	<TextBlock HorizontalAlignment="Center"
+																			   VerticalAlignment="Center"
+																			   FontSize="14"
+																			   x:Name="IconText">
+																		<TextBlock.Style>
+																			<Style TargetType="TextBlock">
+																				<Setter Property="Text" Value="👤"/>
+																				<Setter Property="Foreground" Value="{StaticResource InfoBrush}"/>
+																				<Style.Triggers>
+																					<DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource AncestorType=ComboBoxItem}}" Value="admin">
+																						<Setter Property="Text" Value="⚙"/>
+																						<Setter Property="Foreground" Value="{StaticResource WarningBrush}"/>
+																					</DataTrigger>
+																					<DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource AncestorType=ComboBoxItem}}" Value="super_admin">
+																						<Setter Property="Text" Value="★"/>
+																						<Setter Property="Foreground" Value="{StaticResource DangerBrush}"/>
+																					</DataTrigger>
+																				</Style.Triggers>
+																			</Style>
+																		</TextBlock.Style>
+																	</TextBlock>
+																</Border>
+
+																<ContentPresenter Grid.Column="1"
+																				  Content="{TemplateBinding Content}"
+																				  VerticalAlignment="Center"
+																				  HorizontalAlignment="Left"/>
+															</Grid>
+														</Border>
+														<ControlTemplate.Triggers>
+															<Trigger Property="IsHighlighted" Value="True">
+																<Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+															</Trigger>
+															<Trigger Property="IsSelected" Value="True">
+																<Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+															</Trigger>
+														</ControlTemplate.Triggers>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+										</Style>
+									</ComboBox.Resources>
+									<ComboBoxItem Tag="utilisateur" Content="Utilisateur"/>
+									<ComboBoxItem Tag="admin" Content="Administrateur"/>
+									<ComboBoxItem Tag="super_admin" Content="Super Administrateur"/>
+								</ComboBox>
+							</Border>
+
+							<!-- Boutons d'action -->
+							<Grid Margin="0,8,0,0">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="*"/>
+								</Grid.ColumnDefinitions>
+
+								<!-- Mode lecture : Modifier et Supprimer -->
+								<Grid Grid.Column="0"
+									  Grid.ColumnSpan="2"
+									  Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert, FallbackValue=Collapsed}">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="*"/>
+										<ColumnDefinition Width="*"/>
+									</Grid.ColumnDefinitions>
+
+									<!-- Bouton Modifier avec style moderne -->
+									<Button Grid.Column="0"
+											Command="{Binding ModifierCommand}"
+											Height="48"
+											Margin="0,0,6,0"
+											Cursor="Hand">
+										<Button.Style>
+											<Style TargetType="Button">
+												<Setter Property="Background">
+													<Setter.Value>
+														<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+															<GradientStop Color="#F59E0B" Offset="0"/>
+															<GradientStop Color="#F97316" Offset="1"/>
+														</LinearGradientBrush>
+													</Setter.Value>
+												</Setter>
+												<Setter Property="Foreground" Value="White"/>
+												<Setter Property="BorderThickness" Value="0"/>
+												<Setter Property="FontWeight" Value="SemiBold"/>
+												<Setter Property="Template">
+													<Setter.Value>
+														<ControlTemplate TargetType="Button">
+															<Border Background="{TemplateBinding Background}"
+																	CornerRadius="12"
+																	Padding="{TemplateBinding Padding}">
+																<Border.Effect>
+																	<DropShadowEffect Color="#F59E0B"
+																					  BlurRadius="15"
+																					  ShadowDepth="0"
+																					  Opacity="0.3"/>
+																</Border.Effect>
+																<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+															</Border>
+														</ControlTemplate>
+													</Setter.Value>
+												</Setter>
+												<Style.Triggers>
+													<Trigger Property="IsMouseOver" Value="True">
+														<Setter Property="RenderTransform">
+															<Setter.Value>
+																<ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
+															</Setter.Value>
+														</Setter>
+													</Trigger>
+													<Trigger Property="IsEnabled" Value="False">
+														<Setter Property="Opacity" Value="0.5"/>
+													</Trigger>
+												</Style.Triggers>
+											</Style>
+										</Button.Style>
+										<Button.RenderTransform>
+											<ScaleTransform ScaleX="1" ScaleY="1"/>
+										</Button.RenderTransform>
+										<Button.RenderTransformOrigin>0.5,0.5</Button.RenderTransformOrigin>
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+											<Border Width="28" Height="28"
+													CornerRadius="14"
+													Background="#00000020"
+													Margin="0,0,8,0">
+												<TextBlock Text="✎" FontSize="16"
+														   HorizontalAlignment="Center"
+														   VerticalAlignment="Center"
+														   Foreground="White"/>
+											</Border>
+											<TextBlock Text="Modifier"
+													   FontSize="14"
+													   VerticalAlignment="Center"/>
+										</StackPanel>
+									</Button>
+
+									<!-- Bouton Supprimer avec style moderne -->
+									<Button Grid.Column="1"
+											Command="{Binding SupprimerCommand}"
+											Height="48"
+											Margin="6,0,0,0"
+											Cursor="Hand">
+										<Button.Style>
+											<Style TargetType="Button">
+												<Setter Property="Background">
+													<Setter.Value>
+														<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+															<GradientStop Color="#EF4444" Offset="0"/>
+															<GradientStop Color="#DC2626" Offset="1"/>
+														</LinearGradientBrush>
+													</Setter.Value>
+												</Setter>
+												<Setter Property="Foreground" Value="White"/>
+												<Setter Property="BorderThickness" Value="0"/>
+												<Setter Property="FontWeight" Value="SemiBold"/>
+												<Setter Property="Template">
+													<Setter.Value>
+														<ControlTemplate TargetType="Button">
+															<Border Background="{TemplateBinding Background}"
+																	CornerRadius="12"
+																	Padding="{TemplateBinding Padding}">
+																<Border.Effect>
+																	<DropShadowEffect Color="#EF4444"
+																					  BlurRadius="15"
+																					  ShadowDepth="0"
+																					  Opacity="0.3"/>
+																</Border.Effect>
+																<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+															</Border>
+														</ControlTemplate>
+													</Setter.Value>
+												</Setter>
+												<Style.Triggers>
+													<Trigger Property="IsMouseOver" Value="True">
+														<Setter Property="RenderTransform">
+															<Setter.Value>
+																<ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
+															</Setter.Value>
+														</Setter>
+													</Trigger>
+													<Trigger Property="IsEnabled" Value="False">
+														<Setter Property="Opacity" Value="0.5"/>
+													</Trigger>
+												</Style.Triggers>
+											</Style>
+										</Button.Style>
+										<Button.RenderTransform>
+											<ScaleTransform ScaleX="1" ScaleY="1"/>
+										</Button.RenderTransform>
+										<Button.RenderTransformOrigin>0.5,0.5</Button.RenderTransformOrigin>
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+											<Border Width="28" Height="28"
+													CornerRadius="14"
+													Background="#00000020"
+													Margin="0,0,8,0">
+												<TextBlock Text="🗑" FontSize="16"
+														   HorizontalAlignment="Center"
+														   VerticalAlignment="Center"
+														   Foreground="White"/>
+											</Border>
+											<TextBlock Text="Supprimer"
+													   FontSize="14"
+													   VerticalAlignment="Center"/>
+										</StackPanel>
+									</Button>
+								</Grid>
+
+								<!-- Mode édition : Sauvegarder et Annuler -->
+								<!-- Bouton Sauvegarder avec style moderne -->
+								<Button Grid.Column="0"
+										Command="{Binding SauvegarderCommand}"
+										Height="48"
+										Margin="0,0,6,0"
+										Cursor="Hand"
+										Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}">
+									<Button.Style>
+										<Style TargetType="Button">
+											<Setter Property="Background">
+												<Setter.Value>
+													<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+														<GradientStop Color="#10B981" Offset="0"/>
+														<GradientStop Color="#059669" Offset="1"/>
+													</LinearGradientBrush>
+												</Setter.Value>
+											</Setter>
+											<Setter Property="Foreground" Value="White"/>
+											<Setter Property="BorderThickness" Value="0"/>
+											<Setter Property="FontWeight" Value="SemiBold"/>
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="Button">
+														<Border Background="{TemplateBinding Background}"
+																CornerRadius="12"
+																Padding="{TemplateBinding Padding}">
+															<Border.Effect>
+																<DropShadowEffect Color="#10B981"
+																				  BlurRadius="15"
+																				  ShadowDepth="0"
+																				  Opacity="0.3"/>
+															</Border.Effect>
+															<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+														</Border>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+											<Style.Triggers>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Setter Property="RenderTransform">
+														<Setter.Value>
+															<ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
+														</Setter.Value>
+													</Setter>
+												</Trigger>
+												<Trigger Property="IsEnabled" Value="False">
+													<Setter Property="Opacity" Value="0.5"/>
+												</Trigger>
+											</Style.Triggers>
+										</Style>
+									</Button.Style>
+									<Button.RenderTransform>
+										<ScaleTransform ScaleX="1" ScaleY="1"/>
+									</Button.RenderTransform>
+									<Button.RenderTransformOrigin>0.5,0.5</Button.RenderTransformOrigin>
+									<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+										<Border Width="28" Height="28"
+												CornerRadius="14"
+												Background="#00000020"
+												Margin="0,0,8,0">
+											<TextBlock Text="✓" FontSize="18"
+													   FontWeight="Bold"
+													   HorizontalAlignment="Center"
+													   VerticalAlignment="Center"
+													   Foreground="White"/>
+										</Border>
+										<TextBlock Text="Sauvegarder"
+												   FontSize="14"
+												   VerticalAlignment="Center"/>
+									</StackPanel>
+								</Button>
+
+								<!-- Bouton Annuler avec style moderne -->
+								<Button Grid.Column="1"
+										Command="{Binding AnnulerCommand}"
+										Height="48"
+										Margin="6,0,0,0"
+										Cursor="Hand"
+										Visibility="{Binding EstEnEdition, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}">
+									<Button.Style>
+										<Style TargetType="Button">
+											<Setter Property="Background">
+												<Setter.Value>
+													<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+														<GradientStop Color="#64748B" Offset="0"/>
+														<GradientStop Color="#475569" Offset="1"/>
+													</LinearGradientBrush>
+												</Setter.Value>
+											</Setter>
+											<Setter Property="Foreground" Value="White"/>
+											<Setter Property="BorderThickness" Value="0"/>
+											<Setter Property="FontWeight" Value="SemiBold"/>
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="Button">
+														<Border Background="{TemplateBinding Background}"
+																CornerRadius="12"
+																Padding="{TemplateBinding Padding}">
+															<Border.Effect>
+																<DropShadowEffect Color="#64748B"
+																				  BlurRadius="15"
+																				  ShadowDepth="0"
+																				  Opacity="0.3"/>
+															</Border.Effect>
+															<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+														</Border>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+											<Style.Triggers>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Setter Property="RenderTransform">
+														<Setter.Value>
+															<ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
+														</Setter.Value>
+													</Setter>
+												</Trigger>
+											</Style.Triggers>
+										</Style>
+									</Button.Style>
+									<Button.RenderTransform>
+										<ScaleTransform ScaleX="1" ScaleY="1"/>
+									</Button.RenderTransform>
+									<Button.RenderTransformOrigin>0.5,0.5</Button.RenderTransformOrigin>
+									<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+										<Border Width="28" Height="28"
+												CornerRadius="14"
+												Background="#00000020"
+												Margin="0,0,8,0">
+											<TextBlock Text="✕" FontSize="18"
+													   FontWeight="Bold"
+													   HorizontalAlignment="Center"
+													   VerticalAlignment="Center"
+													   Foreground="White"/>
+										</Border>
+										<TextBlock Text="Annuler"
+												   FontSize="14"
+												   VerticalAlignment="Center"/>
+									</StackPanel>
+								</Button>
+							</Grid>
+						</StackPanel>
+
+						<!-- Message quand aucun utilisateur n'est sélectionné -->
+						<StackPanel Visibility="{Binding AfficherFormulaire, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"
+									VerticalAlignment="Center"
+									HorizontalAlignment="Center"
+									Margin="0,60,0,0">
+							<TextBlock Text="👤"
+									   FontSize="48"
+									   HorizontalAlignment="Center"
+									   Margin="0,0,0,16"
+									   Opacity="0.3"/>
+							<TextBlock Text="Aucun utilisateur sélectionné"
+									   FontSize="16"
+									   FontWeight="SemiBold"
+									   Foreground="{StaticResource TextPrimaryBrush}"
+									   HorizontalAlignment="Center"
+									   Margin="0,0,0,8"/>
+							<TextBlock Text="Sélectionnez un utilisateur dans la liste"
+									   FontSize="13"
+									   Foreground="{StaticResource TextSecondaryBrush}"
+									   HorizontalAlignment="Center"
+									   Margin="0,0,0,8"/>
+							<TextBlock Text="ou cliquez sur 'Nouvel Utilisateur'"
+									   FontSize="13"
+									   Foreground="{StaticResource TextSecondaryBrush}"
+									   HorizontalAlignment="Center"/>
+						</StackPanel>
 					</StackPanel>
-				</StackPanel>
-			</Border>
+				</Border>
+			</ScrollViewer>
 		</Grid>
 	</Grid>
 </UserControl>

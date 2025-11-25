@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using FLEET_MANAGER.Models;
 using FLEET_MANAGER.Repositories;
@@ -7,17 +8,19 @@ namespace FLEET_MANAGER.ViewModels
 {
     /// <summary>
     /// ViewModel pour la gestion des utilisateurs
-    /// Gère les permissions selon le rôle de l'utilisateur connecté
+    /// Gï¿½re les permissions selon le rï¿½le de l'utilisateur connectï¿½
     /// </summary>
     public class UtilisateurViewModel : ViewModelBase
     {
         private ObservableCollection<Utilisateur> _utilisateurs;
+        private ObservableCollection<Utilisateur> _utilisateursFiltres;
         private Utilisateur? _utilisateurSelectionne;
         private bool _estEnEdition = false;
         private string _messageErreur = string.Empty;
         private bool _isLoading = false;
         private bool _estNouveauUtilisateur = false;
         private Utilisateur? _utilisateurConnecte;
+        private string _rechercheTexte = string.Empty;
 
         private string _nomUtilisateur = string.Empty;
         private string _email = string.Empty;
@@ -37,6 +40,24 @@ namespace FLEET_MANAGER.ViewModels
             set => SetProperty(ref _utilisateurs, value, nameof(Utilisateurs));
         }
 
+        public ObservableCollection<Utilisateur> UtilisateursFiltres
+        {
+            get => _utilisateursFiltres;
+            set => SetProperty(ref _utilisateursFiltres, value, nameof(UtilisateursFiltres));
+        }
+
+        public string RechercheTexte
+        {
+            get => _rechercheTexte;
+            set
+            {
+                if (SetProperty(ref _rechercheTexte, value, nameof(RechercheTexte)))
+                {
+                    FiltrerUtilisateurs();
+                }
+            }
+        }
+
         public Utilisateur? UtilisateurSelectionne
         {
             get => _utilisateurSelectionne;
@@ -44,10 +65,11 @@ namespace FLEET_MANAGER.ViewModels
             {
                 if (SetProperty(ref _utilisateurSelectionne, value, nameof(UtilisateurSelectionne)))
                 {
-                    if (value != null)
+                    if (value != null && !EstEnEdition)
                     {
                         ChargerUtilisateurEnFormulaire(value);
                     }
+                    OnPropertyChanged(nameof(AfficherFormulaire));
                 }
             }
         }
@@ -61,8 +83,16 @@ namespace FLEET_MANAGER.ViewModels
         public bool EstEnEdition
         {
             get => _estEnEdition;
-            set => SetProperty(ref _estEnEdition, value, nameof(EstEnEdition));
+            set
+            {
+                if (SetProperty(ref _estEnEdition, value, nameof(EstEnEdition)))
+                {
+                    OnPropertyChanged(nameof(AfficherFormulaire));
+                }
+            }
         }
+
+        public bool AfficherFormulaire => EstEnEdition || UtilisateurSelectionne != null;
 
         public string MessageErreur
         {
@@ -135,6 +165,7 @@ namespace FLEET_MANAGER.ViewModels
         public UtilisateurViewModel()
         {
             _utilisateurs = new ObservableCollection<Utilisateur>();
+            _utilisateursFiltres = new ObservableCollection<Utilisateur>();
             _repository = new UtilisateurRepository();
 
             ChargerCommand = new RelayCommand(_ => ChargerUtilisateurs());
@@ -153,7 +184,7 @@ namespace FLEET_MANAGER.ViewModels
         }
 
         /// <summary>
-        /// Vérifie si l'utilisateur connecté peut modifier l'utilisateur sélectionné
+        /// Vï¿½rifie si l'utilisateur connectï¿½ peut modifier l'utilisateur sï¿½lectionnï¿½
         /// </summary>
         private bool PeuxModifier()
         {
@@ -178,14 +209,14 @@ namespace FLEET_MANAGER.ViewModels
         }
 
         /// <summary>
-        /// Vérifie si l'utilisateur connecté peut supprimer l'utilisateur sélectionné
+        /// Vï¿½rifie si l'utilisateur connectï¿½ peut supprimer l'utilisateur sï¿½lectionnï¿½
         /// </summary>
         private bool PeuxSupprimer()
         {
             if (UtilisateurConnecte == null || UtilisateurSelectionne == null)
                 return false;
 
-            // Ne peut pas se supprimer soi-même
+            // Ne peut pas se supprimer soi-mï¿½me
             if (UtilisateurSelectionne.IdUtilisateur == UtilisateurConnecte.IdUtilisateur)
                 return false;
 
@@ -203,18 +234,18 @@ namespace FLEET_MANAGER.ViewModels
         }
 
         /// <summary>
-        /// Vérifie si l'utilisateur connecté peut créer un utilisateur avec le rôle sélectionné
+        /// Vï¿½rifie si l'utilisateur connectï¿½ peut crï¿½er un utilisateur avec le rï¿½le sï¿½lectionnï¿½
         /// </summary>
         private bool PeuxCreerAvecRole(string role)
         {
             if (UtilisateurConnecte == null)
                 return false;
 
-            // Super Admin : peut créer n'importe quel rôle
+            // Super Admin : peut crï¿½er n'importe quel rï¿½le
             if (UtilisateurConnecte.Role == "super_admin")
                 return true;
 
-            // Admin : peut créer des utilisateurs normaux uniquement
+            // Admin : peut crï¿½er des utilisateurs normaux uniquement
             if (UtilisateurConnecte.Role == "admin")
             {
                 return role == "utilisateur";
@@ -230,6 +261,7 @@ namespace FLEET_MANAGER.ViewModels
                 IsLoading = true;
                 var utilisateurs = _repository.ObtenirTousLesUtilisateurs();
                 Utilisateurs = new ObservableCollection<Utilisateur>(utilisateurs);
+                FiltrerUtilisateurs();
                 MessageErreur = string.Empty;
             }
             catch (Exception ex)
@@ -239,6 +271,26 @@ namespace FLEET_MANAGER.ViewModels
             finally
             {
                 IsLoading = false;
+            }
+        }
+
+        private void FiltrerUtilisateurs()
+        {
+            if (string.IsNullOrWhiteSpace(RechercheTexte))
+            {
+                UtilisateursFiltres = new ObservableCollection<Utilisateur>(Utilisateurs);
+            }
+            else
+            {
+                var recherche = RechercheTexte.ToLower();
+                var filtres = Utilisateurs.Where(u =>
+                    u.NomUtilisateur.ToLower().Contains(recherche) ||
+                    u.Email.ToLower().Contains(recherche) ||
+                    u.Nom.ToLower().Contains(recherche) ||
+                    u.Prenom.ToLower().Contains(recherche) ||
+                    u.Role.ToLower().Contains(recherche)
+                ).ToList();
+                UtilisateursFiltres = new ObservableCollection<Utilisateur>(filtres);
             }
         }
 
@@ -296,21 +348,21 @@ namespace FLEET_MANAGER.ViewModels
 
                 if (_estNouveauUtilisateur)
                 {
-                    // Vérifier les permissions pour créer avec ce rôle
+                    // Vï¿½rifier les permissions pour crï¿½er avec ce rï¿½le
                     if (!PeuxCreerAvecRole(RoleSelectionne))
                     {
                         MessageErreur = $"Vous n'avez pas les droits pour creer un {RoleSelectionne}.";
                         return;
                     }
 
-                    // Vérifier que le mot de passe est renseigné pour un nouvel utilisateur
+                    // Vï¿½rifier que le mot de passe est renseignï¿½ pour un nouvel utilisateur
                     if (string.IsNullOrWhiteSpace(MotDePasse))
                     {
                         MessageErreur = "Le mot de passe est obligatoire pour un nouvel utilisateur.";
                         return;
                     }
 
-                    // Créer le nouvel utilisateur
+                    // Crï¿½er le nouvel utilisateur
                     var nouvel = new Utilisateur
                     {
                         NomUtilisateur = NomUtilisateur,
@@ -344,7 +396,7 @@ namespace FLEET_MANAGER.ViewModels
                     UtilisateurSelectionne.Prenom = Prenom;
                     UtilisateurSelectionne.Role = RoleSelectionne;
 
-                    // Mettre à jour le mot de passe seulement s'il est fourni
+                    // Mettre ï¿½ jour le mot de passe seulement s'il est fourni
                     if (!string.IsNullOrWhiteSpace(MotDePasse))
                     {
                         UtilisateurSelectionne.MotDePasse = MotDePasse;

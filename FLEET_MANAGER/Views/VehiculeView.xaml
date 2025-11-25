@@ -165,7 +165,7 @@
 					</TextBlock>
 
 					<!-- Liste scrollable -->
-					<ScrollViewer Grid.Row="3" Style="{StaticResource ModernScrollViewerStyle}">
+					<ScrollViewer Grid.Row="3" Style="{StaticResource ModernScrollViewerStyle}" Padding="0,0,8,0">
 						<ItemsControl ItemsSource="{Binding VehiculesFiltres}">
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>

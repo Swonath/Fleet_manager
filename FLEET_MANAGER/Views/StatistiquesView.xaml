@@ -1,0 +1,514 @@
+<UserControl x:Class="FLEET_MANAGER.Views.StatistiquesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:FLEET_MANAGER.Views"
+             Background="{StaticResource BackgroundBrush}">
+    <UserControl.Resources>
+        <local:PercentageToWidthConverter x:Key="PercentageToWidthConverter"/>
+    </UserControl.Resources>
+    <Grid Margin="32">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Style="{StaticResource PageHeaderStyle}" Margin="0,0,0,32">
+            <TextBlock Style="{StaticResource PageTitleStyle}">
+                Statistiques
+            </TextBlock>
+            <TextBlock Style="{StaticResource PageDescriptionStyle}">
+                Analyse détaillée des performances de votre flotte
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Contenu principal -->
+        <ScrollViewer Grid.Row="1" Style="{StaticResource ModernScrollViewerStyle}">
+            <StackPanel>
+
+                <!-- Vue d'ensemble - 4 KPI principaux -->
+                <Grid Margin="0,0,0,32">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Total Véhicules -->
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
+                        <StackPanel>
+                            <TextBlock Text="🚗" FontSize="32" Margin="0,0,0,12"/>
+                            <TextBlock Text="{Binding TotalVehicules}"
+                                       FontSize="42"
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource PrimaryBrush}"/>
+                            <TextBlock Text="Véhicules"
+                                       FontSize="14"
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Total Trajets -->
+                    <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
+                        <StackPanel>
+                            <TextBlock Text="📍" FontSize="32" Margin="0,0,0,12"/>
+                            <TextBlock Text="{Binding TotalTrajets}"
+                                       FontSize="42"
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource InfoBrush}"/>
+                            <TextBlock Text="Trajets"
+                                       FontSize="14"
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Kilométrage Total -->
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
+                        <StackPanel>
+                            <TextBlock Text="🛣️" FontSize="32" Margin="0,0,0,12"/>
+                            <TextBlock Text="{Binding KilometrageTotalParcouru, StringFormat={}{0:N0}}"
+                                       FontSize="42"
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource SuccessBrush}"/>
+                            <TextBlock Text="Kilomètres"
+                                       FontSize="14"
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Coût Total -->
+                    <Border Grid.Column="3" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="💰" FontSize="32" Margin="0,0,0,12"/>
+                            <TextBlock Text="{Binding CoutTotalGlobal, StringFormat={}{0:C}}"
+                                       FontSize="42"
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource DangerBrush}"/>
+                            <TextBlock Text="Coût Total"
+                                       FontSize="14"
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Statistiques de Coûts -->
+                <Border Style="{StaticResource CardStyle}" Margin="0,0,0,24">
+                    <StackPanel>
+                        <TextBlock Text="💵 Statistiques de Coûts"
+                                   Style="{StaticResource SectionTitleStyle}"
+                                   Margin="0,0,0,20"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Coût Total Carburant -->
+                            <Border Grid.Column="0" Style="{StaticResource StatBoxStyle}">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding CoutTotalCarburant, StringFormat={}{0:C}}"
+                                               FontSize="28"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource DangerBrush}"/>
+                                    <TextBlock Text="Coût Total Carburant"
+                                               FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Coût Moyen par Véhicule -->
+                            <Border Grid.Column="1" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding CoutMoyenParVehicule, StringFormat={}{0:C}}"
+                                               FontSize="28"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource WarningBrush}"/>
+                                    <TextBlock Text="Coût Moyen / Véhicule"
+                                               FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Coût par Kilomètre -->
+                            <Border Grid.Column="2" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding CoutParKilometre, StringFormat={}{0:C}}"
+                                               FontSize="28"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource InfoBrush}"/>
+                                    <TextBlock Text="Coût / Kilomètre"
+                                               FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Coût Mois Actuel -->
+                            <Border Grid.Column="3" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding CoutMoisActuel, StringFormat={}{0:C}}"
+                                               FontSize="28"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                    <TextBlock Text="Coût Mois Actuel"
+                                               FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Statistiques de Consommation -->
+                <Border Style="{StaticResource CardStyle}" Margin="0,0,0,24">
+                    <StackPanel>
+                        <TextBlock Text="⛽ Statistiques de Consommation"
+                                   Style="{StaticResource SectionTitleStyle}"
+                                   Margin="0,0,0,20"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Consommation Moyenne -->
+                            <Border Grid.Column="0" Style="{StaticResource StatBoxStyle}">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding ConsommationMoyenne, StringFormat={}{0:F2}}"
+                                               FontSize="28"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource SuccessBrush}"/>
+                                    <TextBlock Text="L/100km Moyenne"
+                                               FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Litres Total -->
+                            <Border Grid.Column="1" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding LitresTotal, StringFormat={}{0:N0}}"
+                                               FontSize="28"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource WarningBrush}"/>
+                                    <TextBlock Text="Litres Consommés Total"
+                                               FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Litres Mois Actuel -->
+                            <Border Grid.Column="2" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding LitresMoisActuel, StringFormat={}{0:N0}}"
+                                               FontSize="28"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource InfoBrush}"/>
+                                    <TextBlock Text="Litres Mois Actuel"
+                                               FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Statistiques d'Utilisation -->
+                <Border Style="{StaticResource CardStyle}" Margin="0,0,0,24">
+                    <StackPanel>
+                        <TextBlock Text="📊 Statistiques d'Utilisation"
+                                   Style="{StaticResource SectionTitleStyle}"
+                                   Margin="0,0,0,20"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Distance Moyenne par Véhicule -->
+                            <Border Grid.Column="0" Style="{StaticResource StatBoxStyle}">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding DistanceMoyenneParVehicule, StringFormat={}{0:N0}}"
+                                               FontSize="28"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                    <TextBlock Text="km Moyen / Véhicule"
+                                               FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Trajets Mois Actuel -->
+                            <Border Grid.Column="1" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding TrajetsMoisActuel}"
+                                               FontSize="28"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource SuccessBrush}"/>
+                                    <TextBlock Text="Trajets ce Mois"
+                                               FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Distance Mois Actuel -->
+                            <Border Grid.Column="2" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding DistanceMoisActuel, StringFormat={}{0:N0}}"
+                                               FontSize="28"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource InfoBrush}"/>
+                                    <TextBlock Text="km ce Mois"
+                                               FontSize="12"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Section Classements -->
+                <Grid Margin="0,0,0,24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Top Véhicules Économiques -->
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
+                        <StackPanel>
+                            <TextBlock Text="🏆 Top 5 - Véhicules Économiques"
+                                       Style="{StaticResource SectionTitleStyle}"
+                                       Foreground="{StaticResource SuccessBrush}"
+                                       Margin="0,0,0,16"/>
+
+                            <ItemsControl ItemsSource="{Binding TopVehiculesEconomiques}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{StaticResource BackgroundBrush}"
+                                                CornerRadius="8"
+                                                Padding="16"
+                                                Margin="0,0,0,12">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="{Binding Nom}"
+                                                               FontSize="14"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                    <TextBlock Text="{Binding Immatriculation}"
+                                                               FontSize="12"
+                                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                                               Margin="0,2,0,0"/>
+                                                </StackPanel>
+
+                                                <Border Grid.Column="1"
+                                                        Background="{StaticResource SuccessLightBrush}"
+                                                        CornerRadius="6"
+                                                        Padding="12,6">
+                                                    <TextBlock Text="{Binding ConsommationFormatee}"
+                                                               FontSize="13"
+                                                               FontWeight="Bold"
+                                                               Foreground="{StaticResource SuccessBrush}"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Top Véhicules Plus Utilisés -->
+                    <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="⭐ Top 5 - Véhicules Plus Utilisés"
+                                       Style="{StaticResource SectionTitleStyle}"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       Margin="0,0,0,16"/>
+
+                            <ItemsControl ItemsSource="{Binding TopVehiculesPlusUtilises}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{StaticResource BackgroundBrush}"
+                                                CornerRadius="8"
+                                                Padding="16"
+                                                Margin="0,0,0,12">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="{Binding Nom}"
+                                                               FontSize="14"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                    <TextBlock Text="{Binding Immatriculation}"
+                                                               FontSize="12"
+                                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                                               Margin="0,2,0,0"/>
+                                                </StackPanel>
+
+                                                <Border Grid.Column="1"
+                                                        Background="{StaticResource PrimaryLightBrush}"
+                                                        CornerRadius="6"
+                                                        Padding="12,6">
+                                                    <TextBlock Text="{Binding DistanceFormatee}"
+                                                               FontSize="13"
+                                                               FontWeight="Bold"
+                                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Répartitions -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Répartition Types de Trajet -->
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
+                        <StackPanel>
+                            <TextBlock Text="📍 Répartition Types de Trajet"
+                                       Style="{StaticResource SectionTitleStyle}"
+                                       Margin="0,0,0,16"/>
+
+                            <ItemsControl ItemsSource="{Binding RepartitionTypesTrajet}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,12">
+                                            <Grid Margin="0,0,0,6">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding Categorie}"
+                                                           FontSize="13"
+                                                           FontWeight="Medium"
+                                                           Foreground="{StaticResource TextPrimaryBrush}"/>
+
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Valeur}"
+                                                           FontSize="13"
+                                                           FontWeight="Bold"
+                                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                                           Margin="0,0,12,0"/>
+
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding PourcentageFormate}"
+                                                           FontSize="13"
+                                                           FontWeight="Bold"
+                                                           Foreground="{StaticResource PrimaryBrush}"/>
+                                            </Grid>
+
+                                            <Border Background="{StaticResource BackgroundBrush}"
+                                                    Height="8"
+                                                    CornerRadius="4">
+                                                <Border Background="{StaticResource PrimaryBrush}"
+                                                        HorizontalAlignment="Left"
+                                                        Width="{Binding Pourcentage, Converter={StaticResource PercentageToWidthConverter}}"
+                                                        CornerRadius="4"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Répartition Types de Carburant -->
+                    <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="⛽ Répartition Types de Carburant"
+                                       Style="{StaticResource SectionTitleStyle}"
+                                       Margin="0,0,0,16"/>
+
+                            <ItemsControl ItemsSource="{Binding RepartitionTypesCarburant}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,12">
+                                            <Grid Margin="0,0,0,6">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding Categorie}"
+                                                           FontSize="13"
+                                                           FontWeight="Medium"
+                                                           Foreground="{StaticResource TextPrimaryBrush}"/>
+
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Valeur}"
+                                                           FontSize="13"
+                                                           FontWeight="Bold"
+                                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                                           Margin="0,0,12,0"/>
+
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding PourcentageFormate}"
+                                                           FontSize="13"
+                                                           FontWeight="Bold"
+                                                           Foreground="{StaticResource SuccessBrush}"/>
+                                            </Grid>
+
+                                            <Border Background="{StaticResource BackgroundBrush}"
+                                                    Height="8"
+                                                    CornerRadius="4">
+                                                <Border Background="{StaticResource SuccessBrush}"
+                                                        HorizontalAlignment="Left"
+                                                        Width="{Binding Pourcentage, Converter={StaticResource PercentageToWidthConverter}}"
+                                                        CornerRadius="4"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

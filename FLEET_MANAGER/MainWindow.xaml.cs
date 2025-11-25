@@ -15,11 +15,13 @@ namespace FLEET_MANAGER
         private VehiculeViewModel _vehiculeViewModel;
         private CarburantTrajetViewModel _carburantTrajetViewModel;
         private UtilisateurViewModel _utilisateurViewModel;
+        private StatistiquesViewModel _statistiquesViewModel;
 
         private DashboardView _dashboardView;
         private VehiculeView _vehiculeView;
         private CarburantTrajetView _carburantTrajetView;
         private UtilisateurView _utilisateurView;
+        private StatistiquesView _statistiquesView;
 
         private Utilisateur? _utilisateurConnecte;
 
@@ -37,11 +39,13 @@ namespace FLEET_MANAGER
             _vehiculeViewModel = new VehiculeViewModel();
             _carburantTrajetViewModel = new CarburantTrajetViewModel();
             _utilisateurViewModel = new UtilisateurViewModel();
+            _statistiquesViewModel = new StatistiquesViewModel();
 
             _dashboardView = new DashboardView { DataContext = _dashboardViewModel };
             _vehiculeView = new VehiculeView { DataContext = _vehiculeViewModel };
             _carburantTrajetView = new CarburantTrajetView { DataContext = _carburantTrajetViewModel };
             _utilisateurView = new UtilisateurView { DataContext = _utilisateurViewModel };
+            _statistiquesView = new StatistiquesView { DataContext = _statistiquesViewModel };
             
             // S'abonner a la notification de mise a jour des vehicules
             _vehiculeViewModel.VehiculesChange += OnVehiculesChange;
@@ -54,6 +58,7 @@ namespace FLEET_MANAGER
             // Recharger les vehicules dans les autres ViewModels
             _carburantTrajetViewModel.RéchargerVéhicules();
             _dashboardViewModel.RéchargerDashboard();
+            _statistiquesViewModel.Rafraichir();
         }
 
         public void InitialiserAvecUtilisateur(Utilisateur utilisateur)
@@ -105,6 +110,13 @@ namespace FLEET_MANAGER
             DataContext = _utilisateurViewModel;
             ContentArea.Content = _utilisateurView;
             _utilisateurViewModel.ChargerUtilisateurs();
+        }
+
+        private void BtnStatistiques_Click(object sender, RoutedEventArgs e)
+        {
+            DataContext = _statistiquesViewModel;
+            ContentArea.Content = _statistiquesView;
+            _statistiquesViewModel.Rafraichir();
         }
 
         private void BtnProfil_Click(object sender, RoutedEventArgs e)

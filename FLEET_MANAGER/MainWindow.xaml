@@ -70,6 +70,10 @@
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="BtnCarburantTrajet_Click"/>
 
+                    <Button Content="📈 Statistiques"
+                            Style="{StaticResource SidebarButtonStyle}"
+                            Click="BtnStatistiques_Click"/>
+
                     <Separator Background="#475569"
                                Height="1"
                                Margin="24,20,24,20"

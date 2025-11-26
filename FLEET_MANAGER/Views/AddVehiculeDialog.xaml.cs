@@ -13,14 +13,16 @@ namespace FLEET_MANAGER.Views
             ViewModel = viewModel;
             DataContext = viewModel;
 
-            // Mettre à jour le titre en fonction du mode
+            // Mettre à jour le titre et le bouton en fonction du mode
             if (viewModel.EstNouveauVehicule)
             {
                 TitleTextBlock.Text = "Ajouter un véhicule";
+                BtnSave.Content = "Ajouter le véhicule";
             }
             else
             {
                 TitleTextBlock.Text = "Modifier le véhicule";
+                BtnSave.Content = "Modifier le véhicule";
             }
         }
 

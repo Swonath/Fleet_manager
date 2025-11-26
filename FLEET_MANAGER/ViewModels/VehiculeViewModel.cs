@@ -290,6 +290,21 @@ namespace FLEET_MANAGER.ViewModels
             }
         }
 
+        public void SelectionnerVehicule(Vehicule vehicule)
+        {
+            if (vehicule == null)
+                return;
+
+            // Charger les véhicules si nécessaire
+            if (Vehicules == null || Vehicules.Count == 0)
+            {
+                ChargerVehicules();
+            }
+
+            // Sélectionner le véhicule
+            VehiculeSelectionne = Vehicules.FirstOrDefault(v => v.IdVehicule == vehicule.IdVehicule);
+        }
+
         private void AppliquerFiltres()
         {
             var vehiculesFiltres = Vehicules.AsEnumerable();

@@ -170,6 +170,7 @@
 						<Grid.RowDefinitions>
 							<RowDefinition Height="Auto"/>
 							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
 							<RowDefinition Height="*"/>
 						</Grid.RowDefinitions>
 
@@ -182,10 +183,74 @@
 							<Run Text="véhicules enregistrés"/>
 						</TextBlock>
 
-						<!-- Grille de cartes de véhicules -->
-						<StackPanel Grid.Row="2" Margin="0,8,0,0">
-							<ItemsControl ItemsSource="{Binding Vehicules}"
-							              MaxHeight="500"
+						<!-- Barre de recherche -->
+						<Border Grid.Row="2"
+						        BorderBrush="{StaticResource BorderBrush}"
+						        BorderThickness="1"
+						        CornerRadius="8"
+						        Background="White"
+						        Height="42"
+						        Margin="0,16,0,0">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto"/>
+									<ColumnDefinition Width="*"/>
+								</Grid.ColumnDefinitions>
+
+								<TextBlock Grid.Column="0"
+								           Text="🔍"
+								           FontSize="18"
+								           VerticalAlignment="Center"
+								           Margin="12,0,8,0"
+								           Foreground="{StaticResource TextSecondaryBrush}"/>
+
+								<TextBox Grid.Column="1"
+								         Text="{Binding RechercheTexte, UpdateSourceTrigger=PropertyChanged}"
+								         Background="Transparent"
+								         BorderThickness="0"
+								         VerticalAlignment="Center"
+								         FontSize="14"
+								         Foreground="{StaticResource TextPrimaryBrush}">
+									<TextBox.Resources>
+										<Style TargetType="TextBox">
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="TextBox">
+														<Grid>
+															<ScrollViewer x:Name="PART_ContentHost"
+															              VerticalAlignment="Center"/>
+															<TextBlock Text="Rechercher un véhicule (marque, modèle, immatriculation...)"
+															           IsHitTestVisible="False"
+															           Foreground="{StaticResource TextSecondaryBrush}"
+															           VerticalAlignment="Center">
+																<TextBlock.Style>
+																	<Style TargetType="TextBlock">
+																		<Setter Property="Visibility" Value="Collapsed"/>
+																		<Style.Triggers>
+																			<DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" Value="">
+																				<Setter Property="Visibility" Value="Visible"/>
+																			</DataTrigger>
+																		</Style.Triggers>
+																	</Style>
+																</TextBlock.Style>
+															</TextBlock>
+														</Grid>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+										</Style>
+									</TextBox.Resources>
+								</TextBox>
+							</Grid>
+						</Border>
+
+						<!-- Grille de cartes de véhicules avec ScrollViewer -->
+						<ScrollViewer Grid.Row="3"
+						              Margin="0,16,0,0"
+						              VerticalScrollBarVisibility="Auto"
+						              HorizontalScrollBarVisibility="Disabled"
+						              MaxHeight="600">
+							<ItemsControl ItemsSource="{Binding VehiculesFiltres}"
 							              ScrollViewer.VerticalScrollBarVisibility="Disabled">
 								<ItemsControl.ItemsPanel>
 									<ItemsPanelTemplate>
@@ -200,10 +265,26 @@
 										        CornerRadius="12"
 										        Padding="20"
 										        Margin="0,0,16,16"
-										        Width="340">
+										        Width="340"
+										        Cursor="Hand">
 											<Border.Effect>
 												<DropShadowEffect Color="#E2E8F0" BlurRadius="8" ShadowDepth="2" Opacity="0.15"/>
 											</Border.Effect>
+											<Border.InputBindings>
+												<MouseBinding MouseAction="LeftClick"
+												              Command="{Binding DataContext.SelectionnerVehiculeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+												              CommandParameter="{Binding}"/>
+											</Border.InputBindings>
+											<Border.Style>
+												<Style TargetType="Border">
+													<Style.Triggers>
+														<Trigger Property="IsMouseOver" Value="True">
+															<Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+															<Setter Property="BorderThickness" Value="2"/>
+														</Trigger>
+													</Style.Triggers>
+												</Style>
+											</Border.Style>
 											<Grid>
 												<Grid.RowDefinitions>
 													<RowDefinition Height="Auto"/>
@@ -377,12 +458,15 @@
 									</DataTemplate>
 								</ItemsControl.ItemTemplate>
 							</ItemsControl>
+						</ScrollViewer>
 
+						<!-- Bouton Voir Plus et Message fin de liste en dehors du ScrollViewer -->
+						<StackPanel Grid.Row="3" Margin="0,8,0,0" VerticalAlignment="Bottom">
 							<!-- Bouton Voir Plus -->
 							<Button Command="{Binding ChargerPlusCommand}"
 							        Style="{StaticResource SecondaryButtonStyle}"
 							        Height="45"
-							        Margin="0,24,0,0"
+							        Margin="0,16,0,0"
 							        HorizontalAlignment="Center"
 							        Padding="40,0">
 								<Button.Visibility>
@@ -402,7 +486,7 @@
 							<Border Background="{StaticResource BackgroundBrush}"
 							        CornerRadius="8"
 							        Padding="16"
-							        Margin="0,24,0,0"
+							        Margin="0,16,0,0"
 							        HorizontalAlignment="Center"
 							        Visibility="{Binding TousVehiculesCharges, Converter={StaticResource BoolToVisibilityConverter}}">
 								<TextBlock Text="✅ Tous les véhicules sont affichés"

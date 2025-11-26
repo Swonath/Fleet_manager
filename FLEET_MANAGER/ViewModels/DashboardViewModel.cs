@@ -12,6 +12,8 @@ namespace FLEET_MANAGER.ViewModels
     {
         private Utilisateur? _utilisateurConnecte;
         private ObservableCollection<Vehicule> _vehicules;
+        private ObservableCollection<Vehicule> _vehiculesFiltres;
+        private string _rechercheTexte = string.Empty;
         private int _totalVehicules;
         private int _vehiculesEnService;
         private int _vehiculesEnMaintenance;
@@ -29,6 +31,24 @@ namespace FLEET_MANAGER.ViewModels
         {
             get => _vehicules;
             set => SetProperty(ref _vehicules, value, nameof(Vehicules));
+        }
+
+        public ObservableCollection<Vehicule> VehiculesFiltres
+        {
+            get => _vehiculesFiltres;
+            set => SetProperty(ref _vehiculesFiltres, value, nameof(VehiculesFiltres));
+        }
+
+        public string RechercheTexte
+        {
+            get => _rechercheTexte;
+            set
+            {
+                if (SetProperty(ref _rechercheTexte, value, nameof(RechercheTexte)))
+                {
+                    AppliquerFiltre();
+                }
+            }
         }
 
         public int TotalVehicules
@@ -82,13 +102,25 @@ namespace FLEET_MANAGER.ViewModels
         }
 
         public ICommand ChargerPlusCommand { get; }
+        public ICommand SelectionnerVehiculeCommand { get; }
+
+        // Événement pour la navigation
+        public event Action<Vehicule>? NaviguerVersVehicule;
 
         public DashboardViewModel()
         {
             _vehicules = new ObservableCollection<Vehicule>();
+            _vehiculesFiltres = new ObservableCollection<Vehicule>();
             _vehiculeRepository = new VehiculeRepository();
             _carburantRepository = new CarburantRepository();
             ChargerPlusCommand = new RelayCommand(_ => ChargerVehiculesSuivants());
+            SelectionnerVehiculeCommand = new RelayCommand(param =>
+            {
+                if (param is Vehicule vehicule)
+                {
+                    NaviguerVersVehicule?.Invoke(vehicule);
+                }
+            });
             // Ne plus charger les données au constructeur
         }
 
@@ -146,10 +178,41 @@ namespace FLEET_MANAGER.ViewModels
 
                 _nombreVehiculesCharges += vehiculesACharger.Count;
                 TousVehiculesCharges = _nombreVehiculesCharges >= _tousLesVehicules.Count;
+
+                // Appliquer le filtre après le chargement
+                AppliquerFiltre();
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des véhicules suivants : {ex.Message}");
+            }
+        }
+
+        private void AppliquerFiltre()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(RechercheTexte))
+                {
+                    VehiculesFiltres = new ObservableCollection<Vehicule>(Vehicules);
+                }
+                else
+                {
+                    var texteRecherche = RechercheTexte.ToLower();
+                    var vehiculesFiltres = Vehicules.Where(v =>
+                        v.Marque.ToLower().Contains(texteRecherche) ||
+                        v.Modele.ToLower().Contains(texteRecherche) ||
+                        v.Immatriculation.ToLower().Contains(texteRecherche) ||
+                        v.Etat.ToLower().Contains(texteRecherche) ||
+                        v.TypeCarburant.ToLower().Contains(texteRecherche)
+                    ).ToList();
+
+                    VehiculesFiltres = new ObservableCollection<Vehicule>(vehiculesFiltres);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du filtrage : {ex.Message}");
             }
         }
 

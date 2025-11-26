@@ -34,7 +34,7 @@ namespace FLEET_MANAGER
         public MainWindow()
         {
             InitializeComponent();
-            
+
             _dashboardViewModel = new DashboardViewModel();
             _vehiculeViewModel = new VehiculeViewModel();
             _carburantTrajetViewModel = new CarburantTrajetViewModel();
@@ -46,10 +46,13 @@ namespace FLEET_MANAGER
             _carburantTrajetView = new CarburantTrajetView { DataContext = _carburantTrajetViewModel };
             _utilisateurView = new UtilisateurView { DataContext = _utilisateurViewModel };
             _statistiquesView = new StatistiquesView { DataContext = _statistiquesViewModel };
-            
+
             // S'abonner a la notification de mise a jour des vehicules
             _vehiculeViewModel.VehiculesChange += OnVehiculesChange;
-            
+
+            // S'abonner à la navigation depuis le dashboard
+            _dashboardViewModel.NaviguerVersVehicule += NaviguerVersVehicule;
+
             DataContext = _dashboardViewModel;
         }
 
@@ -59,6 +62,15 @@ namespace FLEET_MANAGER
             _carburantTrajetViewModel.RéchargerVéhicules();
             _dashboardViewModel.RéchargerDashboard();
             _statistiquesViewModel.Rafraichir();
+        }
+
+        private void NaviguerVersVehicule(Vehicule vehicule)
+        {
+            // Naviguer vers la page véhicule
+            BtnVehicules_Click(null, null);
+
+            // Sélectionner le véhicule dans le ViewModel
+            _vehiculeViewModel.SelectionnerVehicule(vehicule);
         }
 
         public void InitialiserAvecUtilisateur(Utilisateur utilisateur)

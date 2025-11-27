@@ -7,8 +7,8 @@ using MySql.Data.MySqlClient;
 namespace FLEET_MANAGER.ViewModels
 {
     /// <summary>
-    /// ViewModel pour l'écran de connexion
-    /// Utilise BCrypt pour vérifier les mots de passe hashés
+    /// ViewModel pour l'ï¿½cran de connexion
+    /// Utilise BCrypt pour vï¿½rifier les mots de passe hashï¿½s
     /// </summary>
     public class LoginViewModel : ViewModelBase
     {
@@ -43,7 +43,7 @@ namespace FLEET_MANAGER.ViewModels
 
         public ICommand LoginCommand { get; }
 
-        // Événement déclenché lors d'une connexion réussie
+        // ï¿½vï¿½nement dï¿½clenchï¿½ lors d'une connexion rï¿½ussie
         public event EventHandler<Utilisateur>? LoginSucceeded;
 
         public LoginViewModel()
@@ -68,7 +68,7 @@ namespace FLEET_MANAGER.ViewModels
 
                 if (utilisateur != null)
                 {
-                    Message = "Connexion réussie !";
+                    Message = "Connexion rï¿½ussie !";
                     LoginSucceeded?.Invoke(this, utilisateur);
                 }
                 else
@@ -78,7 +78,10 @@ namespace FLEET_MANAGER.ViewModels
             }
             catch (Exception ex)
             {
-                Message = $"Erreur : {ex.Message}";
+                // Log dÃ©taillÃ© pour le dÃ©bogage
+                System.Diagnostics.Debug.WriteLine($"Erreur de connexion : {ex}");
+                // Message gÃ©nÃ©rique pour l'utilisateur
+                Message = "Une erreur est survenue lors de la connexion. Veuillez rÃ©essayer.";
             }
             finally
             {
@@ -87,13 +90,13 @@ namespace FLEET_MANAGER.ViewModels
         }
 
         /// <summary>
-        /// Authentifie un utilisateur en vérifiant son mot de passe avec BCrypt
+        /// Authentifie un utilisateur en vï¿½rifiant son mot de passe avec BCrypt
         /// </summary>
         private Utilisateur? AuthentifierUtilisateur(string nomUtilisateur, string motDePasse)
         {
             try
             {
-                // Étape 1 : Récupérer l'utilisateur par son nom (sans vérifier le mot de passe en SQL)
+                // ï¿½tape 1 : Rï¿½cupï¿½rer l'utilisateur par son nom (sans vï¿½rifier le mot de passe en SQL)
                 string query = "SELECT * FROM utilisateurs WHERE nom_utilisateur = @username AND actif = 1";
                 var parameters = new Dictionary<string, object>
                 {
@@ -104,10 +107,10 @@ namespace FLEET_MANAGER.ViewModels
                 {
                     if (reader.Read())
                     {
-                        // Récupérer le hash du mot de passe stocké en base
+                        // Rï¿½cupï¿½rer le hash du mot de passe stockï¿½ en base
                         string hashStocke = reader["mot_de_passe"]?.ToString() ?? string.Empty;
 
-                        // Étape 2 : Vérifier le mot de passe avec BCrypt
+                        // ï¿½tape 2 : Vï¿½rifier le mot de passe avec BCrypt
                         if (!string.IsNullOrEmpty(hashStocke) && PasswordHelper.VerifierMotDePasse(motDePasse, hashStocke))
                         {
                             // Mot de passe correct, retourner l'utilisateur

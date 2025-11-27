@@ -273,7 +273,8 @@ namespace FLEET_MANAGER.ViewModels
             }
             catch (Exception ex)
             {
-                MessageErreur = $"Erreur lors du chargement des vehicules : {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Erreur chargement véhicules : {ex}");
+                MessageErreur = "Erreur lors du chargement des véhicules.";
             }
         }
 
@@ -298,7 +299,8 @@ namespace FLEET_MANAGER.ViewModels
             }
             catch (Exception ex)
             {
-                MessageErreur = $"Erreur lors du chargement de l'historique : {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Erreur chargement historique : {ex}");
+                MessageErreur = "Erreur lors du chargement de l'historique.";
             }
         }
 
@@ -341,7 +343,8 @@ namespace FLEET_MANAGER.ViewModels
             }
             catch (Exception ex)
             {
-                MessageErreur = $"Erreur lors du chargement des trajets : {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Erreur chargement trajets : {ex}");
+                MessageErreur = "Erreur lors du chargement des trajets.";
             }
         }
 
@@ -410,8 +413,10 @@ namespace FLEET_MANAGER.ViewModels
                     MessageErreur = "Erreur lors de l'enregistrement.";
                 }
             }
-            catch (Exception ex)            {
-                MessageErreur = $"Erreur : {ex.Message}";
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur enregistrement carburant : {ex}");
+                MessageErreur = "Erreur lors de l'enregistrement. Veuillez réessayer.";
             }
             finally
             {
@@ -472,7 +477,8 @@ namespace FLEET_MANAGER.ViewModels
             }
             catch (Exception ex)
             {
-                MessageErreur = $"Erreur : {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Erreur enregistrement trajet : {ex}");
+                MessageErreur = "Erreur lors de l'enregistrement. Veuillez réessayer.";
             }
             finally
             {

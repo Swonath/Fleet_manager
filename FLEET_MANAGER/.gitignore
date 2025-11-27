@@ -90,6 +90,7 @@ TestResults/
 # Configuration files with sensitive data (edit as needed)
 # appsettings.Development.json
 # appsettings.Production.json
+App.config
 
 # IDE files
 *.swp

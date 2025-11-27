@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<appSettings>
+		<!-- Configuration de la base de données -->
+		<!-- Copiez ce fichier vers App.config et remplissez avec vos vraies valeurs -->
+		<add key="DB_Server" value="localhost" />
+		<add key="DB_Database" value="fleet_manager" />
+		<add key="DB_UserId" value="your_username" />
+		<add key="DB_Password" value="your_password" />
+		<add key="DB_Port" value="3306" />
+	</appSettings>
+</configuration>

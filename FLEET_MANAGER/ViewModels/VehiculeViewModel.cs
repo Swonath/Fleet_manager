@@ -281,8 +281,8 @@ namespace FLEET_MANAGER.ViewModels
             }
             catch (Exception ex)
             {
-                MessageErreur = $"Erreur lors du chargement : {ex.Message}";
-                System.Diagnostics.Debug.WriteLine(MessageErreur);
+                System.Diagnostics.Debug.WriteLine($"Erreur chargement véhicules : {ex}");
+                MessageErreur = "Erreur lors du chargement des véhicules.";
             }
             finally
             {

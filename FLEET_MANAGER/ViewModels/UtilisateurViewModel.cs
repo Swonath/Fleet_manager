@@ -286,7 +286,8 @@ namespace FLEET_MANAGER.ViewModels
             }
             catch (Exception ex)
             {
-                MessageErreur = $"Erreur lors du chargement : {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement : {ex}");
+                MessageErreur = "Erreur lors du chargement des utilisateurs.";
             }
             finally
             {
@@ -464,8 +465,8 @@ namespace FLEET_MANAGER.ViewModels
             }
             catch (Exception ex)
             {
-                MessageErreur = $"Erreur : {ex.Message}";
-                System.Diagnostics.Debug.WriteLine($"Exception: {ex}");
+                System.Diagnostics.Debug.WriteLine($"Erreur sauvegarde utilisateur : {ex}");
+                MessageErreur = "Erreur lors de la sauvegarde. Veuillez réessayer.";
             }
             finally
             {
@@ -497,7 +498,8 @@ namespace FLEET_MANAGER.ViewModels
             }
             catch (Exception ex)
             {
-                MessageErreur = $"Erreur : {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Erreur suppression utilisateur : {ex}");
+                MessageErreur = "Erreur lors de la suppression. Veuillez réessayer.";
             }
             finally
             {
@@ -518,9 +520,11 @@ namespace FLEET_MANAGER.ViewModels
         {
             bool valide = true;
 
-            if (string.IsNullOrWhiteSpace(NomUtilisateur))
+            // Valider le nom d'utilisateur
+            var (nomUtilisateurValide, nomUtilisateurErreur) = Helpers.ValidationHelper.ValiderNomUtilisateur(NomUtilisateur);
+            if (!nomUtilisateurValide)
             {
-                NomUtilisateurError = "Le nom d'utilisateur est requis.";
+                NomUtilisateurError = nomUtilisateurErreur ?? "Nom d'utilisateur invalide.";
                 valide = false;
             }
             else
@@ -528,14 +532,27 @@ namespace FLEET_MANAGER.ViewModels
                 NomUtilisateurError = string.Empty;
             }
 
-            if (string.IsNullOrWhiteSpace(Email) || !Email.Contains("@"))
+            // Valider l'email
+            var (emailValide, emailErreur) = Helpers.ValidationHelper.ValiderEmail(Email);
+            if (!emailValide)
             {
-                EmailError = "Un email valide est requis.";
+                EmailError = emailErreur ?? "Email invalide.";
                 valide = false;
             }
             else
             {
                 EmailError = string.Empty;
+            }
+
+            // Valider le mot de passe (seulement pour nouvel utilisateur ou si fourni pour modification)
+            if (_estNouveauUtilisateur || !string.IsNullOrWhiteSpace(MotDePasse))
+            {
+                var (motDePasseValide, motDePasseErreur) = Helpers.ValidationHelper.ValiderMotDePasse(MotDePasse);
+                if (!motDePasseValide)
+                {
+                    MessageErreur = motDePasseErreur ?? "Mot de passe invalide.";
+                    valide = false;
+                }
             }
 
             if (string.IsNullOrWhiteSpace(RoleSelectionne))

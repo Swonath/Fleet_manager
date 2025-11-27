@@ -79,13 +79,17 @@ namespace FLEET_MANAGER
             _dashboardViewModel.InitialiserAvecUtilisateur(utilisateur);
             _utilisateurViewModel.InitialiserAvecUtilisateurConnecte(utilisateur);
 
-            // Afficher/masquer le bouton Utilisateurs selon les droits
+            // Afficher/masquer la section Administration selon les droits
             if (utilisateur.Role == "admin" || utilisateur.Role == "super_admin")
             {
+                SeparatorAdministration.Visibility = Visibility.Visible;
+                TitreAdministration.Visibility = Visibility.Visible;
                 BtnUtilisateurs.Visibility = Visibility.Visible;
             }
             else
             {
+                SeparatorAdministration.Visibility = Visibility.Collapsed;
+                TitreAdministration.Visibility = Visibility.Collapsed;
                 BtnUtilisateurs.Visibility = Visibility.Collapsed;
             }
 

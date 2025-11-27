@@ -77,12 +77,14 @@
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="BtnStatistiques_Click"/>
 
-                    <Separator Background="#475569"
+                    <Separator x:Name="SeparatorAdministration"
+                               Background="#475569"
                                Height="1"
                                Margin="24,20,24,20"
                                Opacity="0.3"/>
 
-                    <TextBlock Text="ADMINISTRATION"
+                    <TextBlock x:Name="TitreAdministration"
+                               Text="ADMINISTRATION"
                                FontSize="11"
                                FontWeight="SemiBold"
                                Foreground="#64748B"

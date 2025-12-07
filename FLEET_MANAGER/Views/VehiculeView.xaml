@@ -381,6 +381,15 @@
 
 							<!-- Boutons d'action -->
 								<StackPanel Grid.Column="2" VerticalAlignment="Center">
+									<Button Click="BtnAjouterPleinTrajet_Click"
+											Style="{StaticResource PrimaryButtonStyle}"
+											Margin="0,0,0,8"
+											Height="36">
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Text="⛽" FontSize="12" Margin="0,0,6,0"/>
+											<TextBlock Text="Ajouter un plein/trajet" FontSize="12"/>
+										</StackPanel>
+									</Button>
 									<Button Click="BtnModifier_Click"
 											Style="{StaticResource WarningButtonStyle}"
 											Margin="0,0,0,8"

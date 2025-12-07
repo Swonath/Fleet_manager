@@ -73,6 +73,15 @@ namespace FLEET_MANAGER
             _vehiculeViewModel.SelectionnerVehicule(vehicule);
         }
 
+        public void NaviguerVersCarburantTrajet(Vehicule vehicule)
+        {
+            // Naviguer vers la page Carburant & Trajet
+            BtnCarburantTrajet_Click(null, null);
+
+            // Sélectionner le véhicule dans le ViewModel
+            _carburantTrajetViewModel.SelectionnerVehicule(vehicule);
+        }
+
         public void InitialiserAvecUtilisateur(Utilisateur utilisateur)
         {
             UtilisateurConnecte = utilisateur;

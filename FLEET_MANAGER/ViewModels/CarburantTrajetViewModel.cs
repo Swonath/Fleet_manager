@@ -109,10 +109,16 @@ namespace FLEET_MANAGER.ViewModels
                     {
                         ChargerHistorique(value.IdVehicule);
                         ChargerTrajets(value.IdVehicule);
-                        // Pré-remplir les kilomètres depuis le dernier carburant
-                        if (_historique.Count > 0)
+                        // Pré-remplir le kilométrage de départ du trajet avec le dernier kilométrage d'arrivée
+                        if (_tousLesTrajets != null && _tousLesTrajets.Count > 0)
                         {
-                            _kilometrageDepart = _historique.Last().Kilometrage;
+                            // Les trajets sont triés par date DESC, donc le premier est le plus récent
+                            KilometrageDepart = _tousLesTrajets.First().KilomettrageArrivee;
+                        }
+                        else if (_historique.Count > 0)
+                        {
+                            // Si aucun trajet, utiliser le dernier carburant
+                            KilometrageDepart = _historique.Last().Kilometrage;
                         }
                     }
                 }
@@ -344,6 +350,21 @@ namespace FLEET_MANAGER.ViewModels
         public void RéchargerVéhicules()
         {
             ChargerVehicules();
+        }
+
+        /// <summary>
+        /// Sélectionne un véhicule spécifique dans la liste
+        /// </summary>
+        public void SelectionnerVehicule(Vehicule vehicule)
+        {
+            if (vehicule == null) return;
+
+            // Rechercher le véhicule dans la liste
+            var vehiculeDansListe = Vehicules.FirstOrDefault(v => v.IdVehicule == vehicule.IdVehicule);
+            if (vehiculeDansListe != null)
+            {
+                VehiculeSelectionne = vehiculeDansListe;
+            }
         }
 
         private void ChargerHistorique(int idVehicule)

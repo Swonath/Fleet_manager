@@ -76,5 +76,19 @@ namespace FLEET_MANAGER.Views
                 }
             }
         }
+
+        private void BtnAjouterPleinTrajet_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is VehiculeViewModel viewModel && viewModel.VehiculeSelectionne != null)
+            {
+                // Obtenir la fenêtre principale
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    // Naviguer vers la page Carburant & Trajet avec le véhicule sélectionné
+                    mainWindow.NaviguerVersCarburantTrajet(viewModel.VehiculeSelectionne);
+                }
+            }
+        }
     }
 }

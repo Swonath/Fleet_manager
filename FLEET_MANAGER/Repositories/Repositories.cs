@@ -1,8 +1,8 @@
 using FLEET_MANAGER.Models;
 using FLEET_MANAGER.Data;
 using FLEET_MANAGER.Helpers;
-using MySql.Data.MySqlClient;
 using System.Collections.ObjectModel;
+using Logger = FLEET_MANAGER.Helpers.Logger;
 
 namespace FLEET_MANAGER.Repositories
 {
@@ -10,6 +10,7 @@ namespace FLEET_MANAGER.Repositories
     {
         public List<Vehicule> ObtenirTousLesVehicules()
         {
+            Logger.Log("DEBUT ObtenirTousLesVehicules");
             var vehicules = new List<Vehicule>();
             string query = "SELECT * FROM vehicules ORDER BY marque, modele";
 
@@ -21,25 +22,26 @@ namespace FLEET_MANAGER.Repositories
                     {
                         vehicules.Add(new Vehicule
                         {
-                            IdVehicule = reader.IsDBNull(reader.GetOrdinal("id_vehicule")) ? 0 : (int)reader["id_vehicule"],
+                            IdVehicule = reader.IsDBNull(reader.GetOrdinal("id_vehicule")) ? 0 : Convert.ToInt32(reader["id_vehicule"]),
                             Marque = reader.IsDBNull(reader.GetOrdinal("marque")) ? string.Empty : reader["marque"].ToString() ?? string.Empty,
                             Modele = reader.IsDBNull(reader.GetOrdinal("modele")) ? string.Empty : reader["modele"].ToString() ?? string.Empty,
                             Immatriculation = reader.IsDBNull(reader.GetOrdinal("immatriculation")) ? string.Empty : reader["immatriculation"].ToString() ?? string.Empty,
-                            AnneeFabrication = reader.IsDBNull(reader.GetOrdinal("annee_fabrication")) ? 0 : (int)reader["annee_fabrication"],
+                            AnneeFabrication = reader.IsDBNull(reader.GetOrdinal("annee_fabrication")) ? 0 : Convert.ToInt32(reader["annee_fabrication"]),
                             TypeCarburant = reader.IsDBNull(reader.GetOrdinal("type_carburant")) ? string.Empty : reader["type_carburant"].ToString() ?? string.Empty,
-                            KilomettrageInitial = reader.IsDBNull(reader.GetOrdinal("kilométrage_initial")) ? 0 : (int)reader["kilométrage_initial"],
-                            KilomettrageActuel = reader.IsDBNull(reader.GetOrdinal("kilométrage_actuel")) ? 0 : (int)reader["kilométrage_actuel"],
-                            DateAcquisition = reader.IsDBNull(reader.GetOrdinal("date_acquisition")) ? DateTime.Now : (DateTime)reader["date_acquisition"],
+                            KilomettrageInitial = reader.IsDBNull(reader.GetOrdinal("kilometrage_initial")) ? 0 : Convert.ToInt32(reader["kilometrage_initial"]),
+                            KilomettrageActuel = reader.IsDBNull(reader.GetOrdinal("kilometrage_actuel")) ? 0 : Convert.ToInt32(reader["kilometrage_actuel"]),
+                            DateAcquisition = reader.IsDBNull(reader.GetOrdinal("date_acquisition")) ? DateTime.Now : (DateTime.TryParse(reader["date_acquisition"].ToString(), out var dtAcq) ? dtAcq : DateTime.Now),
                             Etat = reader.IsDBNull(reader.GetOrdinal("etat")) ? "En service" : reader["etat"].ToString() ?? "En service",
-                            DateCreation = reader.IsDBNull(reader.GetOrdinal("date_creation")) ? DateTime.Now : (DateTime)reader["date_creation"],
-                            DateModification = reader.IsDBNull(reader.GetOrdinal("date_modification")) ? DateTime.Now : (DateTime)reader["date_modification"]
+                            DateCreation = reader.IsDBNull(reader.GetOrdinal("date_creation")) ? DateTime.Now : (DateTime.TryParse(reader["date_creation"].ToString(), out var dtVeh) ? dtVeh : DateTime.Now),
+                            DateModification = reader.IsDBNull(reader.GetOrdinal("date_modification")) ? DateTime.Now : (DateTime.TryParse(reader["date_modification"].ToString(), out var dtMod) ? dtMod : DateTime.Now)
                         });
                     }
                 }
+                Logger.Log($"ObtenirTousLesVehicules - {vehicules.Count} vehicule(s) trouve(s)");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors de la recuperation des vehicules : {ex.Message}");
+                Logger.LogError("ObtenirTousLesVehicules", ex);
             }
 
             return vehicules;
@@ -58,18 +60,18 @@ namespace FLEET_MANAGER.Repositories
                     {
                         return new Vehicule
                         {
-                            IdVehicule = (int)reader["id_vehicule"],
+                            IdVehicule = Convert.ToInt32(reader["id_vehicule"]),
                             Marque = reader["marque"].ToString() ?? string.Empty,
                             Modele = reader["modele"].ToString() ?? string.Empty,
                             Immatriculation = reader["immatriculation"].ToString() ?? string.Empty,
-                            AnneeFabrication = (int)reader["annee_fabrication"],
+                            AnneeFabrication = Convert.ToInt32(reader["annee_fabrication"]),
                             TypeCarburant = reader["type_carburant"].ToString() ?? string.Empty,
-                            KilomettrageInitial = (int)reader["kilométrage_initial"],
-                            KilomettrageActuel = (int)reader["kilométrage_actuel"],
-                            DateAcquisition = (DateTime)reader["date_acquisition"],
+                            KilomettrageInitial = Convert.ToInt32(reader["kilometrage_initial"]),
+                            KilomettrageActuel = Convert.ToInt32(reader["kilometrage_actuel"]),
+                            DateAcquisition = DateTime.TryParse(reader["date_acquisition"].ToString(), out var dtAcq2) ? dtAcq2 : DateTime.Now,
                             Etat = reader["etat"].ToString() ?? string.Empty,
-                            DateCreation = (DateTime)reader["date_creation"],
-                            DateModification = (DateTime)reader["date_modification"]
+                            DateCreation = DateTime.TryParse(reader["date_creation"].ToString(), out var dtTemp) ? dtTemp : DateTime.Now,
+                            DateModification = DateTime.TryParse(reader["date_modification"].ToString(), out var dtMod2) ? dtMod2 : DateTime.Now
                         };
                     }
                 }
@@ -84,9 +86,9 @@ namespace FLEET_MANAGER.Repositories
 
         public bool AjouterVehicule(Vehicule vehicule)
         {
-            string query = @"INSERT INTO vehicules 
-                (marque, modele, immatriculation, annee_fabrication, type_carburant, 
-                 kilométrage_initial, kilométrage_actuel, date_acquisition, etat)
+            string query = @"INSERT INTO vehicules
+                (marque, modele, immatriculation, annee_fabrication, type_carburant,
+                 kilometrage_initial, kilometrage_actuel, date_acquisition, etat)
                 VALUES (@marque, @modele, @immat, @annee, @carburant, @km_initial, @km_actuel, @date_acq, @etat)";
 
             var parameters = new Dictionary<string, object>
@@ -98,27 +100,33 @@ namespace FLEET_MANAGER.Repositories
                 { "@carburant", vehicule.TypeCarburant },
                 { "@km_initial", vehicule.KilomettrageInitial },
                 { "@km_actuel", vehicule.KilomettrageActuel },
-                { "@date_acq", vehicule.DateAcquisition },
+                { "@date_acq", vehicule.DateAcquisition.ToString("yyyy-MM-dd") },
                 { "@etat", vehicule.Etat }
             };
 
             try
             {
+                Logger.Log("DEBUT AjouterVehicule");
+                Logger.Log($"Parametres: Marque={vehicule.Marque}, Modele={vehicule.Modele}, Immat={vehicule.Immatriculation}, TypeCarburant={vehicule.TypeCarburant}, Etat={vehicule.Etat}");
+
                 DatabaseConnection.ExecuteCommand(query, parameters);
+
+                Logger.Log("Vehicule ajoute avec SUCCES");
                 return true;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors de l'ajout du vehicule : {ex.Message}");
+                Logger.LogError("AjouterVehicule", ex);
+                Logger.Log($"Parametres du vehicule - Marque: {vehicule.Marque}, Modele: {vehicule.Modele}, Immat: {vehicule.Immatriculation}, Annee: {vehicule.AnneeFabrication}, TypeCarburant: {vehicule.TypeCarburant}, Etat: {vehicule.Etat}, DateAcq: {vehicule.DateAcquisition}");
                 return false;
             }
         }
 
         public bool ModifierVehicule(Vehicule vehicule)
         {
-            string query = @"UPDATE vehicules SET 
-                marque = @marque, modele = @modele, annee_fabrication = @annee, 
-                type_carburant = @carburant, kilométrage_actuel = @km_actuel, etat = @etat
+            string query = @"UPDATE vehicules SET
+                marque = @marque, modele = @modele, annee_fabrication = @annee,
+                type_carburant = @carburant, kilometrage_actuel = @km_actuel, etat = @etat
                 WHERE id_vehicule = @id";
 
             var parameters = new Dictionary<string, object>
@@ -170,6 +178,7 @@ namespace FLEET_MANAGER.Repositories
             string query = "SELECT * FROM carburants WHERE id_vehicule = @id ORDER BY date_saisie DESC";
             var parameters = new Dictionary<string, object> { { "@id", idVehicule } };
 
+            Logger.Log($"DEBUT ObtenirCarburantParVehicule pour vehicule {idVehicule}");
             try
             {
                 using (var reader = DatabaseConnection.ExecuteQuery(query, parameters))
@@ -178,39 +187,41 @@ namespace FLEET_MANAGER.Repositories
                     {
                         carburants.Add(new Carburant
                         {
-                            IdCarburant = (int)reader["id_carburant"],
-                            IdVehicule = (int)reader["id_vehicule"],
-                            DateSaisie = (DateTime)reader["date_saisie"],
-                            QuantiteLitres = (decimal)reader["quantite_litres"],
-                            CoutTotal = (decimal)reader["cout_total"],
-                            CoutParLitre = (decimal)reader["cout_par_litre"],
-                            Kilometrage = (int)reader["kilométrage"],
+                            IdCarburant = Convert.ToInt32(reader["id_carburant"]),
+                            IdVehicule = Convert.ToInt32(reader["id_vehicule"]),
+                            DateSaisie = DateTime.TryParse(reader["date_saisie"].ToString(), out var dtSaisie) ? dtSaisie : DateTime.Now,
+                            QuantiteLitres = Convert.ToDecimal(Convert.ToDouble(reader["quantite_litres"])),
+                            CoutTotal = Convert.ToDecimal(Convert.ToDouble(reader["cout_total"])),
+                            CoutParLitre = Convert.ToDecimal(Convert.ToDouble(reader["cout_par_litre"])),
+                            Kilometrage = Convert.ToInt32(reader["kilometrage"]),
                             Notes = reader["notes"] != DBNull.Value ? reader["notes"].ToString() : null,
-                            IdUtilisateur = (int)reader["id_utilisateur"],
-                            DateCreation = (DateTime)reader["date_creation"]
+                            IdUtilisateur = Convert.ToInt32(reader["id_utilisateur"]),
+                            DateCreation = DateTime.TryParse(reader["date_creation"].ToString(), out var dtTemp) ? dtTemp : DateTime.Now
                         });
                     }
                 }
             }
             catch (Exception ex)
             {
+                Logger.LogError("ObtenirCarburantParVehicule", ex);
                 System.Diagnostics.Debug.WriteLine($"Erreur lors de la recuperation des carburants : {ex.Message}");
             }
 
+            Logger.Log($"ObtenirCarburantParVehicule - {carburants.Count} carburant(s) trouve(s) pour vehicule {idVehicule}");
             return carburants;
         }
 
         public bool AjouterCarburant(Carburant carburant)
         {
-            string query = @"INSERT INTO carburants 
-                (id_vehicule, date_saisie, heure_saisie, quantite_litres, cout_total, cout_par_litre, kilométrage, notes, id_utilisateur)
+            string query = @"INSERT INTO carburants
+                (id_vehicule, date_saisie, heure_saisie, quantite_litres, cout_total, cout_par_litre, kilometrage, notes, id_utilisateur)
                 VALUES (@id_veh, @date, @heure, @quantite, @cout_total, @cout_litre, @km, @notes, @id_user)";
 
             var parameters = new Dictionary<string, object>
             {
                 { "@id_veh", carburant.IdVehicule },
-                { "@date", carburant.DateSaisie.Date },
-                { "@heure", carburant.DateSaisie.TimeOfDay },
+                { "@date", carburant.DateSaisie.ToString("yyyy-MM-dd") },
+                { "@heure", carburant.DateSaisie.ToString("HH:mm:ss") },
                 { "@quantite", carburant.QuantiteLitres },
                 { "@cout_total", carburant.CoutTotal },
                 { "@cout_litre", carburant.CoutParLitre },
@@ -221,12 +232,18 @@ namespace FLEET_MANAGER.Repositories
 
             try
             {
+                Logger.Log("DEBUT AjouterCarburant");
+                Logger.Log($"Parametres: IdVehicule={carburant.IdVehicule}, DateSaisie={carburant.DateSaisie}, QuantiteLitres={carburant.QuantiteLitres}, CoutTotal={carburant.CoutTotal}, Kilometrage={carburant.Kilometrage}");
+
                 DatabaseConnection.ExecuteCommand(query, parameters);
+
+                Logger.Log("Carburant ajoute avec SUCCES");
                 return true;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors de l'ajout du carburant : {ex.Message}");
+                Logger.LogError("AjouterCarburant", ex);
+                Logger.Log($"Parametres du carburant - IdVehicule: {carburant.IdVehicule}, DateSaisie: {carburant.DateSaisie}, QuantiteLitres: {carburant.QuantiteLitres}, CoutTotal: {carburant.CoutTotal}, CoutParLitre: {carburant.CoutParLitre}, Kilometrage: {carburant.Kilometrage}, IdUtilisateur: {carburant.IdUtilisateur}");
                 return false;
             }
         }
@@ -240,6 +257,7 @@ namespace FLEET_MANAGER.Repositories
             string query = "SELECT * FROM trajets WHERE id_vehicule = @id ORDER BY date_trajet DESC";
             var parameters = new Dictionary<string, object> { { "@id", idVehicule } };
 
+            Logger.Log($"DEBUT ObtenirTrajetsParVehicule pour vehicule {idVehicule}");
             try
             {
                 using (var reader = DatabaseConnection.ExecuteQuery(query, parameters))
@@ -248,45 +266,47 @@ namespace FLEET_MANAGER.Repositories
                     {
                         trajets.Add(new Trajet
                         {
-                            IdTrajet = (int)reader["id_trajet"],
-                            IdVehicule = (int)reader["id_vehicule"],
-                            DateTrajet = (DateTime)reader["date_trajet"],
-                            HeureDepart = (TimeSpan)reader["heure_depart"],
-                            HeureArrivee = (TimeSpan)reader["heure_arrivee"],
-                            KilomettrageDepart = (int)reader["kilométrage_depart"],
-                            KilomettrageArrivee = (int)reader["kilométrage_arrivee"],
-                            DistanceParcourue = (int)reader["distance_parcourue"],
+                            IdTrajet = Convert.ToInt32(reader["id_trajet"]),
+                            IdVehicule = Convert.ToInt32(reader["id_vehicule"]),
+                            DateTrajet = DateTime.TryParse(reader["date_trajet"].ToString(), out var dtTrajet) ? dtTrajet : DateTime.Now,
+                            HeureDepart = TimeSpan.TryParse(reader["heure_depart"].ToString(), out var hDepart) ? hDepart : TimeSpan.Zero,
+                            HeureArrivee = TimeSpan.TryParse(reader["heure_arrivee"].ToString(), out var hArrivee) ? hArrivee : TimeSpan.Zero,
+                            KilomettrageDepart = Convert.ToInt32(reader["kilometrage_depart"]),
+                            KilomettrageArrivee = Convert.ToInt32(reader["kilometrage_arrivee"]),
+                            DistanceParcourue = Convert.ToInt32(reader["distance_parcourue"]),
                             LieuDepart = reader["lieu_depart"].ToString() ?? string.Empty,
                             LieuArrivee = reader["lieu_arrivee"].ToString() ?? string.Empty,
                             TypeTrajet = reader["type_trajet"].ToString() ?? string.Empty,
                             Notes = reader["notes"] != DBNull.Value ? reader["notes"].ToString() : null,
-                            IdUtilisateur = (int)reader["id_utilisateur"],
-                            DateCreation = (DateTime)reader["date_creation"]
+                            IdUtilisateur = Convert.ToInt32(reader["id_utilisateur"]),
+                            DateCreation = DateTime.TryParse(reader["date_creation"].ToString(), out var dtTemp) ? dtTemp : DateTime.Now
                         });
                     }
                 }
             }
             catch (Exception ex)
             {
+                Logger.LogError("ObtenirTrajetsParVehicule", ex);
                 System.Diagnostics.Debug.WriteLine($"Erreur lors de la recuperation des trajets : {ex.Message}");
             }
 
+            Logger.Log($"ObtenirTrajetsParVehicule - {trajets.Count} trajet(s) trouve(s) pour vehicule {idVehicule}");
             return trajets;
         }
 
         public bool AjouterTrajet(Trajet trajet)
         {
-            string query = @"INSERT INTO trajets 
-                (id_vehicule, date_trajet, heure_depart, heure_arrivee, kilométrage_depart, 
-                 kilométrage_arrivee, distance_parcourue, lieu_depart, lieu_arrivee, type_trajet, notes, id_utilisateur)
+            string query = @"INSERT INTO trajets
+                (id_vehicule, date_trajet, heure_depart, heure_arrivee, kilometrage_depart,
+                 kilometrage_arrivee, distance_parcourue, lieu_depart, lieu_arrivee, type_trajet, notes, id_utilisateur)
                 VALUES (@id_veh, @date, @h_dep, @h_arr, @km_dep, @km_arr, @distance, @lieu_dep, @lieu_arr, @type, @notes, @id_user)";
 
             var parameters = new Dictionary<string, object>
             {
                 { "@id_veh", trajet.IdVehicule },
-                { "@date", trajet.DateTrajet },
-                { "@h_dep", trajet.HeureDepart },
-                { "@h_arr", trajet.HeureArrivee },
+                { "@date", trajet.DateTrajet.ToString("yyyy-MM-dd") },
+                { "@h_dep", trajet.HeureDepart.ToString(@"hh\:mm\:ss") },
+                { "@h_arr", trajet.HeureArrivee.ToString(@"hh\:mm\:ss") },
                 { "@km_dep", trajet.KilomettrageDepart },
                 { "@km_arr", trajet.KilomettrageArrivee },
                 { "@distance", trajet.DistanceParcourue },
@@ -299,12 +319,18 @@ namespace FLEET_MANAGER.Repositories
 
             try
             {
+                Logger.Log("DEBUT AjouterTrajet");
+                Logger.Log($"Parametres: IdVehicule={trajet.IdVehicule}, DateTrajet={trajet.DateTrajet}, HeureDepart={trajet.HeureDepart}, HeureArrivee={trajet.HeureArrivee}, TypeTrajet={trajet.TypeTrajet}");
+
                 DatabaseConnection.ExecuteCommand(query, parameters);
+
+                Logger.Log("Trajet ajoute avec SUCCES");
                 return true;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors de l'ajout du trajet : {ex.Message}");
+                Logger.LogError("AjouterTrajet", ex);
+                Logger.Log($"Parametres du trajet - IdVehicule: {trajet.IdVehicule}, DateTrajet: {trajet.DateTrajet}, HeureDepart: {trajet.HeureDepart}, HeureArrivee: {trajet.HeureArrivee}, KmDepart: {trajet.KilomettrageDepart}, KmArrivee: {trajet.KilomettrageArrivee}, TypeTrajet: {trajet.TypeTrajet}, IdUtilisateur: {trajet.IdUtilisateur}");
                 return false;
             }
         }
@@ -312,7 +338,7 @@ namespace FLEET_MANAGER.Repositories
 
     /// <summary>
     /// Repository pour la gestion des utilisateurs
-    /// Les mots de passe sont hashés avec BCrypt avant stockage
+    /// Les mots de passe sont hashÃ©s avec BCrypt avant stockage
     /// </summary>
     public class UtilisateurRepository
     {
@@ -329,15 +355,15 @@ namespace FLEET_MANAGER.Repositories
                     {
                         utilisateurs.Add(new Utilisateur
                         {
-                            IdUtilisateur = (int)reader["id_utilisateur"],
+                            IdUtilisateur = Convert.ToInt32(reader["id_utilisateur"]),
                             NomUtilisateur = reader["nom_utilisateur"].ToString() ?? string.Empty,
                             Email = reader["email"].ToString() ?? string.Empty,
                             MotDePasse = reader["mot_de_passe"].ToString() ?? string.Empty,
                             Nom = reader["nom"].ToString() ?? string.Empty,
                             Prenom = reader["prenom"].ToString() ?? string.Empty,
                             Role = reader["role"].ToString() ?? "utilisateur",
-                            DateCreation = (DateTime)reader["date_creation"],
-                            Actif = (bool)reader["actif"]
+                            DateCreation = DateTime.TryParse(reader["date_creation"].ToString(), out var dt1) ? dt1 : DateTime.Now,
+                            Actif = Convert.ToInt32(reader["actif"]) == 1
                         });
                     }
                 }
@@ -363,15 +389,15 @@ namespace FLEET_MANAGER.Repositories
                     {
                         return new Utilisateur
                         {
-                            IdUtilisateur = (int)reader["id_utilisateur"],
+                            IdUtilisateur = Convert.ToInt32(reader["id_utilisateur"]),
                             NomUtilisateur = reader["nom_utilisateur"].ToString() ?? string.Empty,
                             Email = reader["email"].ToString() ?? string.Empty,
                             MotDePasse = reader["mot_de_passe"].ToString() ?? string.Empty,
                             Nom = reader["nom"].ToString() ?? string.Empty,
                             Prenom = reader["prenom"].ToString() ?? string.Empty,
                             Role = reader["role"].ToString() ?? string.Empty,
-                            DateCreation = (DateTime)reader["date_creation"],
-                            Actif = (bool)reader["actif"]
+                            DateCreation = DateTime.TryParse(reader["date_creation"].ToString(), out var dt2) ? dt2 : DateTime.Now,
+                            Actif = Convert.ToInt32(reader["actif"]) == 1
                         };
                     }
                 }
@@ -385,18 +411,18 @@ namespace FLEET_MANAGER.Repositories
         }
 
         /// <summary>
-        /// Ajoute un nouvel utilisateur avec mot de passe hashé BCrypt
+        /// Ajoute un nouvel utilisateur avec mot de passe hashÃ© BCrypt
         /// </summary>
         public bool AjouterUtilisateur(Utilisateur utilisateur)
         {
-            // Vérifier que le mot de passe n'est pas vide
+            // Vï¿½rifier que le mot de passe n'est pas vide
             if (string.IsNullOrWhiteSpace(utilisateur.MotDePasse))
             {
                 System.Diagnostics.Debug.WriteLine("Erreur : Le mot de passe est vide");
                 return false;
             }
 
-            // Vérifier que le rôle est valide
+            // VÃ©rifier que le rÃ´le est valide
             if (string.IsNullOrWhiteSpace(utilisateur.Role))
             {
                 utilisateur.Role = "utilisateur";
@@ -435,7 +461,7 @@ namespace FLEET_MANAGER.Repositories
 
         /// <summary>
         /// Modifie un utilisateur existant
-        /// Si le mot de passe est fourni et n'est pas déjà hashé, il sera hashé
+        /// Si le mot de passe est fourni et n'est pas dÃ©jÃ  hashÃ©, il sera hashÃ©
         /// </summary>
         public bool ModifierUtilisateur(Utilisateur utilisateur)
         {
@@ -444,7 +470,7 @@ namespace FLEET_MANAGER.Repositories
                 string query;
                 Dictionary<string, object> parameters;
 
-                // Si un nouveau mot de passe est fourni et n'est pas déjà un hash BCrypt
+                // Si un nouveau mot de passe est fourni et n'est pas dÃ©jÃ  un hash BCrypt
                 if (!string.IsNullOrWhiteSpace(utilisateur.MotDePasse) &&
                     !utilisateur.MotDePasse.StartsWith("$2"))
                 {

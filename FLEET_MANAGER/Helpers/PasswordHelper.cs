@@ -1,14 +1,12 @@
-using Org.BouncyCastle.Crypto.Generators;
-
 namespace FLEET_MANAGER.Helpers
 {
     /// <summary>
     /// Classe utilitaire pour la gestion des mots de passe avec BCrypt
     /// 
-    /// BCrypt est un algorithme de hashage sécurisé qui :
-    /// - Génère un "sel" (salt) aléatoire automatiquement
-    /// - Est volontairement lent pour résister aux attaques par force brute
-    /// - Produit un hash différent à chaque fois (même pour le même mot de passe)
+    /// BCrypt est un algorithme de hashage sÃ©curisÃ© qui :
+    /// - GÃ©nÃ¨re un "sel" (salt) alÃ©atoire automatiquement
+    /// - Est volontairement lent pour rÃ©sister aux attaques par force brute
+    /// - Produit un hash diffÃ©rent Ã  chaque fois (mÃªme pour le mÃªme mot de passe)
     /// </summary>
     public static class PasswordHelper
     {
@@ -19,17 +17,17 @@ namespace FLEET_MANAGER.Helpers
         /// <returns>Le hash BCrypt du mot de passe</returns>
         public static string HasherMotDePasse(string motDePasse)
         {
-            // Le paramètre 12 est le "work factor" (coût)
-            // Plus il est élevé, plus le hashage est lent (et sécurisé)
-            // 12 est une bonne valeur par défaut
+            // Le paramÃ¨tre 12 est le "work factor" (coÃ¹t)
+            // Plus il est Ã©levÃ©, plus le hashage est lent (et sÃ©curisÃ©)
+            // 12 est une bonne valeur par dÃ©faut
             return BCrypt.Net.BCrypt.HashPassword(motDePasse, workFactor: 12);
         }
 
         /// <summary>
-        /// Vérifie si un mot de passe en clair correspond à un hash BCrypt
+        /// VÃ©rifie si un mot de passe en clair correspond Ã  un hash BCrypt
         /// </summary>
-        /// <param name="motDePasse">Le mot de passe en clair à vérifier</param>
-        /// <param name="hash">Le hash BCrypt stocké en base de données</param>
+        /// <param name="motDePasse">Le mot de passe en clair Ã  vÃ©rifier</param>
+        /// <param name="hash">Le hash BCrypt stockÃ© en base de donnÃ©es</param>
         /// <returns>True si le mot de passe est correct, False sinon</returns>
         public static bool VerifierMotDePasse(string motDePasse, string hash)
         {

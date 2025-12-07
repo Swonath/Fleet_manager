@@ -1,7 +1,7 @@
 namespace FLEET_MANAGER.Models
 {
     /// <summary>
-    /// Mod�le repr�sentant un utilisateur
+    /// Modéle représentant un utilisateur
     /// </summary>
     public class Utilisateur
     {
@@ -19,7 +19,7 @@ namespace FLEET_MANAGER.Models
     }
 
     /// <summary>
-    /// Mod�le repr�sentant un v�hicule
+    /// Modéle représentant un véhicule
     /// </summary>
     public class Vehicule
     {
@@ -28,11 +28,11 @@ namespace FLEET_MANAGER.Models
         public string Modele { get; set; } = string.Empty;
         public string Immatriculation { get; set; } = string.Empty;
         public int AnneeFabrication { get; set; }
-        public string TypeCarburant { get; set; } = string.Empty; // Essence, Diesel, Hybride, �lectrique
+        public string TypeCarburant { get; set; } = string.Empty; // Essence, Diesel, Hybride, électrique
         public int KilomettrageInitial { get; set; }
         public int KilomettrageActuel { get; set; }
         public DateTime DateAcquisition { get; set; }
-        public string Etat { get; set; } = "En service"; // En service, En maintenance, Retir� du service
+        public string Etat { get; set; } = "En service"; // En service, En maintenance, Retiré du service
         public DateTime DateCreation { get; set; }
         public DateTime DateModification { get; set; }
 
@@ -40,7 +40,7 @@ namespace FLEET_MANAGER.Models
     }
 
     /// <summary>
-    /// Mod�le repr�sentant un ravitaillement en carburant
+    /// Modéle représentant un ravitaillement en carburant
     /// </summary>
     public class Carburant
     {
@@ -59,7 +59,7 @@ namespace FLEET_MANAGER.Models
     }
 
     /// <summary>
-    /// Mod�le repr�sentant un trajet
+    /// Modéle représentant un trajet
     /// </summary>
     public class Trajet
     {
@@ -80,7 +80,7 @@ namespace FLEET_MANAGER.Models
     }
 
     /// <summary>
-    /// Mod�le repr�sentant une maintenance
+    /// Modéle représentant une maintenance
     /// </summary>
     public class Maintenance
     {
@@ -98,13 +98,13 @@ namespace FLEET_MANAGER.Models
     }
 
     /// <summary>
-    /// Mod�le repr�sentant un rapport
+    /// Modéle représentant un rapport
     /// </summary>
     public class Rapport
     {
         public int IdRapport { get; set; }
         public int? IdVehicule { get; set; }
-        public string TypeRapport { get; set; } = string.Empty; // Consommation, Co�ts, Utilisation, etc.
+        public string TypeRapport { get; set; } = string.Empty; // Consommation, Coùts, Utilisation, etc.
         public DateTime DateDebut { get; set; }
         public DateTime DateFin { get; set; }
         public string? DonneesJson { get; set; }

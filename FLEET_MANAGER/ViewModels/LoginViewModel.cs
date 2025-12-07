@@ -2,13 +2,12 @@ using System.Windows.Input;
 using FLEET_MANAGER.Data;
 using FLEET_MANAGER.Models;
 using FLEET_MANAGER.Helpers;
-using MySql.Data.MySqlClient;
 
 namespace FLEET_MANAGER.ViewModels
 {
     /// <summary>
-    /// ViewModel pour l'�cran de connexion
-    /// Utilise BCrypt pour v�rifier les mots de passe hash�s
+    /// ViewModel pour l'écran de connexion
+    /// Utilise BCrypt pour vérifier les mots de passe hashés
     /// </summary>
     public class LoginViewModel : ViewModelBase
     {
@@ -43,7 +42,7 @@ namespace FLEET_MANAGER.ViewModels
 
         public ICommand LoginCommand { get; }
 
-        // �v�nement d�clench� lors d'une connexion r�ussie
+        // événement déclenché lors d'une connexion réussie
         public event EventHandler<Utilisateur>? LoginSucceeded;
 
         public LoginViewModel()
@@ -80,8 +79,8 @@ namespace FLEET_MANAGER.ViewModels
             {
                 // Log détaillé pour le débogage
                 System.Diagnostics.Debug.WriteLine($"Erreur de connexion : {ex}");
-                // Message générique pour l'utilisateur
-                Message = "Une erreur est survenue lors de la connexion. Veuillez réessayer.";
+                // Message détaillé pour diagnostiquer le problème
+                Message = $"Erreur: {ex.Message}";
             }
             finally
             {
@@ -90,13 +89,13 @@ namespace FLEET_MANAGER.ViewModels
         }
 
         /// <summary>
-        /// Authentifie un utilisateur en v�rifiant son mot de passe avec BCrypt
+        /// Authentifie un utilisateur en vérifiant son mot de passe avec BCrypt
         /// </summary>
         private Utilisateur? AuthentifierUtilisateur(string nomUtilisateur, string motDePasse)
         {
             try
             {
-                // �tape 1 : R�cup�rer l'utilisateur par son nom (sans v�rifier le mot de passe en SQL)
+                // étape 1 : Récupérer l'utilisateur par son nom (sans vérifier le mot de passe en SQL)
                 string query = "SELECT * FROM utilisateurs WHERE nom_utilisateur = @username AND actif = 1";
                 var parameters = new Dictionary<string, object>
                 {
@@ -107,23 +106,23 @@ namespace FLEET_MANAGER.ViewModels
                 {
                     if (reader.Read())
                     {
-                        // R�cup�rer le hash du mot de passe stock� en base
+                        // Récupérer le hash du mot de passe stocké en base
                         string hashStocke = reader["mot_de_passe"]?.ToString() ?? string.Empty;
 
-                        // �tape 2 : V�rifier le mot de passe avec BCrypt
+                        // étape 2 : Vérifier le mot de passe avec BCrypt
                         if (!string.IsNullOrEmpty(hashStocke) && PasswordHelper.VerifierMotDePasse(motDePasse, hashStocke))
                         {
                             // Mot de passe correct, retourner l'utilisateur
                             return new Utilisateur
                             {
-                                IdUtilisateur = (int)reader["id_utilisateur"],
+                                IdUtilisateur = Convert.ToInt32(reader["id_utilisateur"]),
                                 NomUtilisateur = reader["nom_utilisateur"].ToString() ?? string.Empty,
                                 Email = reader["email"].ToString() ?? string.Empty,
                                 Nom = reader["nom"].ToString() ?? string.Empty,
                                 Prenom = reader["prenom"].ToString() ?? string.Empty,
                                 Role = reader["role"].ToString() ?? "utilisateur",
-                                DateCreation = (DateTime)reader["date_creation"],
-                                Actif = (bool)reader["actif"]
+                                DateCreation = DateTime.TryParse(reader["date_creation"].ToString(), out var dt) ? dt : DateTime.Now,
+                                Actif = Convert.ToInt32(reader["actif"]) == 1
                             };
                         }
                     }

@@ -216,28 +216,6 @@ namespace FLEET_MANAGER.ViewModels
             }
         }
 
-        public void ChargerDonnees()
-        {
-            try
-            {
-                var vehicules = _vehiculeRepository.ObtenirTousLesVehicules();
-                Vehicules = new ObservableCollection<Vehicule>(vehicules);
-                
-                // Calculer les statistiques
-                TotalVehicules = vehicules.Count;
-                VehiculesEnService = vehicules.Count(v => v.Etat == "En service");
-                VehiculesEnMaintenance = vehicules.Count(v => v.Etat == "En maintenance");
-                VehiculesDisponibles = vehicules.Count(v => v.Etat == "Disponible");
-                
-                // Calculer le co�t total de carburant pour tous les v�hicules
-                CalculerCoutTotalCarburant();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des donn�es : {ex.Message}");
-            }
-        }
-
         private void CalculerCoutTotalCarburant()
         {
             try

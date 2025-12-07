@@ -7,7 +7,7 @@ using FLEET_MANAGER.Repositories;
 namespace FLEET_MANAGER.ViewModels
 {
     /// <summary>
-    /// ViewModel pour la gestion des v�hicules
+    /// ViewModel pour la gestion des véhicules
     /// </summary>
     public class VehiculeViewModel : ViewModelBase
     {
@@ -18,7 +18,7 @@ namespace FLEET_MANAGER.ViewModels
         private bool _estEnEdition = false;
         private string _messageErreur = string.Empty;
         private bool _isLoading = false;
-        private bool _estNouveauVehicule = false; // Ajouter cette propri�t�
+        private bool _estNouveauVehicule = false; // Ajouter cette propriété
         private string _rechercheTexte = string.Empty;
         private string _filtreStatut = "Tous";
         private ObservableCollection<ElementHistorique> _historique;

@@ -39,12 +39,6 @@ namespace FLEET_MANAGER.Helpers
                 return (false, "Le mot de passe doit contenir au moins un chiffre.");
             }
 
-            // Optionnel: Vérifier les caractères spéciaux
-            // if (!Regex.IsMatch(motDePasse, @"[!@#$%^&*(),.?""':{}|<>]"))
-            // {
-            //     return (false, "Le mot de passe doit contenir au moins un caractère spécial.");
-            // }
-
             return (true, null);
         }
 

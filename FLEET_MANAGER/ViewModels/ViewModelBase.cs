@@ -3,7 +3,7 @@ using System.Windows.Input;
 namespace FLEET_MANAGER.ViewModels
 {
     /// <summary>
-    /// Implémentation de ICommand pour les ViewModels
+    /// ImplÃ©mentation de ICommand pour les ViewModels
     /// </summary>
     public class RelayCommand : ICommand
     {
@@ -28,7 +28,7 @@ namespace FLEET_MANAGER.ViewModels
     }
 
     /// <summary>
-    /// Classe de base pour tous les ViewModels avec implémentation de INotifyPropertyChanged
+    /// Classe de base pour tous les ViewModels avec implÃ©mentation de INotifyPropertyChanged
     /// </summary>
     public class ViewModelBase : System.ComponentModel.INotifyPropertyChanged
     {

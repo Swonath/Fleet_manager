@@ -8,7 +8,7 @@ namespace FLEET_MANAGER.ViewModels
 {
     /// <summary>
     /// ViewModel pour la gestion des utilisateurs
-    /// G�re les permissions selon le r�le de l'utilisateur connect�
+    /// Gére les permissions selon le réle de l'utilisateur connecté
     /// </summary>
     public class UtilisateurViewModel : ViewModelBase
     {
@@ -197,7 +197,7 @@ namespace FLEET_MANAGER.ViewModels
         }
 
         /// <summary>
-        /// V�rifie si l'utilisateur connect� peut modifier l'utilisateur s�lectionn�
+        /// Vérifie si l'utilisateur connecté peut modifier l'utilisateur sélectionné
         /// </summary>
         private bool PeuxModifier()
         {
@@ -222,7 +222,7 @@ namespace FLEET_MANAGER.ViewModels
         }
 
         /// <summary>
-        /// V�rifie si l'utilisateur connect� peut supprimer l'utilisateur s�lectionn�
+        /// Vérifie si l'utilisateur connecté peut supprimer l'utilisateur sélectionné
         /// </summary>
         private bool PeuxSupprimer()
         {
@@ -247,18 +247,18 @@ namespace FLEET_MANAGER.ViewModels
         }
 
         /// <summary>
-        /// V�rifie si l'utilisateur connect� peut cr�er un utilisateur avec le r�le s�lectionn�
+        /// Vérifie si l'utilisateur connecté peut créer un utilisateur avec le rôle sélectionné
         /// </summary>
         private bool PeuxCreerAvecRole(string role)
         {
             if (UtilisateurConnecte == null)
                 return false;
 
-            // Super Admin : peut cr�er n'importe quel r�le
+            // Super Admin : peut créer n'importe quel rôle
             if (UtilisateurConnecte.Role == "super_admin")
                 return true;
 
-            // Admin : peut cr�er des utilisateurs normaux uniquement
+            // Admin : peut créer des utilisateurs normaux uniquement
             if (UtilisateurConnecte.Role == "admin")
             {
                 return role == "utilisateur";
@@ -397,21 +397,21 @@ namespace FLEET_MANAGER.ViewModels
 
                 if (_estNouveauUtilisateur)
                 {
-                    // V�rifier les permissions pour cr�er avec ce r�le
+                    // Vérifier les permissions pour créer avec ce rôle
                     if (!PeuxCreerAvecRole(RoleSelectionne))
                     {
                         MessageErreur = $"Vous n'avez pas les droits pour creer un {RoleSelectionne}.";
                         return;
                     }
 
-                    // V�rifier que le mot de passe est renseign� pour un nouvel utilisateur
+                    // Vérifier que le mot de passe est renseigné pour un nouvel utilisateur
                     if (string.IsNullOrWhiteSpace(MotDePasse))
                     {
                         MessageErreur = "Le mot de passe est obligatoire pour un nouvel utilisateur.";
                         return;
                     }
 
-                    // Cr�er le nouvel utilisateur
+                    // Créer le nouvel utilisateur
                     var nouvel = new Utilisateur
                     {
                         NomUtilisateur = NomUtilisateur,
@@ -445,7 +445,7 @@ namespace FLEET_MANAGER.ViewModels
                     UtilisateurSelectionne.Prenom = Prenom;
                     UtilisateurSelectionne.Role = RoleSelectionne;
 
-                    // Mettre � jour le mot de passe seulement s'il est fourni
+                    // Mettre à jour le mot de passe seulement s'il est fourni
                     if (!string.IsNullOrWhiteSpace(MotDePasse))
                     {
                         UtilisateurSelectionne.MotDePasse = MotDePasse;

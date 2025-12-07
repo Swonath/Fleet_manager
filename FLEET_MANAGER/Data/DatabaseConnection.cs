@@ -1,38 +1,76 @@
-using MySql.Data.MySqlClient;
-using System.Configuration;
+using System.Data.SQLite;
+using System.IO;
 
 namespace FLEET_MANAGER.Data
 {
     /// <summary>
-    /// Classe pour gÈrer la connexion ‡ la base de donnÈes MySQL
+    /// Classe pour g√©rer la connexion √† la base de donn√©es SQLite
+    /// Version migr√©e depuis MySQL pour une application standalone
     /// </summary>
     public class DatabaseConnection
     {
         private static string? _connectionString;
+        private static string? _databasePath;
 
         /// <summary>
-        /// Initialise la chaÓne de connexion
+        /// Initialise la cha√Æne de connexion SQLite
         /// </summary>
-        public static void Initialize(string server, string database, string uid, string password, int port = 3306)
+        /// <param name="databasePath">Chemin vers le fichier de base de donn√©es SQLite (optionnel, utilise Data/fleet_manager.db par d√©faut)</param>
+        public static void Initialize(string? databasePath = null)
         {
-            _connectionString = $"Server={server};Port={port};Database={database};Uid={uid};Pwd={password};";
+            // Si aucun chemin n'est sp√©cifi√©, utiliser le dossier Data dans le r√©pertoire de l'application
+            if (string.IsNullOrEmpty(databasePath))
+            {
+                string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string dataDirectory = Path.Combine(appDirectory, "Data");
+
+                // Cr√©er le dossier Data s'il n'existe pas
+                if (!Directory.Exists(dataDirectory))
+                {
+                    Directory.CreateDirectory(dataDirectory);
+                }
+
+                _databasePath = Path.Combine(dataDirectory, "fleet_manager.db");
+            }
+            else
+            {
+                _databasePath = databasePath;
+            }
+
+            _connectionString = $"Data Source={_databasePath};Version=3;";
         }
 
         /// <summary>
-        /// Retourne une nouvelle connexion ‡ la base de donnÈes
+        /// Retourne le chemin de la base de donn√©es
         /// </summary>
-        public static MySqlConnection GetConnection()
+        public static string? GetDatabasePath()
+        {
+            return _databasePath;
+        }
+
+        /// <summary>
+        /// V√©rifie si la base de donn√©es existe
+        /// </summary>
+        public static bool DatabaseExists()
+        {
+            return !string.IsNullOrEmpty(_databasePath) && File.Exists(_databasePath);
+        }
+
+        /// <summary>
+        /// Retourne une nouvelle connexion √† la base de donn√©es
+        /// </summary>
+        public static SQLiteConnection GetConnection()
         {
             if (string.IsNullOrEmpty(_connectionString))
             {
-                throw new InvalidOperationException("La chaÓne de connexion n'a pas ÈtÈ initialisÈe. Appelez Initialize() d'abord.");
+                throw new InvalidOperationException("La cha√Æne de connexion n'a pas √©t√© initialis√©e. Appelez Initialize() d'abord.");
             }
 
-            return new MySqlConnection(_connectionString);
+            return new SQLiteConnection(_connectionString);
         }
 
         /// <summary>
-        /// Teste la connexion ‡ la base de donnÈes
+        /// Teste la connexion √† la base de donn√©es
         /// </summary>
         public static bool TestConnection()
         {
@@ -52,14 +90,14 @@ namespace FLEET_MANAGER.Data
         }
 
         /// <summary>
-        /// ExÈcute une commande SQL sans paramËtres
+        /// Ex√©cute une commande SQL sans param√®tres
         /// </summary>
         public static void ExecuteCommand(string query)
         {
             using (var connection = GetConnection())
             {
                 connection.Open();
-                using (var command = new MySqlCommand(query, connection))
+                using (var command = new SQLiteCommand(query, connection))
                 {
                     command.ExecuteNonQuery();
                 }
@@ -67,14 +105,14 @@ namespace FLEET_MANAGER.Data
         }
 
         /// <summary>
-        /// ExÈcute une commande SQL avec paramËtres
+        /// Ex√©cute une commande SQL avec param√®tres
         /// </summary>
         public static void ExecuteCommand(string query, Dictionary<string, object> parameters)
         {
             using (var connection = GetConnection())
             {
                 connection.Open();
-                using (var command = new MySqlCommand(query, connection))
+                using (var command = new SQLiteCommand(query, connection))
                 {
                     foreach (var param in parameters)
                     {
@@ -86,24 +124,24 @@ namespace FLEET_MANAGER.Data
         }
 
         /// <summary>
-        /// RÈcupËre un tableau de rÈsultats
+        /// R√©cup√®re un tableau de r√©sultats
         /// </summary>
-        public static MySqlDataReader ExecuteQuery(string query)
+        public static SQLiteDataReader ExecuteQuery(string query)
         {
             var connection = GetConnection();
             connection.Open();
-            var command = new MySqlCommand(query, connection);
+            var command = new SQLiteCommand(query, connection);
             return command.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
         }
 
         /// <summary>
-        /// RÈcupËre un tableau de rÈsultats avec paramËtres
+        /// R√©cup√®re un tableau de r√©sultats avec param√®tres
         /// </summary>
-        public static MySqlDataReader ExecuteQuery(string query, Dictionary<string, object> parameters)
+        public static SQLiteDataReader ExecuteQuery(string query, Dictionary<string, object> parameters)
         {
             var connection = GetConnection();
             connection.Open();
-            var command = new MySqlCommand(query, connection);
+            var command = new SQLiteCommand(query, connection);
             foreach (var param in parameters)
             {
                 command.Parameters.AddWithValue(param.Key, param.Value ?? DBNull.Value);
@@ -112,14 +150,14 @@ namespace FLEET_MANAGER.Data
         }
 
         /// <summary>
-        /// RÈcupËre un scalaire (nombre, compte, etc.)
+        /// R√©cup√®re un scalaire (nombre, compte, etc.)
         /// </summary>
         public static object? ExecuteScalar(string query)
         {
             using (var connection = GetConnection())
             {
                 connection.Open();
-                using (var command = new MySqlCommand(query, connection))
+                using (var command = new SQLiteCommand(query, connection))
                 {
                     return command.ExecuteScalar();
                 }
@@ -127,14 +165,14 @@ namespace FLEET_MANAGER.Data
         }
 
         /// <summary>
-        /// RÈcupËre un scalaire avec paramËtres
+        /// R√©cup√®re un scalaire avec param√®tres
         /// </summary>
         public static object? ExecuteScalar(string query, Dictionary<string, object> parameters)
         {
             using (var connection = GetConnection())
             {
                 connection.Open();
-                using (var command = new MySqlCommand(query, connection))
+                using (var command = new SQLiteCommand(query, connection))
                 {
                     foreach (var param in parameters)
                     {

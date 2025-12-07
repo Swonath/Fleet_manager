@@ -1,9 +1,5 @@
-﻿using System.Configuration;
-using System.Data;
 using System.Windows;
-using FLEET_MANAGER.Config;
 using FLEET_MANAGER.Data;
-using FLEET_MANAGER.Services;
 
 namespace FLEET_MANAGER
 {
@@ -16,26 +12,22 @@ namespace FLEET_MANAGER
         {
             base.OnStartup(e);
 
-            // Initialiser la connexion à la base de données
+            // Initialiser la connexion à la base de données SQLite
             try
             {
-                DatabaseConnection.Initialize(
-                    DatabaseConfig.Server,
-                    DatabaseConfig.Database,
-                    DatabaseConfig.UserId,
-                    DatabaseConfig.Password,
-                    DatabaseConfig.Port
-                );
+                // Initialiser la connexion (crée le dossier Data/ et le fichier fleet_manager.db)
+                DatabaseConnection.Initialize();
+
+                // Initialiser la base de données si nécessaire (première utilisation)
+                DatabaseInitializer.InitializeIfNeeded();
 
                 // Tester la connexion
                 if (!DatabaseConnection.TestConnection())
                 {
                     MessageBox.Show(
                         "Impossible de se connecter à la base de données.\n\n" +
-                        "Assurez-vous que :\n" +
-                        "1. MySQL est en cours d'exécution\n" +
-                        "2. La base de données 'fleet_manager' existe\n" +
-                        "3. Les paramètres de connexion sont corrects",
+                        "L'application va maintenant se fermer. Si le problème persiste, " +
+                        "supprimez le dossier 'Data' et relancez l'application.",
                         "Erreur de connexion",
                         MessageBoxButton.OK,
                         MessageBoxImage.Error
@@ -44,44 +36,18 @@ namespace FLEET_MANAGER
                     return;
                 }
 
-                // Migrer les mots de passe non hashés (exécuté une seule fois)
-                MigrerMotsDePasse();
+                System.Diagnostics.Debug.WriteLine($"Base de données initialisée : {DatabaseConnection.GetDatabasePath()}");
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Erreur lors de l'initialisation : {ex.Message}",
+                    $"Erreur lors de l'initialisation de la base de données :\n\n{ex.Message}\n\n" +
+                    "L'application va maintenant se fermer.",
                     "Erreur",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error
                 );
                 this.Shutdown();
-            }
-        }
-
-        /// <summary>
-        /// Migre automatiquement les mots de passe en clair vers BCrypt
-        /// Cette méthode s'exécute au démarrage et convertit les anciens mots de passe
-        /// </summary>
-        private void MigrerMotsDePasse()
-        {
-            try
-            {
-                // Vérifier si une migration est nécessaire
-                if (PasswordMigrationService.MigrationNecessaire())
-                {
-                    int nombreMigres = PasswordMigrationService.MigrerMotsDePasse();
-
-                    if (nombreMigres > 0)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Migration BCrypt : {nombreMigres} mot(s) de passe converti(s)");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Ne pas bloquer l'application en cas d'erreur de migration
-                System.Diagnostics.Debug.WriteLine($"Avertissement migration : {ex.Message}");
             }
         }
     }

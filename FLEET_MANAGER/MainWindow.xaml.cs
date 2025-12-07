@@ -78,6 +78,7 @@ namespace FLEET_MANAGER
             UtilisateurConnecte = utilisateur;
             _dashboardViewModel.InitialiserAvecUtilisateur(utilisateur);
             _utilisateurViewModel.InitialiserAvecUtilisateurConnecte(utilisateur);
+            _carburantTrajetViewModel.InitialiserAvecUtilisateur(utilisateur);
 
             // Afficher/masquer la section Administration selon les droits
             if (utilisateur.Role == "admin" || utilisateur.Role == "super_admin")
@@ -124,6 +125,7 @@ namespace FLEET_MANAGER
             SetActiveButton(BtnVehiculesNav);
             DataContext = _vehiculeViewModel;
             ContentArea.Content = _vehiculeView;
+            _vehiculeViewModel.ChargerVehicules();
         }
 
         private void BtnCarburantTrajet_Click(object sender, RoutedEventArgs e)
@@ -131,6 +133,7 @@ namespace FLEET_MANAGER
             SetActiveButton(BtnCarburantTrajet);
             DataContext = _carburantTrajetViewModel;
             ContentArea.Content = _carburantTrajetView;
+            _carburantTrajetViewModel.RéchargerVéhicules();
         }
 
         private void BtnUtilisateurs_Click(object sender, RoutedEventArgs e)
@@ -153,21 +156,6 @@ namespace FLEET_MANAGER
             DataContext = _statistiquesViewModel;
             ContentArea.Content = _statistiquesView;
             await _statistiquesViewModel.ChargerStatistiquesAsync();
-        }
-
-        private void BtnProfil_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Module Profil - En développement", "Profil");
-        }
-
-        private void BtnMaintenances_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Module Maintenances - A venir");
-        }
-
-        private void BtnRapports_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Module Rapports - A venir");
         }
 
         private void BtnDeconnexion_Click(object sender, RoutedEventArgs e)

@@ -6,16 +6,19 @@ using FLEET_MANAGER.Repositories;
 namespace FLEET_MANAGER.ViewModels
 {
     /// <summary>
-    /// ViewModel combin� pour la gestion du carburant et des trajets
+    /// ViewModel combiné pour la gestion du carburant et des trajets
     /// </summary>
     public class CarburantTrajetViewModel : ViewModelBase
     {
+        private Utilisateur? _utilisateurConnecte;
         private ObservableCollection<Vehicule> _vehicules;
+        private ObservableCollection<Vehicule> _vehiculesFiltres;
+        private string _rechercheVehicule = string.Empty;
         private Vehicule? _vehiculeSelectionne;
         private ObservableCollection<Carburant> _historique;
         private ObservableCollection<Trajet> _trajets;
 
-        // Propri�t�s Carburant
+        // Propriétés Carburant
         private decimal _quantiteLitres = 0;
         private decimal _coutTotal = 0;
         private decimal _coutParLitre = 0;
@@ -23,7 +26,7 @@ namespace FLEET_MANAGER.ViewModels
         private int _kilometrageCarburant = 0;
         private string _notesCarburant = string.Empty;
 
-        // Propri�t�s Trajet
+        // Propriétés Trajet
         private TimeSpan _heureDepart = new TimeSpan(9, 0, 0);
         private TimeSpan _heureArrivee = new TimeSpan(17, 0, 0);
         private int _kilometrageDepart = 0;
@@ -68,7 +71,31 @@ namespace FLEET_MANAGER.ViewModels
         public ObservableCollection<Vehicule> Vehicules
         {
             get => _vehicules;
-            set => SetProperty(ref _vehicules, value, nameof(Vehicules));
+            set
+            {
+                if (SetProperty(ref _vehicules, value, nameof(Vehicules)))
+                {
+                    AppliquerFiltreVehicule();
+                }
+            }
+        }
+
+        public ObservableCollection<Vehicule> VehiculesFiltres
+        {
+            get => _vehiculesFiltres;
+            set => SetProperty(ref _vehiculesFiltres, value, nameof(VehiculesFiltres));
+        }
+
+        public string RechercheVehicule
+        {
+            get => _rechercheVehicule;
+            set
+            {
+                if (SetProperty(ref _rechercheVehicule, value, nameof(RechercheVehicule)))
+                {
+                    AppliquerFiltreVehicule();
+                }
+            }
         }
 
         public Vehicule? VehiculeSelectionne
@@ -82,7 +109,7 @@ namespace FLEET_MANAGER.ViewModels
                     {
                         ChargerHistorique(value.IdVehicule);
                         ChargerTrajets(value.IdVehicule);
-                        // Pr�-remplir les kilom�tres depuis le dernier carburant
+                        // Pré-remplir les kilomètres depuis le dernier carburant
                         if (_historique.Count > 0)
                         {
                             _kilometrageDepart = _historique.Last().Kilometrage;
@@ -104,7 +131,7 @@ namespace FLEET_MANAGER.ViewModels
             set => SetProperty(ref _trajets, value, nameof(Trajets));
         }
 
-        // Propri�t�s Carburant
+        // Propriétés Carburant
         public decimal QuantiteLitres
         {
             get => _quantiteLitres;
@@ -153,7 +180,7 @@ namespace FLEET_MANAGER.ViewModels
             set => SetProperty(ref _notesCarburant, value, nameof(NotesCarburant));
         }
 
-        // Propri�t�s Trajet
+        // Propriétés Trajet
         public DateTime DateTrajet
         {
             get => _dateTrajet;
@@ -248,6 +275,7 @@ namespace FLEET_MANAGER.ViewModels
         public CarburantTrajetViewModel()
         {
             _vehicules = new ObservableCollection<Vehicule>();
+            _vehiculesFiltres = new ObservableCollection<Vehicule>();
             _historique = new ObservableCollection<Carburant>();
             _trajets = new ObservableCollection<Trajet>();
             _vehiculeRepository = new VehiculeRepository();
@@ -263,18 +291,53 @@ namespace FLEET_MANAGER.ViewModels
             ChargerVehicules();
         }
 
+        /// <summary>
+        /// Initialise le ViewModel avec l'utilisateur connecté
+        /// </summary>
+        public void InitialiserAvecUtilisateur(Utilisateur utilisateur)
+        {
+            _utilisateurConnecte = utilisateur;
+        }
+
         private void ChargerVehicules()
         {
             try
             {
                 var vehicules = _vehiculeRepository.ObtenirTousLesVehicules();
                 Vehicules = new ObservableCollection<Vehicule>(vehicules);
+                AppliquerFiltreVehicule();
                 MessageErreur = string.Empty;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Erreur chargement véhicules : {ex}");
                 MessageErreur = "Erreur lors du chargement des véhicules.";
+            }
+        }
+
+        private void AppliquerFiltreVehicule()
+        {
+            if (Vehicules == null)
+            {
+                VehiculesFiltres = new ObservableCollection<Vehicule>();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(RechercheVehicule))
+            {
+                VehiculesFiltres = new ObservableCollection<Vehicule>(Vehicules);
+            }
+            else
+            {
+                var texteRecherche = RechercheVehicule.ToLower();
+                var vehiculesFiltres = Vehicules.Where(v =>
+                    v.Marque.ToLower().Contains(texteRecherche) ||
+                    v.Modele.ToLower().Contains(texteRecherche) ||
+                    v.Immatriculation.ToLower().Contains(texteRecherche) ||
+                    v.DescriptionComplete.ToLower().Contains(texteRecherche)
+                ).ToList();
+
+                VehiculesFiltres = new ObservableCollection<Vehicule>(vehiculesFiltres);
             }
         }
 
@@ -398,14 +461,15 @@ namespace FLEET_MANAGER.ViewModels
                     CoutParLitre = CoutParLitre,
                     Kilometrage = KilometrageCarburant,
                     Notes = NotesCarburant,
-                    IdUtilisateur = 1 // TODO: Utiliser l'utilisateur connecte
+                    IdUtilisateur = _utilisateurConnecte?.IdUtilisateur ?? 1
                 };
 
                 if (_carburantRepository.AjouterCarburant(carburant))
                 {
                     MessageErreur = "Ravitaillement enregistre avec succes !";
                     ChargerHistorique(VehiculeSelectionne.IdVehicule);
-                    // Pr�-remplir le kilom�trage du trajet
+                    // Pré-remplir le kilomètrage de DÉPART du trajet avec le kilométrage du carburant
+                    // pour une progression logique du kilométrage
                     KilometrageDepart = KilometrageCarburant;
                 }
                 else
@@ -461,7 +525,7 @@ namespace FLEET_MANAGER.ViewModels
                     LieuArrivee = LieuArrivee,
                     TypeTrajet = TypeTrajet,
                     Notes = NotesTrajet,
-                    IdUtilisateur = 1  // TODO: Utiliser l'utilisateur connecte
+                    IdUtilisateur = _utilisateurConnecte?.IdUtilisateur ?? 1
                 };
 
                 if (_trajetRepository.AjouterTrajet(trajet))

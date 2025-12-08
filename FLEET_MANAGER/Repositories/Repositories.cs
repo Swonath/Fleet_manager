@@ -32,6 +32,8 @@ namespace FLEET_MANAGER.Repositories
                             KilomettrageActuel = reader.IsDBNull(reader.GetOrdinal("kilometrage_actuel")) ? 0 : Convert.ToInt32(reader["kilometrage_actuel"]),
                             DateAcquisition = reader.IsDBNull(reader.GetOrdinal("date_acquisition")) ? DateTime.Now : (DateTime.TryParse(reader["date_acquisition"].ToString(), out var dtAcq) ? dtAcq : DateTime.Now),
                             Etat = reader.IsDBNull(reader.GetOrdinal("etat")) ? "En service" : reader["etat"].ToString() ?? "En service",
+                            CapaciteReservoir = reader.IsDBNull(reader.GetOrdinal("capacite_reservoir")) ? null : Convert.ToDecimal(reader["capacite_reservoir"]),
+                            CapaciteBatterie = reader.IsDBNull(reader.GetOrdinal("capacite_batterie")) ? null : Convert.ToDecimal(reader["capacite_batterie"]),
                             DateCreation = reader.IsDBNull(reader.GetOrdinal("date_creation")) ? DateTime.Now : (DateTime.TryParse(reader["date_creation"].ToString(), out var dtVeh) ? dtVeh : DateTime.Now),
                             DateModification = reader.IsDBNull(reader.GetOrdinal("date_modification")) ? DateTime.Now : (DateTime.TryParse(reader["date_modification"].ToString(), out var dtMod) ? dtMod : DateTime.Now)
                         });
@@ -70,6 +72,8 @@ namespace FLEET_MANAGER.Repositories
                             KilomettrageActuel = Convert.ToInt32(reader["kilometrage_actuel"]),
                             DateAcquisition = DateTime.TryParse(reader["date_acquisition"].ToString(), out var dtAcq2) ? dtAcq2 : DateTime.Now,
                             Etat = reader["etat"].ToString() ?? string.Empty,
+                            CapaciteReservoir = reader.IsDBNull(reader.GetOrdinal("capacite_reservoir")) ? null : Convert.ToDecimal(reader["capacite_reservoir"]),
+                            CapaciteBatterie = reader.IsDBNull(reader.GetOrdinal("capacite_batterie")) ? null : Convert.ToDecimal(reader["capacite_batterie"]),
                             DateCreation = DateTime.TryParse(reader["date_creation"].ToString(), out var dtTemp) ? dtTemp : DateTime.Now,
                             DateModification = DateTime.TryParse(reader["date_modification"].ToString(), out var dtMod2) ? dtMod2 : DateTime.Now
                         };
@@ -88,8 +92,8 @@ namespace FLEET_MANAGER.Repositories
         {
             string query = @"INSERT INTO vehicules
                 (marque, modele, immatriculation, annee_fabrication, type_carburant,
-                 kilometrage_initial, kilometrage_actuel, date_acquisition, etat)
-                VALUES (@marque, @modele, @immat, @annee, @carburant, @km_initial, @km_actuel, @date_acq, @etat)";
+                 kilometrage_initial, kilometrage_actuel, date_acquisition, etat, capacite_reservoir, capacite_batterie)
+                VALUES (@marque, @modele, @immat, @annee, @carburant, @km_initial, @km_actuel, @date_acq, @etat, @capacite_reservoir, @capacite_batterie)";
 
             var parameters = new Dictionary<string, object>
             {
@@ -101,7 +105,9 @@ namespace FLEET_MANAGER.Repositories
                 { "@km_initial", vehicule.KilomettrageInitial },
                 { "@km_actuel", vehicule.KilomettrageActuel },
                 { "@date_acq", vehicule.DateAcquisition.ToString("yyyy-MM-dd") },
-                { "@etat", vehicule.Etat }
+                { "@etat", vehicule.Etat },
+                { "@capacite_reservoir", vehicule.CapaciteReservoir.HasValue ? (object)vehicule.CapaciteReservoir.Value : DBNull.Value },
+                { "@capacite_batterie", vehicule.CapaciteBatterie.HasValue ? (object)vehicule.CapaciteBatterie.Value : DBNull.Value }
             };
 
             try
@@ -126,7 +132,8 @@ namespace FLEET_MANAGER.Repositories
         {
             string query = @"UPDATE vehicules SET
                 marque = @marque, modele = @modele, annee_fabrication = @annee,
-                type_carburant = @carburant, kilometrage_actuel = @km_actuel, etat = @etat
+                type_carburant = @carburant, kilometrage_actuel = @km_actuel, etat = @etat,
+                capacite_reservoir = @capacite_reservoir, capacite_batterie = @capacite_batterie
                 WHERE id_vehicule = @id";
 
             var parameters = new Dictionary<string, object>
@@ -137,7 +144,9 @@ namespace FLEET_MANAGER.Repositories
                 { "@annee", vehicule.AnneeFabrication },
                 { "@carburant", vehicule.TypeCarburant },
                 { "@km_actuel", vehicule.KilomettrageActuel },
-                { "@etat", vehicule.Etat }
+                { "@etat", vehicule.Etat },
+                { "@capacite_reservoir", vehicule.CapaciteReservoir.HasValue ? (object)vehicule.CapaciteReservoir.Value : DBNull.Value },
+                { "@capacite_batterie", vehicule.CapaciteBatterie.HasValue ? (object)vehicule.CapaciteBatterie.Value : DBNull.Value }
             };
 
             try

@@ -20,6 +20,11 @@ namespace FLEET_MANAGER.Data
                 CreateTables();
                 InsertDefaultData();
             }
+            else
+            {
+                // Exécuter les migrations pour les bases existantes
+                ApplyMigrations();
+            }
         }
 
         /// <summary>
@@ -67,6 +72,8 @@ namespace FLEET_MANAGER.Data
                     kilometrage_actuel INTEGER DEFAULT 0,
                     date_acquisition TEXT NOT NULL,
                     etat TEXT NOT NULL CHECK(etat IN ('En service', 'En maintenance', 'Retiré du service', 'Disponible')) DEFAULT 'Disponible',
+                    capacite_reservoir REAL,
+                    capacite_batterie REAL,
                     date_creation TEXT DEFAULT CURRENT_TIMESTAMP,
                     date_modification TEXT DEFAULT CURRENT_TIMESTAMP
                 )");
@@ -179,6 +186,59 @@ namespace FLEET_MANAGER.Data
             System.Diagnostics.Debug.WriteLine("Comptes créés :");
             System.Diagnostics.Debug.WriteLine("  - Super Admin: superadmin / Superadmin123");
             System.Diagnostics.Debug.WriteLine("  - Admin: admin / Admin123");
+        }
+
+        /// <summary>
+        /// Applique les migrations de base de données pour les nouvelles fonctionnalités
+        /// </summary>
+        private static void ApplyMigrations()
+        {
+            try
+            {
+                // Migration : Ajouter capacite_reservoir et capacite_batterie si elles n'existent pas
+                if (!ColumnExists("vehicules", "capacite_reservoir"))
+                {
+                    DatabaseConnection.ExecuteCommand("ALTER TABLE vehicules ADD COLUMN capacite_reservoir REAL");
+                    System.Diagnostics.Debug.WriteLine("Colonne 'capacite_reservoir' ajoutée à la table vehicules");
+                }
+
+                if (!ColumnExists("vehicules", "capacite_batterie"))
+                {
+                    DatabaseConnection.ExecuteCommand("ALTER TABLE vehicules ADD COLUMN capacite_batterie REAL");
+                    System.Diagnostics.Debug.WriteLine("Colonne 'capacite_batterie' ajoutée à la table vehicules");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de l'application des migrations : {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Vérifie si une colonne existe dans une table
+        /// </summary>
+        private static bool ColumnExists(string tableName, string columnName)
+        {
+            try
+            {
+                string query = $"PRAGMA table_info({tableName})";
+                using (var reader = DatabaseConnection.ExecuteQuery(query))
+                {
+                    while (reader.Read())
+                    {
+                        string name = reader["name"].ToString() ?? string.Empty;
+                        if (name.Equals(columnName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

@@ -36,6 +36,10 @@ namespace FLEET_MANAGER.Models
         public DateTime DateCreation { get; set; }
         public DateTime DateModification { get; set; }
 
+        // Capacités énergétiques
+        public decimal? CapaciteReservoir { get; set; } // Capacité du réservoir en litres (pour Essence, Diesel, Hybride)
+        public decimal? CapaciteBatterie { get; set; } // Capacité de la batterie en kWh (pour Électrique, Hybride)
+
         public string DescriptionComplete => $"{Marque} {Modele} ({Immatriculation})";
     }
 

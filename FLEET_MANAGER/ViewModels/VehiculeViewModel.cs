@@ -42,6 +42,8 @@ namespace FLEET_MANAGER.ViewModels
         private int _kilometrageInitial = 0;
         private DateTime _dateAcquisition = DateTime.Now;
         private string _etat = "En service";
+        private decimal? _capaciteReservoir = null;
+        private decimal? _capaciteBatterie = null;
 
         // Erreurs de validation
         private string _marqueError = string.Empty;
@@ -187,6 +189,18 @@ namespace FLEET_MANAGER.ViewModels
         {
             get => _etat;
             set => SetProperty(ref _etat, value, nameof(Etat));
+        }
+
+        public decimal? CapaciteReservoir
+        {
+            get => _capaciteReservoir;
+            set => SetProperty(ref _capaciteReservoir, value, nameof(CapaciteReservoir));
+        }
+
+        public decimal? CapaciteBatterie
+        {
+            get => _capaciteBatterie;
+            set => SetProperty(ref _capaciteBatterie, value, nameof(CapaciteBatterie));
         }
 
         public bool EstEnEdition
@@ -360,6 +374,8 @@ namespace FLEET_MANAGER.ViewModels
             KilomettrageInitial = vehicule.KilomettrageInitial;
             DateAcquisition = vehicule.DateAcquisition;
             Etat = vehicule.Etat;
+            CapaciteReservoir = vehicule.CapaciteReservoir;
+            CapaciteBatterie = vehicule.CapaciteBatterie;
         }
 
         private void ReinitialiserFormulaire()
@@ -372,6 +388,8 @@ namespace FLEET_MANAGER.ViewModels
             KilomettrageInitial = 0;
             DateAcquisition = DateTime.Now;
             Etat = "En service";
+            CapaciteReservoir = null;
+            CapaciteBatterie = null;
             MarqueError = string.Empty;
             ModeleError = string.Empty;
             ImmatriculationError = string.Empty;
@@ -396,7 +414,9 @@ namespace FLEET_MANAGER.ViewModels
                     KilomettrageInitial = KilomettrageInitial,
                     KilomettrageActuel = KilomettrageInitial,
                     DateAcquisition = DateAcquisition,
-                    Etat = Etat
+                    Etat = Etat,
+                    CapaciteReservoir = CapaciteReservoir,
+                    CapaciteBatterie = CapaciteBatterie
                 };
 
                 if (_repository.AjouterVehicule(nouveau))
@@ -457,7 +477,9 @@ namespace FLEET_MANAGER.ViewModels
                         KilomettrageInitial = KilomettrageInitial,
                         KilomettrageActuel = KilomettrageInitial,
                         DateAcquisition = DateAcquisition,
-                        Etat = Etat
+                        Etat = Etat,
+                        CapaciteReservoir = CapaciteReservoir,
+                        CapaciteBatterie = CapaciteBatterie
                     };
 
                     if (_repository.AjouterVehicule(nouveau))
@@ -481,6 +503,8 @@ namespace FLEET_MANAGER.ViewModels
                     VehiculeSelectionne.AnneeFabrication = Annee;
                     VehiculeSelectionne.TypeCarburant = TypeCarburant;
                     VehiculeSelectionne.Etat = Etat;
+                    VehiculeSelectionne.CapaciteReservoir = CapaciteReservoir;
+                    VehiculeSelectionne.CapaciteBatterie = CapaciteBatterie;
 
                     if (_repository.ModifierVehicule(VehiculeSelectionne))
                     {

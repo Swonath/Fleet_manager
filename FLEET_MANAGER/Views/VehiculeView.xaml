@@ -412,6 +412,10 @@
 
 							<!-- Statistiques -->
 							<Grid Grid.Row="1" Margin="0,24,0,0">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="*"/>
@@ -419,8 +423,9 @@
 								<ColumnDefinition Width="*"/>
 							</Grid.ColumnDefinitions>
 
+							<!-- Première ligne de statistiques -->
 							<!-- Kilométrage actuel -->
-							<Border Grid.Column="0" Style="{StaticResource StatBoxStyle}">
+							<Border Grid.Row="0" Grid.Column="0" Style="{StaticResource StatBoxStyle}">
 								<StackPanel>
 									<TextBlock Style="{StaticResource StatLabelStyle}">
 										Kilométrage actuel
@@ -431,7 +436,7 @@
 							</Border>
 
 							<!-- Consommation moyenne (placeholder) -->
-							<Border Grid.Column="1" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
+							<Border Grid.Row="0" Grid.Column="1" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
 								<StackPanel>
 									<TextBlock Style="{StaticResource StatLabelStyle}">
 										Consommation moyenne
@@ -442,7 +447,7 @@
 							</Border>
 
 							<!-- Total carburant (placeholder) -->
-							<Border Grid.Column="2" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
+							<Border Grid.Row="0" Grid.Column="2" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
 								<StackPanel>
 									<TextBlock Style="{StaticResource StatLabelStyle}">
 										Total carburant
@@ -453,7 +458,7 @@
 							</Border>
 
 								<!-- Date d'acquisition -->
-								<Border Grid.Column="3" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
+								<Border Grid.Row="0" Grid.Column="3" Style="{StaticResource StatBoxStyle}" Margin="12,0,0,0">
 									<StackPanel>
 										<TextBlock Style="{StaticResource StatLabelStyle}">
 											Date d'acquisition
@@ -463,6 +468,63 @@
 												   FontSize="16"/>
 									</StackPanel>
 								</Border>
+
+							<!-- Deuxième ligne de statistiques - Capacités énergétiques -->
+							<!-- Capacité réservoir -->
+							<Border Grid.Row="1" Grid.Column="0" Style="{StaticResource StatBoxStyle}" Margin="0,12,0,0">
+								<StackPanel>
+									<TextBlock Style="{StaticResource StatLabelStyle}">
+										⛽ Capacité réservoir
+									</TextBlock>
+									<TextBlock>
+										<TextBlock.Text>
+											<MultiBinding StringFormat="{}{0:N1} L">
+												<Binding Path="VehiculeSelectionne.CapaciteReservoir"/>
+											</MultiBinding>
+										</TextBlock.Text>
+										<TextBlock.Style>
+											<Style TargetType="TextBlock" BasedOn="{StaticResource StatValueStyle}">
+												<Setter Property="Text" Value="Non renseigné"/>
+												<Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+												<Setter Property="FontSize" Value="14"/>
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding VehiculeSelectionne.CapaciteReservoir}" Value="{x:Null}">
+														<Setter Property="Text" Value="Non renseigné"/>
+													</DataTrigger>
+												</Style.Triggers>
+											</Style>
+										</TextBlock.Style>
+									</TextBlock>
+								</StackPanel>
+							</Border>
+
+							<!-- Capacité batterie -->
+							<Border Grid.Row="1" Grid.Column="1" Style="{StaticResource StatBoxStyle}" Margin="12,12,0,0">
+								<StackPanel>
+									<TextBlock Style="{StaticResource StatLabelStyle}">
+										🔋 Capacité batterie
+									</TextBlock>
+									<TextBlock>
+										<TextBlock.Text>
+											<MultiBinding StringFormat="{}{0:N1} kWh">
+												<Binding Path="VehiculeSelectionne.CapaciteBatterie"/>
+											</MultiBinding>
+										</TextBlock.Text>
+										<TextBlock.Style>
+											<Style TargetType="TextBlock" BasedOn="{StaticResource StatValueStyle}">
+												<Setter Property="Text" Value="Non renseigné"/>
+												<Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+												<Setter Property="FontSize" Value="14"/>
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding VehiculeSelectionne.CapaciteBatterie}" Value="{x:Null}">
+														<Setter Property="Text" Value="Non renseigné"/>
+													</DataTrigger>
+												</Style.Triggers>
+											</Style>
+										</TextBlock.Style>
+									</TextBlock>
+								</StackPanel>
+							</Border>
 							</Grid>
 						</Grid>
 					</Border>

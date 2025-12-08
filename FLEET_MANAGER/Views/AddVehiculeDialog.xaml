@@ -160,6 +160,9 @@
                             </TextBlock>
                             <TextBox Text="{Binding KilomettrageInitial, UpdateSourceTrigger=PropertyChanged}"
                                      Style="{StaticResource ModernTextBoxStyle}"/>
+                            <TextBlock Text="{Binding KilometrageInitialError}"
+                                       Style="{StaticResource ErrorTextStyle}"
+                                       Visibility="{Binding KilometrageInitialError, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         </StackPanel>
                     </Grid>
 

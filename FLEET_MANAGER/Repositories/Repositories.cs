@@ -168,10 +168,42 @@ namespace FLEET_MANAGER.Repositories
                 return false;
             }
         }
+
+        /// <summary>
+        /// Met à jour le kilométrage actuel d'un véhicule
+        /// </summary>
+        public bool MettreAJourKilometrage(int idVehicule, int nouveauKilometrage)
+        {
+            string query = "UPDATE vehicules SET kilometrage_actuel = @km_actuel WHERE id_vehicule = @id";
+            var parameters = new Dictionary<string, object>
+            {
+                { "@id", idVehicule },
+                { "@km_actuel", nouveauKilometrage }
+            };
+
+            try
+            {
+                Logger.Log($"Mise a jour kilometrage vehicule {idVehicule} : {nouveauKilometrage} km");
+                DatabaseConnection.ExecuteCommand(query, parameters);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("MettreAJourKilometrage", ex);
+                return false;
+            }
+        }
     }
 
     public class CarburantRepository
     {
+        private readonly VehiculeRepository _vehiculeRepository;
+
+        public CarburantRepository()
+        {
+            _vehiculeRepository = new VehiculeRepository();
+        }
+
         public List<Carburant> ObtenirCarburantParVehicule(int idVehicule)
         {
             var carburants = new List<Carburant>();
@@ -237,6 +269,9 @@ namespace FLEET_MANAGER.Repositories
 
                 DatabaseConnection.ExecuteCommand(query, parameters);
 
+                // Mettre à jour le kilométrage actuel du véhicule
+                _vehiculeRepository.MettreAJourKilometrage(carburant.IdVehicule, carburant.Kilometrage);
+
                 Logger.Log("Carburant ajoute avec SUCCES");
                 return true;
             }
@@ -251,6 +286,13 @@ namespace FLEET_MANAGER.Repositories
 
     public class TrajetRepository
     {
+        private readonly VehiculeRepository _vehiculeRepository;
+
+        public TrajetRepository()
+        {
+            _vehiculeRepository = new VehiculeRepository();
+        }
+
         public List<Trajet> ObtenirTrajetsParVehicule(int idVehicule)
         {
             var trajets = new List<Trajet>();
@@ -323,6 +365,9 @@ namespace FLEET_MANAGER.Repositories
                 Logger.Log($"Parametres: IdVehicule={trajet.IdVehicule}, DateTrajet={trajet.DateTrajet}, HeureDepart={trajet.HeureDepart}, HeureArrivee={trajet.HeureArrivee}, TypeTrajet={trajet.TypeTrajet}");
 
                 DatabaseConnection.ExecuteCommand(query, parameters);
+
+                // Mettre à jour le kilométrage actuel du véhicule avec le kilométrage d'arrivée
+                _vehiculeRepository.MettreAJourKilometrage(trajet.IdVehicule, trajet.KilomettrageArrivee);
 
                 Logger.Log("Trajet ajoute avec SUCCES");
                 return true;

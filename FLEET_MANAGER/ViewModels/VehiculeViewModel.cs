@@ -47,6 +47,7 @@ namespace FLEET_MANAGER.ViewModels
         private string _marqueError = string.Empty;
         private string _modeleError = string.Empty;
         private string _immatriculationError = string.Empty;
+        private string _kilometrageInitialError = string.Empty;
 
         public ObservableCollection<Vehicule> Vehicules
         {
@@ -167,7 +168,13 @@ namespace FLEET_MANAGER.ViewModels
         public int KilomettrageInitial
         {
             get => _kilometrageInitial;
-            set => SetProperty(ref _kilometrageInitial, value, nameof(KilomettrageInitial));
+            set
+            {
+                if (SetProperty(ref _kilometrageInitial, value, nameof(KilomettrageInitial)))
+                {
+                    ValidateKilometrageInitial();
+                }
+            }
         }
 
         public DateTime DateAcquisition
@@ -216,6 +223,12 @@ namespace FLEET_MANAGER.ViewModels
         {
             get => _immatriculationError;
             set => SetProperty(ref _immatriculationError, value, nameof(ImmatriculationError));
+        }
+
+        public string KilometrageInitialError
+        {
+            get => _kilometrageInitialError;
+            set => SetProperty(ref _kilometrageInitialError, value, nameof(KilometrageInitialError));
         }
 
         public bool EstNouveauVehicule
@@ -362,6 +375,7 @@ namespace FLEET_MANAGER.ViewModels
             MarqueError = string.Empty;
             ModeleError = string.Empty;
             ImmatriculationError = string.Empty;
+            KilometrageInitialError = string.Empty;
         }
 
         private void PerformerAjout()
@@ -571,6 +585,16 @@ namespace FLEET_MANAGER.ViewModels
                 ImmatriculationError = string.Empty;
             }
 
+            if (_kilometrageInitial < 0)
+            {
+                KilometrageInitialError = "Le kilometrage ne peut pas etre negatif.";
+                valide = false;
+            }
+            else
+            {
+                KilometrageInitialError = string.Empty;
+            }
+
             return valide;
         }
 
@@ -596,6 +620,14 @@ namespace FLEET_MANAGER.ViewModels
                 ImmatriculationError = "L'immatriculation est requise.";
             else
                 ImmatriculationError = string.Empty;
+        }
+
+        private void ValidateKilometrageInitial()
+        {
+            if (_kilometrageInitial < 0)
+                KilometrageInitialError = "Le kilometrage ne peut pas etre negatif.";
+            else
+                KilometrageInitialError = string.Empty;
         }
 
         private void ChargerHistorique(int idVehicule)

@@ -463,9 +463,27 @@ namespace FLEET_MANAGER.ViewModels
                 return;
             }
 
-            if (QuantiteLitres <= 0 || CoutTotal <= 0 || KilometrageCarburant <= 0)
+            if (KilometrageCarburant < 0)
             {
-                MessageErreur = "Veuillez remplir tous les champs correctement.";
+                MessageErreur = "Le kilometrage ne peut pas etre negatif.";
+                return;
+            }
+
+            if (KilometrageCarburant == 0)
+            {
+                MessageErreur = "Le kilometrage doit etre superieur a 0.";
+                return;
+            }
+
+            if (QuantiteLitres <= 0)
+            {
+                MessageErreur = "La quantite de litres doit etre superieure a 0.";
+                return;
+            }
+
+            if (CoutTotal <= 0)
+            {
+                MessageErreur = "Le cout total doit etre superieur a 0.";
                 return;
             }
 
@@ -520,6 +538,18 @@ namespace FLEET_MANAGER.ViewModels
             if (string.IsNullOrWhiteSpace(LieuDepart) || string.IsNullOrWhiteSpace(LieuArrivee))
             {
                 MessageErreur = "Les lieux de depart et d'arrivee sont requis.";
+                return;
+            }
+
+            if (KilometrageDepart < 0 || KilometrageArrivee < 0)
+            {
+                MessageErreur = "Les kilometrages ne peuvent pas etre negatifs.";
+                return;
+            }
+
+            if (KilometrageArrivee <= KilometrageDepart)
+            {
+                MessageErreur = "Le kilometrage d'arrivee doit etre superieur au kilometrage de depart.";
                 return;
             }
 
